@@ -20,11 +20,18 @@
             android:id="@+id/nav_motherboard"
             android:icon="@drawable/ic_menu_manage"
             android:title="Motherboard" />
-
         <item
             android:id="@+id/nav_powerSupply"
             android:icon="@drawable/ic_menu_manage"
             android:title="Power Supply" />
+        <item
+            android:id="@+id/nav_cooling"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Cooling" />
+        <item
+            android:id="@+id/nav_soundCard"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Sound Card" />
 
     </menu>
     </item>
@@ -39,6 +46,23 @@
                 android:id="@+id/nav_ssd"
                 android:icon="@drawable/ic_menu_send"
                 android:title="SSD" />
+        </menu>
+    </item>
+
+    <item android:title="Miscellaneous">
+        <menu>
+            <item
+                android:id="@+id/nav_onitor"
+                android:icon="@drawable/ic_menu_share"
+                android:title="Monitor" />
+            <item
+            android:id="@+id/nav_peripherals"
+            android:icon="@drawable/ic_menu_send"
+            android:title="Peripherals" />
+            <item
+                android:id="@+id/nav_tower"
+                android:icon="@drawable/ic_menu_send"
+                android:title="Tower" />
         </menu>
     </item>
 
