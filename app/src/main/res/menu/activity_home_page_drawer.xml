@@ -1,33 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single">
+
+    <item android:title="Internal"><menu>
+
         <item
-            android:id="@+id/nav_camera"
+            android:id="@+id/nav_ram"
             android:icon="@drawable/ic_menu_camera"
             android:title="RAM" />
         <item
-            android:id="@+id/nav_gallery"
+            android:id="@+id/nav_cpu"
             android:icon="@drawable/ic_menu_gallery"
             android:title="CPU" />
         <item
-            android:id="@+id/nav_slideshow"
+            android:id="@+id/nav_gpu"
             android:icon="@drawable/ic_menu_slideshow"
             android:title="GPU" />
         <item
-            android:id="@+id/nav_manage"
+            android:id="@+id/nav_motherboard"
             android:icon="@drawable/ic_menu_manage"
             android:title="Motherboard" />
-    </group>
+
+        <item
+            android:id="@+id/nav_powerSupply"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Power Supply" />
+
+    </menu>
+    </item>
 
     <item android:title="Storage">
         <menu>
             <item
-                android:id="@+id/nav_share"
+                android:id="@+id/nav_hdd"
                 android:icon="@drawable/ic_menu_share"
                 android:title="HDD" />
             <item
-                android:id="@+id/nav_send"
+                android:id="@+id/nav_ssd"
                 android:icon="@drawable/ic_menu_send"
                 android:title="SSD" />
         </menu>
