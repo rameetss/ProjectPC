@@ -85,7 +85,8 @@ public class HomePage extends AppCompatActivity
             Intent ram = new Intent(this, ram.class);
             startActivity(ram);
         } else if (id == R.id.nav_cpu) {
-
+            Intent cpu = new Intent(this, Login.class);
+            startActivity(cpu);
         } else if (id == R.id.nav_gpu) {
 
         } else if (id == R.id.nav_motherboard) {
