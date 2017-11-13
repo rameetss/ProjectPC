@@ -14,13 +14,13 @@ import android.view.MenuItem;
  * Created by Rameet on 11/12/2017.
  */
 
-public class ram extends AppCompatActivity
+public class hdd extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ram);
+        setContentView(R.layout.activity_hdd);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -93,7 +93,6 @@ public class ram extends AppCompatActivity
             Intent misc = new Intent(this, misc.class);
             startActivity(misc);
         }
-
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

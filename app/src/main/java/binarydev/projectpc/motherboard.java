@@ -14,13 +14,13 @@ import android.view.MenuItem;
  * Created by Rameet on 11/12/2017.
  */
 
-public class ram extends AppCompatActivity
+public class motherboard extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ram);
+        setContentView(R.layout.activity_motherboard);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
