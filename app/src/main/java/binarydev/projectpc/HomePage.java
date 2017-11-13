@@ -1,5 +1,6 @@
 package binarydev.projectpc;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -81,7 +82,8 @@ public class HomePage extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_ram) {
-            // Handle the camera action
+            Intent ram = new Intent(this, ram.class);
+            startActivity(ram);
         } else if (id == R.id.nav_cpu) {
 
         } else if (id == R.id.nav_gpu) {
@@ -92,7 +94,20 @@ public class HomePage extends AppCompatActivity
 
         } else if (id == R.id.nav_ssd) {
 
+        }else if (id == R.id.nav_case) {
+
+        }else if (id == R.id.nav_cooling) {
+
+        }else if (id == R.id.nav_monitor) {
+
+        }else if (id == R.id.nav_powerSupply) {
+
+        }else if (id == R.id.nav_peripherals) {
+
+        }else if (id == R.id.nav_misc) {
+
         }
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
