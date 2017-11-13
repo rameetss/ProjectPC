@@ -14,13 +14,13 @@ import android.view.MenuItem;
  * Created by Rameet on 11/12/2017.
  */
 
-public class ram extends AppCompatActivity
+public class cooling extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ram);
+        setContentView(R.layout.activity_cooling);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -63,35 +63,26 @@ public class ram extends AppCompatActivity
             Intent cpu = new Intent(this, cpu.class);
             startActivity(cpu);
         } else if (id == R.id.nav_gpu) {
-            Intent gpu = new Intent(this, gpu.class);
-            startActivity(gpu);
+
         } else if (id == R.id.nav_motherboard) {
-            Intent motherboard = new Intent(this, motherboard.class);
-            startActivity(motherboard);
+
         } else if (id == R.id.nav_hdd) {
-            Intent hdd = new Intent(this, hdd.class);
-            startActivity(hdd);
+
         } else if (id == R.id.nav_ssd) {
-            Intent ssd = new Intent(this, ssd.class);
-            startActivity(ssd);
+
         }else if (id == R.id.nav_case) {
-            Intent Case = new Intent(this, computerCase.class);
-            startActivity(Case);
+
         }else if (id == R.id.nav_cooling) {
-            Intent cooling = new Intent(this, cooling.class);
-            startActivity(cooling);
+
         }else if (id == R.id.nav_monitor) {
-            Intent monitor = new Intent(this, monitor.class);
-            startActivity(monitor);
+
         }else if (id == R.id.nav_powerSupply) {
-            Intent powerSupply = new Intent(this, power_supply.class);
-            startActivity(powerSupply);
+
         }else if (id == R.id.nav_peripherals) {
-            Intent peripherals = new Intent(this, peripherals.class);
-            startActivity(peripherals);
+
         }else if (id == R.id.nav_misc) {
-            Intent misc = new Intent(this, misc.class);
-            startActivity(misc);
+            Intent login = new Intent(this, Login.class);
+            startActivity(login);
         }
 
 
