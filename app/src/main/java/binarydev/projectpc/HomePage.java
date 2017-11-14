@@ -115,7 +115,7 @@ public class HomePage extends AppCompatActivity
             Intent peripherals = new Intent(this, peripherals.class);
             startActivity(peripherals);
         }else if (id == R.id.nav_misc) {
-            Intent misc = new Intent(this, misc.class);
+            Intent misc = new Intent(this, Login.class);
             startActivity(misc);
         }
 
