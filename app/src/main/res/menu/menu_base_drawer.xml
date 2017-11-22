@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/nav_home"
+        android:icon="@drawable/ic_nav_home"
+        android:title="@string/drawer_home"/>
+
+    <item android:id="@+id/nav_inbox"
+        android:icon="@drawable/ic_nav_inbox"
+        android:title="@string/drawer_inbox" />
+
+    <item android:id="@+id/nav_settings"
+        android:icon="@drawable/ic_nav_settings"
+        android:title="@string/drawer_settings" />
+
+    <item android:id="@+id/nav_sign_out"
+        android:icon="@drawable/ic_nav_sign_out"
+        android:title="@string/drawer_sign_out" />
+
+    <item android:title="@string/drawer_internal">
+        <menu>
+            <item
+                android:id="@+id/nav_ram"
+                android:icon="@drawable/ic_nav_ram"
+                android:title="@string/drawer_ram" />
+            <item
+                android:id="@+id/nav_cpu"
+                android:icon="@drawable/ic_nav_cpu"
+                android:title="@string/drawer_cpu" />
+            <item
+                android:id="@+id/nav_gpu"
+                android:icon="@drawable/ic_nav_gpu"
+                android:title="@string/drawer_gpu" />
+            <item
+                android:id="@+id/nav_motherboard"
+                android:icon="@drawable/ic_nav_motherboard"
+                android:title="@string/drawer_motherboard" />
+            <item
+                android:id="@+id/nav_power_supply"
+                android:icon="@drawable/ic_nav_power_supply"
+                android:title="@string/drawer_power_supply" />
+            <item
+                android:id="@+id/nav_cooling"
+                android:icon="@drawable/ic_nav_cooling"
+                android:title="@string/drawer_cooling" />
+        </menu>
+    </item>
+
+    <item android:title="@string/drawer_storage">
+        <menu>
+            <item
+                android:id="@+id/nav_hdd"
+                android:icon="@drawable/ic_nav_hdd"
+                android:title="@string/drawer_hdd" />
+            <item
+                android:id="@+id/nav_ssd"
+                android:icon="@drawable/ic_nav_ssd"
+                android:title="@string/drawer_ssd" />
+        </menu>
+    </item>
+
+    <item android:title="@string/drawer_external">
+        <menu>
+            <item
+                android:id="@+id/nav_case"
+                android:icon="@drawable/ic_nav_computer_case"
+                android:title="@string/drawer_case" />
+            <item
+                android:id="@+id/nav_monitor"
+                android:icon="@drawable/ic_nav_monitor"
+                android:title="@string/drawer_monitor" />
+            <item
+                android:id="@+id/nav_peripherals"
+                android:icon="@drawable/ic_nav_mouse"
+                android:title="@string/drawer_peripherals" />
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/nav_misc"
+        android:icon="@drawable/ic_nav_misc"
+        android:title="@string/drawer_misc" />
+
+</menu>

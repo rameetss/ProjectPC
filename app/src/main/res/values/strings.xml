@@ -5,4 +5,27 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+
+    <!-- Navigation drawer -->
+    <string name="drawer_home">Home</string>
+    <string name="drawer_inbox">Inbox</string>
+    <string name="drawer_settings">Settings</string>
+    <string name="drawer_sign_out">Sign out</string>
+
+    <string name="drawer_internal">Internal</string>
+    <string name="drawer_ram">RAM</string>
+    <string name="drawer_cpu">CPU</string>
+    <string name="drawer_gpu">GPU</string>
+    <string name="drawer_motherboard">Motherboard</string>
+    <string name="drawer_power_supply">Power Supply</string>
+    <string name="drawer_cooling">Cooling</string>
+    <string name="drawer_storage">Storage</string>
+    <string name="drawer_hdd">HDD</string>
+    <string name="drawer_ssd">SSD</string>
+    <string name="drawer_external">External</string>
+    <string name="drawer_misc">Misc.</string>
+    <string name="drawer_peripherals">Peripherals</string>
+    <string name="drawer_monitor">Monitor</string>
+    <string name="drawer_case">Case</string>
+
 </resources>

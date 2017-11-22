@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="16dp"
+    android:height="16dp"
+    android:viewportWidth="16"
+    android:viewportHeight="16">
+
+    <group
+            android:name="Group"
+            android:translateX="-480.000000">
+        <path
+            android:name="Rectangle 142 copy"
+            android:fillColor="#000000"
+            android:fillType="evenOdd"
+            android:strokeWidth="1"
+            android:pathData="M495,11 L495,15 L481,15 L481,11 L480.975342,11 L484,2 L486,2 L486,3
+L484.571429,3 L482,11 L494,11 L491.428571,3 L490,3 L490,2 L492,2 L495.00354,11 Z
+M487,1 L489,1 L489,6 L491,6 L488,10 L485,6 L487,6 Z M486,12 L486,13 L490,13
+L490,12 Z M486,12" />
+    </group>
+</vector>

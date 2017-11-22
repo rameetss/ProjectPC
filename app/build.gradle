@@ -4,7 +4,7 @@ android {
     compileSdkVersion 26
     buildToolsVersion "26.0.2"
     defaultConfig {
-        applicationId "binarydev.projectpc"
+        applicationId "ca.projectpc.projectpc"
         minSdkVersion 21
         targetSdkVersion 26
         versionCode 1
@@ -29,4 +29,5 @@ dependencies {
     compile 'com.android.support:design:26.+'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
+    compile 'org.jetbrains:annotations-java5:15.0'
 }
