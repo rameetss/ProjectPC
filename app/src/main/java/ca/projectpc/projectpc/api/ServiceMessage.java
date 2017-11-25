@@ -71,7 +71,9 @@ public class ServiceMessage<TData> {
         mCode = message.mCode;
         mError = message.mError;
         mDataSerialized = gson.toJson(message.mDataSerialized);
-        mData = gson.fromJson(mDataSerialized.toString(), mClassInfo);
+        if (mClassInfo != null) {
+            mData = gson.fromJson(mDataSerialized.toString(), mClassInfo);
+        }
     }
 
     /**
@@ -80,7 +82,9 @@ public class ServiceMessage<TData> {
      */
     public String serialize() {
         Gson gson = new Gson();
-        mDataSerialized = gson.toJson(mData, mClassInfo);
+        if (mClassInfo != null) {
+            mDataSerialized = gson.toJson(mData, mClassInfo);
+        }
         return gson.toJson(this, getClass());
     }
 }

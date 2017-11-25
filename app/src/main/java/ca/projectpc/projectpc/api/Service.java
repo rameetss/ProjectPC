@@ -293,6 +293,15 @@ public abstract class Service {
         return sendRequest(method, path, null, null, null, resultClass, internalCallback, callback);
     }
 
+    protected static
+    ServiceTask sendRequest(String method,
+                            String path,
+                            final IServiceCallback<Void> internalCallback,
+                            final IServiceCallback<Void> callback)
+            throws UnsupportedEncodingException, ParseException {
+        return sendRequest(method, path, null, null, null, null, internalCallback, callback);
+    }
+
     public static <TService extends Service>
     TService get(Class<TService> clazz)
             throws IllegalAccessException, InstantiationException {

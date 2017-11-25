@@ -42,6 +42,7 @@ public abstract class BaseActivity extends AppCompatActivity
                 onClickFloatingActionButton(view);
             }
         });
+        mFloatingActionButton.hide();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -51,7 +52,7 @@ public abstract class BaseActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        mNavigationView = (NavigationView) findViewById(R.id.nav_view);
+        mNavigationView = (NavigationView)findViewById(R.id.nav_view);
         mNavigationView.setNavigationItemSelectedListener(this);
     }
 
@@ -93,6 +94,14 @@ public abstract class BaseActivity extends AppCompatActivity
     public void setContentView(@LayoutRes int layoutResID) {
         View childView = View.inflate(this, layoutResID, null);
         mContentContainer.addView(childView);
+    }
+
+    public void showFloatingActionButton() {
+        mFloatingActionButton.show();
+    }
+
+    public void hideFloatingActionButton() {
+        mFloatingActionButton.hide();
     }
 
     /**********************************************************

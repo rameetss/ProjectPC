@@ -14,11 +14,6 @@ public abstract class NavigationActivity extends BaseActivity {
     }
 
     @Override
-    public void onClickFloatingActionButton(View view) {
-        Toast.makeText(this, "Home FAB!", Toast.LENGTH_LONG).show();
-    }
-
-    @Override
     public void onNavigationItemSelected(int id) {
         Class c = null;
         if (id == R.id.nav_home) {

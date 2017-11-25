@@ -6,17 +6,23 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import ca.projectpc.projectpc.R;
+import ca.projectpc.projectpc.api.IServiceCallback;
+import ca.projectpc.projectpc.api.Service;
+import ca.projectpc.projectpc.api.ServiceResult;
+import ca.projectpc.projectpc.api.services.SystemService;
 
 public class HomeActivity extends NavigationActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        // Show floating action button
+        showFloatingActionButton();
     }
 
     @Override
     public void onClickFloatingActionButton(View view) {
-        Toast.makeText(this, "Home FAB!", Toast.LENGTH_LONG).show();
     }
 
     @Override
