@@ -1,6 +1,12 @@
 <resources>
     <string name="app_name">ProjectPC</string>
 
+    <!-- ImagePicker -->
+    <string name="image_picker_select_image">Select an image</string>
+    <string name="image_picker_select_image_via">Select an image via…</string>
+    <string name="image_picker_camera">Camera</string>
+    <string name="image_picker_gallery">Gallery</string>
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 

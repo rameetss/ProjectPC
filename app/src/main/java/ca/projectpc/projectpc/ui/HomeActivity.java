@@ -23,6 +23,27 @@ public class HomeActivity extends NavigationActivity {
 
     @Override
     public void onClickFloatingActionButton(View view) {
+        try {
+            SystemService service = Service.get(SystemService.class);
+            service.getVersion(new IServiceCallback<SystemService.VersionResult>() {
+                @Override
+                public void onEnd(ServiceResult<SystemService.VersionResult> result) {
+                    if (!result.hasError()) {
+                        Toast.makeText(getBaseContext(),
+                                String.format("Version: %s", result.getData().version),
+                                Toast.LENGTH_LONG).show();
+                    } else {
+                        result.getException().printStackTrace();
+                        Toast.makeText(getBaseContext(),
+                                "Unable to get system version!",
+                                Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            Toast.makeText(this, "Unable to get system version!", Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
