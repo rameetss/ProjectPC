@@ -64,20 +64,15 @@ public abstract class Service {
         return sCookies;
     }
 
-    protected static <TArgs, TResult>
-    ServiceTask sendRequest(String method, String path,
+    protected static <TResult>
+    ServiceTask sendRequestRaw(String method, String path,
                             Map<String, List<String>> headers,
-                            TArgs args, Class<TArgs> argsClass,
+                            final byte[] buffer,
                             final Class<TResult> resultClass,
                             final IServiceCallback<TResult> internalCallback,
                             final IServiceCallback<TResult> callback)
-            throws UnsupportedEncodingException, ParseException {
+        throws UnsupportedEncodingException, ParseException {
         String requestUrl = String.format("%s/%s", sServerUrl, path).replaceAll("///", "/");
-        String data = null;
-        if (args != null && argsClass != null) {
-            Gson gson = new Gson();
-            data = gson.toJson(args, argsClass);
-        }
 
         // Create headers map if it doesn't already exist
         if (headers == null) {
@@ -122,7 +117,7 @@ public abstract class Service {
             headers.put("Cookie", cookiesList);
         }
 
-        HttpTask task = new HttpTask(requestUrl, data, sTimeout) {
+        HttpTask task = new HttpTask(requestUrl, buffer, sTimeout) {
             private Future<ServiceMessage<TResult>> mFutureTask;
 
             @Override
@@ -248,6 +243,24 @@ public abstract class Service {
     }
 
     protected static <TArgs, TResult>
+    ServiceTask sendRequest(String method, String path,
+                            Map<String, List<String>> headers,
+                            TArgs args, Class<TArgs> argsClass,
+                            final Class<TResult> resultClass,
+                            final IServiceCallback<TResult> internalCallback,
+                            final IServiceCallback<TResult> callback)
+            throws UnsupportedEncodingException, ParseException {
+        byte[] data = null;
+        if (args != null && argsClass != null) {
+            Gson gson = new Gson();
+            String argsEncoded = gson.toJson(args, argsClass);
+            data = argsEncoded.getBytes("UTF-8");
+        }
+
+        return sendRequestRaw(method, path, headers, data, resultClass, internalCallback, callback);
+    }
+
+    protected static <TArgs, TResult>
     ServiceTask sendRequest(String method,
                             String path,
                             Map<String, String> cookies,
@@ -300,6 +313,29 @@ public abstract class Service {
                             final IServiceCallback<Void> callback)
             throws UnsupportedEncodingException, ParseException {
         return sendRequest(method, path, null, null, null, null, internalCallback, callback);
+    }
+
+    protected static <TResult>
+    ServiceTask sendRequest(String method,
+                            String path,
+                            Map<String, List<String>> headers,
+                            byte[] buffer,
+                            final Class<TResult> resultClass,
+                            final IServiceCallback<TResult> internalCallback,
+                            final IServiceCallback<TResult> callback)
+            throws UnsupportedEncodingException, ParseException {
+        return sendRequestRaw(method, path, headers, buffer, resultClass, internalCallback, callback);
+    }
+
+    protected static
+    ServiceTask sendRequest(String method,
+                            String path,
+                            Map<String, List<String>> headers,
+                            byte[] buffer,
+                            final IServiceCallback<Void> internalCallback,
+                            final IServiceCallback<Void> callback)
+            throws UnsupportedEncodingException, ParseException {
+        return sendRequestRaw(method, path, headers, buffer, null, internalCallback, callback);
     }
 
     public static <TService extends Service>
