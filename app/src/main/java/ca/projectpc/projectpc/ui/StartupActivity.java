@@ -1,9 +1,9 @@
 package ca.projectpc.projectpc.ui;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -12,12 +12,13 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 
 import java.io.File;
-import java.util.List;
+import java.io.FileInputStream;
 
 import ca.projectpc.projectpc.R;
 import ca.projectpc.projectpc.api.IServiceCallback;
 import ca.projectpc.projectpc.api.Service;
 import ca.projectpc.projectpc.api.ServiceResult;
+import ca.projectpc.projectpc.api.services.AuthService;
 import ca.projectpc.projectpc.api.services.PostService;
 import pl.aprilapps.easyphotopicker.DefaultCallback;
 import pl.aprilapps.easyphotopicker.EasyImage;
@@ -29,48 +30,131 @@ public class StartupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_startup);
 
         // Initialize API
-        Service.setServerUrl("http://192.168.0.102:4040/api/");
-        Service.setTimeout(1000);
+        Service.setServerUrl("http://ppc.indigogames.ca/api/");
+        Service.setTimeout(5000);
 
         // Navigate to login/home activity
-        Intent intent = new Intent(this, HomeActivity.class);
+        Intent intent = new Intent(this, SearchActivity.class);
         startActivity(intent);
     }
 
+    // TODO: Test
     public void uploadImage(View view) {
         // setup easy image
         EasyImage.configuration(this)
-                .setImagesFolderName("project-pc")
+                .setImagesFolderName("local")
                 .saveInAppExternalFilesDir()
                 .saveInRootPicturesDirectory();
 
-        EasyImage.openChooserWithGallery(this, "Select an image", 0);
+        //EasyImage.openChooserWithGallery(this, "Select an image", 0);
+
+        try {
+            AuthService authService = Service.get(AuthService.class);
+            authService.login("example@interwebs.com", "1234",
+                    new IServiceCallback<AuthService.AuthResult>() {
+                        @Override
+                        public void onEnd(final ServiceResult<AuthService.AuthResult> authResult) {
+                            try {
+                                if (!authResult.hasError()) {
+                                    Log.d("StartupActivity", "Authenticated");
+
+                                    PostService postService = Service.get(PostService.class);
+                                    postService.downloadImage("5a20d9dc08f4f04b5c13a935", new IServiceCallback<PostService.DownloadImageResult>() {
+                                        @Override
+                                        public void onEnd(ServiceResult<PostService.DownloadImageResult> downloadImageResult) {
+                                            try {
+                                                if (!downloadImageResult.hasError()) {
+                                                    Log.d("StartupActivity", "Image downloaded");
+
+                                                    byte[] imageData = Base64.decode(downloadImageResult.getData().imageData, Base64.DEFAULT);
+                                                    Glide.with(getBaseContext()).load(imageData).into((ImageView)findViewById(R.id.startup_image_test));
+                                                }
+                                            } catch (Exception ex) {
+                                                ex.printStackTrace();
+                                            }
+                                        }
+                                    });
+                                }
+                            } catch (Exception ex) {
+                                ex.printStackTrace();
+                            }
+                        }
+            });
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // ...
         EasyImage.handleActivityResult(requestCode, resultCode, data, this, new DefaultCallback() {
             @Override
-            public void onImagePicked(File file, EasyImage.ImageSource source, int type) {
-                //if (source == EasyImage.ImageSource.CAMERA) {
-                    try {
-                        PostService service = Service.get(PostService.class);
-                        /*
-                        service.uploadImage(file, new IServiceCallback<Void>() {
-                            @Override
-                            public void onEnd(ServiceResult<Void> result) {
-                                Log.d("ProjectPC", result.getException().toString());
-                                //if (!result.hasError()) {
-                                    Toast.makeText(getBaseContext(), "Uploaded!", Toast.LENGTH_LONG).show();
-                                //}
-                            }
-                        });
-                        */
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-                //}
+            public void onImagePicked(final File file, EasyImage.ImageSource source, int type) {
+                try {
+                    AuthService authService = Service.get(AuthService.class);
+                    authService.login("example@interwebs.com", "1234",
+                    //authService.create("example@interwebs.com", "Eyaz", "Rehman", "Imposter", "1234",
+                            new IServiceCallback<AuthService.AuthResult>() {
+                                @Override
+                                public void onEnd(final ServiceResult<AuthService.AuthResult> authResult) {
+                                    try {
+                                        if (!authResult.hasError()) {
+                                            Log.d("StartupActivity", "Authenticated");
+
+                                            final PostService postService = Service.get(PostService.class);
+                                            postService.createPost("This is an ad!", "motherboard", null,
+                                                    100.99, "CAD", "Buy it now bro",
+                                                    new IServiceCallback<PostService.BasicIdResult>() {
+                                                        @Override
+                                                        public void onEnd(ServiceResult<PostService.BasicIdResult> createPostResult) {
+                                                            try {
+                                                                if (!createPostResult.hasError()) {
+                                                                    Log.d("StartupActivity", "Created post");
+
+                                                                    Toast.makeText(getBaseContext(), "Created post", Toast.LENGTH_LONG).show();
+
+                                                                    // Load image
+                                                                    byte[] buffer = new byte[(int)file.length()];
+                                                                    FileInputStream stream = new FileInputStream(file);
+                                                                    int bytesRead = stream.read(buffer);
+                                                                    if (bytesRead > 0) {
+                                                                        String base64Image = Base64.encodeToString(buffer, Base64.DEFAULT);
+                                                                        postService.uploadImage(createPostResult.getData().id, true, base64Image, new IServiceCallback<PostService.BasicIdResult>() {
+                                                                            @Override
+                                                                            public void onEnd(ServiceResult<PostService.BasicIdResult> uploadImageResult) {
+                                                                                try {
+                                                                                    if (!uploadImageResult.hasError()) {
+                                                                                        Log.d("StartupActivity", "Uploaded image");
+                                                                                        Toast.makeText(getBaseContext(), "Uploaded image!", Toast.LENGTH_LONG).show();
+                                                                                    } else {
+                                                                                        throw uploadImageResult.getException();
+                                                                                    }
+                                                                                } catch (Exception ex) {
+                                                                                    ex.printStackTrace();
+                                                                                }
+                                                                            }
+                                                                        });
+                                                                    }
+                                                                } else {
+                                                                    throw createPostResult.getException();
+                                                                }
+                                                            } catch (Exception ex) {
+                                                                ex.printStackTrace();
+                                                            }
+                                                        }
+                                                    }
+                                            );
+                                        } else {
+                                            throw authResult.getException();
+                                        }
+                                    } catch (Exception ex) {
+                                        ex.printStackTrace();
+                                    }
+                                }
+                            });
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
             }
         });
 

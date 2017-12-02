@@ -37,7 +37,7 @@ public class AuthService extends Service {
         byte[] epBytes = String.format("%s%s", email, password).getBytes("UTF-8");
         parameters.passwordHash = Hash.FNV1A_32(epBytes);
 
-        return sendRequest("GET", "/auth/create", parameters, CreateAccountParameters.class,
+        return sendRequest("POST", "/auth/create", parameters, CreateAccountParameters.class,
                 AuthResult.class, null, callback);
     }
 
@@ -50,7 +50,7 @@ public class AuthService extends Service {
         byte[] epBytes = String.format("%s%s", email, password).getBytes("UTF-8");
         parameters.passwordHash = Hash.FNV1A_32(epBytes);
 
-        return sendRequest("GET", "/auth/login", parameters, LoginParameters.class,
+        return sendRequest("POST", "/auth/login", parameters, LoginParameters.class,
                 AuthResult.class, null, callback);
     }
 

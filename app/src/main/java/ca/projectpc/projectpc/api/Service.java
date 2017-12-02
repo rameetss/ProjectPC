@@ -13,6 +13,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -256,6 +257,11 @@ public abstract class Service {
             String argsEncoded = gson.toJson(args, argsClass);
             data = argsEncoded.getBytes("UTF-8");
         }
+        if (headers == null) {
+            headers = new TreeMap<>();
+        }
+
+        headers.put("Content-Type", Arrays.asList("application/json"));
 
         return sendRequestRaw(method, path, headers, data, resultClass, internalCallback, callback);
     }

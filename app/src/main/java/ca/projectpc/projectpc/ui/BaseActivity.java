@@ -54,6 +54,7 @@ public abstract class BaseActivity extends AppCompatActivity
 
         mNavigationView = (NavigationView)findViewById(R.id.nav_view);
         mNavigationView.setNavigationItemSelectedListener(this);
+        mNavigationView.inflateMenu(getNavigationMenuId());
     }
 
     @Override
@@ -110,6 +111,7 @@ public abstract class BaseActivity extends AppCompatActivity
     public abstract void onClickFloatingActionButton(View view);
     public abstract void onNavigationItemSelected(int id);
 
+    public abstract int getNavigationMenuId();
     public abstract int getNavigationId();
     public abstract int getMenuId();
 
