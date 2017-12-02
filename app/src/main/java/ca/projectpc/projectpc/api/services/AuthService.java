@@ -25,8 +25,9 @@ public class AuthService extends Service {
         public int roleType;
     }
 
-    public ServiceTask create(String email, String firstName, String lastName, String userName,
-                              String password, final IServiceCallback<AuthResult> callback)
+    public ServiceTask createAccount(String email, String firstName, String lastName,
+                                     String userName, String password,
+                                     final IServiceCallback<AuthResult> callback)
             throws Exception {
         CreateAccountParameters parameters = new CreateAccountParameters();
         parameters.email = email;

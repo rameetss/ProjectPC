@@ -11,7 +11,7 @@ public class MessageService extends Service {
         String body;
     }
 
-    private class GetMessagesParameters {
+    private class GetMessagesForPostParameters {
         String postId;
     }
 
@@ -27,11 +27,10 @@ public class MessageService extends Service {
     }
 
     public class GetMessagesResult {
-        public String postId;
         public Message[] messages;
     }
 
-    public ServiceTask create(String postId, String targetId, String body,
+    public ServiceTask createMessage(String postId, String targetId, String body,
                               final IServiceCallback<BasicIdResult> callback)
             throws Exception {
         CreateMessageParameters parameters = new CreateMessageParameters();
@@ -43,12 +42,19 @@ public class MessageService extends Service {
                 BasicIdResult.class, null, callback);
     }
 
-    public ServiceTask get(String postId, final IServiceCallback<GetMessagesResult> callback)
+    public ServiceTask getMessagesForPost(String postId,
+                                          final IServiceCallback<GetMessagesResult> callback)
             throws Exception {
-        GetMessagesParameters parameters = new GetMessagesParameters();
+        GetMessagesForPostParameters parameters = new GetMessagesForPostParameters();
         parameters.postId = postId;
 
-        return sendRequest("POST", "/message/get", parameters, GetMessagesParameters.class,
-                GetMessagesResult.class, null, callback);
+        return sendRequest("POST", "/message/getMessagesForPost", parameters,
+                GetMessagesForPostParameters.class, GetMessagesResult.class, null, callback);
+    }
+
+    public ServiceTask getAllMessages(final IServiceCallback<GetMessagesResult> callback)
+            throws Exception {
+        return sendRequest("POST", "/message/getMessagesForPost", GetMessagesResult.class, null,
+                callback);
     }
 }
