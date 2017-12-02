@@ -65,6 +65,16 @@ public abstract class Service {
         return sCookies;
     }
 
+    public static void clearCookies() {
+        sCookies.clear();
+    }
+
+    public static void reset() {
+        sCookies.clear();
+        sTimeout = REQUEST_TIMEOUT;
+        sServerUrl = null;
+    }
+
     protected static <TResult>
     ServiceTask sendRequestRaw(String method, String path,
                             Map<String, List<String>> headers,
