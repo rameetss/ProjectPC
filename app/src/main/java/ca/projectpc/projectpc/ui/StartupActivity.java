@@ -33,11 +33,11 @@ public class StartupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_startup);
 
         // Initialize API
-        Service.setServerUrl("http://ppc.indigogames.ca/api/");
+        Service.setServerUrl("https://ppc.indigogames.ca/api/");
         Service.setTimeout(5000);
 
         // Navigate to login/home activity
-        Intent intent = new Intent(this, SearchActivity.class);
+        Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
 
