@@ -35,6 +35,9 @@
     <string name="category_case">Case</string>
     <string name="category_misc">Miscellaneous</string>
 
+    <!-- Startup activity -->
+    <string name="startup_loading">Loading…</string>
+
     <!-- Login activity -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
