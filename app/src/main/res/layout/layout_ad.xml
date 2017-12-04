@@ -17,7 +17,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp">
+            android:padding="5dp">
 
             <ImageView
                 android:id="@+id/imageView"
@@ -72,10 +72,11 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@+id/textCurrency"
                 android:layout_alignBottom="@+id/textCurrency"
+                android:layout_marginStart="11dp"
                 android:layout_toEndOf="@+id/textCurrency"
                 android:text="$500"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-                android:textStyle="bold" />
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:textColor="#000000" />
 
             <TextView
                 android:id="@+id/textCurrency"
@@ -84,8 +85,8 @@
                 android:layout_alignStart="@+id/textViewShortDesc"
                 android:layout_below="@+id/textViewShortDesc"
                 android:text="CAD"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-                android:textStyle="bold" />
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:textColor="#000000"/>
 
         </RelativeLayout>
 

@@ -119,27 +119,27 @@
 
         <ImageView
             android:id="@+id/image_one"
-            android:src="@drawable/logo_long"
+            android:src="@drawable/upload_file"
             android:layout_width="80dp"
             android:layout_height="100dp"
             />
             <ImageView
                 android:id="@+id/image_two"
-                android:src="@drawable/logo_long"
+                android:src="@drawable/upload_file"
                 android:layout_toRightOf="@+id/image_one"
                 android:layout_width="80dp"
                 android:layout_height="100dp"
                 />
             <ImageView
                 android:id="@+id/image_three"
-                android:src="@drawable/logo_long"
+                android:src="@drawable/upload_file"
                 android:layout_toRightOf="@+id/image_two"
                 android:layout_width="80dp"
                 android:layout_height="100dp"
                 />
             <ImageView
                 android:id="@+id/image_four"
-                android:src="@drawable/logo_long"
+                android:src="@drawable/upload_file"
                 android:layout_toRightOf="@+id/image_three"
                 android:layout_width="80dp"
                 android:layout_height="100dp"
