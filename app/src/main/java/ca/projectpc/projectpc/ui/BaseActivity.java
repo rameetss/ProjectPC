@@ -79,6 +79,8 @@ public abstract class BaseActivity extends AppCompatActivity
         // Only trigger event if the ID is different than the current one
         if (id != getNavigationId()) {
             onNavigationItemSelected(id);
+            Intent intent = new Intent(BaseActivity.this, SearchActivity.class);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

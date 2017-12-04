@@ -41,6 +41,10 @@
         <activity
             android:name=".ui.PostAdActivity"
             android:label="@string/title_activity_post_ad"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.Adapter"
+            android:label="@string/title_activity_adapter"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

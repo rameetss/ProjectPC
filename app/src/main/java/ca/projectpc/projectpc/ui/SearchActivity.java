@@ -4,10 +4,15 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.provider.Telephony;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import ca.projectpc.projectpc.R;
 import ca.projectpc.projectpc.api.IServiceCallback;
@@ -20,15 +25,84 @@ public class SearchActivity extends BaseActivity {
     private int mNavigationId;
     private int mMenuId;
     private String mCategory;
+    RecyclerView recyclerView;
+    //a list to store all the products
+    List<Item> itemList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_search);
 
         // Get passed information
         Intent callingIntent = getIntent();
         mNavigationId = callingIntent.getIntExtra("internal_navigation_id", R.id.nav_home);
         mMenuId = callingIntent.getIntExtra("internal_menu_id", 0);
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        //initializing the itemlist
+        itemList = new ArrayList<>();
+
+        //adding some items to our list
+        itemList.add(
+                new Item(
+                        1,
+                        "Asus Gaming Tower",
+                        "Feb 3",
+                        2.7,
+                        250,
+                        R.drawable.computer_case));
+
+        itemList.add(
+                new Item(
+                        1,
+                        "500W Power Supply",
+                        "May 8",
+                        5,
+                        65,
+                        R.drawable.power_supply));
+
+        itemList.add(
+                new Item(
+                        1,
+                        "8GB Kingston RAM",
+                        "Nov 9",
+                        4,
+                        200,
+                        R.drawable.ram));
+        itemList.add(
+                new Item(
+                        1,
+                        "Asus Gaming Tower",
+                        "Feb 3",
+                        2.7,
+                        250,
+                        R.drawable.computer_case));
+
+        itemList.add(
+                new Item(
+                        1,
+                        "500W Power Supply",
+                        "May 8",
+                        5,
+                        65,
+                        R.drawable.power_supply));
+
+        itemList.add(
+                new Item(
+                        1,
+                        "8GB Kingston RAM",
+                        "Nov 9",
+                        4,
+                        200,
+                        R.drawable.ram));
+        //creating recyclerview adapter
+        Adapter adapter = new Adapter(this, itemList);
+
+        //setting adapter to recyclerview
+        recyclerView.setAdapter(adapter);
 
         // Get category
         int categoryId = navIdToCategoryStringId(mNavigationId);

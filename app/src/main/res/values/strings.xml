@@ -94,5 +94,6 @@
     <string name="service_internal_error">Internal error</string>
     <string name="service_unable_to_process_request">Unable to process request</string>
     <string name="title_activity_post_ad">PostAdActivity</string>
+    <string name="title_activity_adapter">Adapter</string>
 
 </resources>
