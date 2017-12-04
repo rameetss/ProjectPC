@@ -1,5 +1,6 @@
 package ca.projectpc.projectpc.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.constraint.ConstraintLayout;
@@ -41,6 +42,8 @@ public abstract class BaseActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 onClickFloatingActionButton(view);
+                Intent intent = new Intent(BaseActivity.this, PostAdActivity.class);
+                startActivity(intent);
             }
         });
         mFloatingActionButton.hide();

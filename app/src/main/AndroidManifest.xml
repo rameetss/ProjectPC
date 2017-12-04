@@ -35,8 +35,13 @@
         <activity
             android:name=".ui.InboxActivity"
             android:label="@string/title_activity_inbox" />
-        <activity android:name=".ui.MessageActivity"
+        <activity
+            android:name=".ui.MessageActivity"
             android:label="@string/title_activity_message" />
+        <activity
+            android:name=".ui.PostAdActivity"
+            android:label="@string/title_activity_post_ad"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

@@ -69,6 +69,23 @@
     <!-- Inbox activity -->
     <string name="title_activity_inbox">Inbox</string>
 
+    <!-- Post Ad activity -->
+    <string name="post_button">Post Ad</string>
+    <string name="post_title">Title</string>
+    <string name="post_description">Description</string>
+    <string name="post_tags">Tags (seperate with commas)</string>
+    <string name="post_price">Price</string>
+    <string name="post_location">Location</string>
+    <string name="upload_image">Upload Image(s)</string>
+
+    <!---spinner sstuff -->
+    <string-array name="spinner_currencies">
+        <item>CAD</item>
+        <item>USD</item>
+        <item>EUR</item>
+    </string-array>
+
+
     <!-- Message activity -->
     <string name="title_activity_message">Message</string>
     <string name="prompt_enter_message">Enter message</string>
@@ -76,5 +93,6 @@
     <!-- Service -->
     <string name="service_internal_error">Internal error</string>
     <string name="service_unable_to_process_request">Unable to process request</string>
+    <string name="title_activity_post_ad">PostAdActivity</string>
 
 </resources>
