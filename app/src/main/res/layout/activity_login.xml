@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:fitsSystemWindows="true">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:fitsSystemWindows="true"
+    tools:context="ca.projectpc.projectpc.ui.LoginActivity">
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="56dp"
-        android:paddingLeft="24dp"
-        android:paddingRight="24dp">
+        android:padding="@dimen/default_padding">
 
-        <ImageView android:src="@drawable/logo_long"
+        <ImageView
+            android:src="@drawable/logo_long"
+            android:contentDescription="@string/app_name"
             android:layout_width="wrap_content"
             android:layout_height="72dp"
             android:layout_marginBottom="24dp"
@@ -45,13 +46,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
-                android:hint="@string/prompt_password"/>
+                android:hint="@string/prompt_password"
+                android:imeOptions="actionGo"/>
 
         </android.support.design.widget.TextInputLayout>
 
-        <!-- Register Button -->
+        <!-- Login Button -->
         <android.support.v7.widget.AppCompatButton
-            android:id="@+id/btn_login"
+            android:id="@+id/login_login_button"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
@@ -60,13 +62,16 @@
             android:onClick="onLogin"
             android:text="@string/action_sign_in_short"/>
 
-        <TextView android:id="@+id/login_register_text_view"
+        <!-- Register Label -->
+        <TextView
+            android:id="@+id/login_register_text_view"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
             android:text="@string/action_register"
             android:gravity="center"
-            android:textColor="@color/colorPrimaryDark"/>
+            android:textColor="@color/colorPrimaryDark"
+            android:onClick="onRegister"/>
 
     </LinearLayout>
 </ScrollView>

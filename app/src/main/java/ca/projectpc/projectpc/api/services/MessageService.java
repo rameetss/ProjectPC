@@ -22,7 +22,9 @@ public class MessageService extends Service {
     public class Message {
         public String postId;
         public String senderId;
+        public String senderName;
         public String targetId;
+        public String targetName;
         public String body;
     }
 
@@ -54,7 +56,7 @@ public class MessageService extends Service {
 
     public ServiceTask getAllMessages(final IServiceCallback<GetMessagesResult> callback)
             throws Exception {
-        return sendRequest("POST", "/message/getMessagesForPost", GetMessagesResult.class, null,
+        return sendRequest("POST", "/message/getAllMessages", GetMessagesResult.class, null,
                 callback);
     }
 }

@@ -18,6 +18,7 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -30,9 +31,12 @@
             android:label="@string/title_activity_login" />
         <activity
             android:name=".ui.RegisterActivity"
-            android:label="@string/title_activity_register"/>
+            android:label="@string/title_activity_register" />
         <activity
-            android:name=".ui.InboxActivity"/>
+            android:name=".ui.InboxActivity"
+            android:label="@string/title_activity_inbox" />
+        <activity android:name=".ui.MessageActivity"
+            android:label="@string/title_activity_message" />
     </application>
 
 </manifest>

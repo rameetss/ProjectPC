@@ -1,5 +1,7 @@
 package ca.projectpc.projectpc.api;
 
+import android.annotation.SuppressLint;
+
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
@@ -128,6 +130,10 @@ public abstract class Service {
             headers.put("Cookie", cookiesList);
         }
 
+        // The following code will NOT leak, as HttpTask contains a timeout and will end execution
+        // forcefully if the operation is not completed within the allotted time. The task can also
+        // be ended forcefully through task.cancel(); which is part of the ServiceTask API.
+        @SuppressLint("StaticFieldLeak")
         HttpTask task = new HttpTask(requestUrl, buffer, sTimeout) {
             private Future<ServiceMessage<TResult>> mFutureTask;
 

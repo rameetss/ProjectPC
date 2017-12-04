@@ -7,4 +7,5 @@
     <dimen name="fab_margin">16dp</dimen>
 
     <dimen name="default_padding">16dp</dimen>
+    <dimen name="message_padding">2dp</dimen>
 </resources>

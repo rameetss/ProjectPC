@@ -144,4 +144,6 @@ public class PostService extends Service {
         return sendRequest("POST", "/post/downloadImage", parameters, DownloadImageParameters.class,
                 DownloadImageResult.class, null, callback);
     }
+
+    // TODO: Get posts
 }

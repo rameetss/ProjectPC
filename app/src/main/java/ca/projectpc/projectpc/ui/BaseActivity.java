@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -30,12 +31,12 @@ public abstract class BaseActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.activity_base);
 
-        mContentContainer = (ConstraintLayout)findViewById(R.id.base_content_container);
+        mContentContainer = (ConstraintLayout) findViewById(R.id.base_content_container);
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.base_toolbar);
         setSupportActionBar(mToolbar);
 
-        mFloatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
+        mFloatingActionButton = (FloatingActionButton) findViewById(R.id.base_fab);
         mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -52,7 +53,7 @@ public abstract class BaseActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        mNavigationView = (NavigationView)findViewById(R.id.nav_view);
+        mNavigationView = (NavigationView) findViewById(R.id.nav_view);
         mNavigationView.setNavigationItemSelectedListener(this);
         mNavigationView.inflateMenu(getNavigationMenuId());
     }
@@ -109,10 +110,13 @@ public abstract class BaseActivity extends AppCompatActivity
      Must be implemented
      *********************************************************/
     public abstract void onClickFloatingActionButton(View view);
+
     public abstract void onNavigationItemSelected(int id);
 
     public abstract int getNavigationMenuId();
+
     public abstract int getNavigationId();
+
     public abstract int getMenuId();
 
     @Override

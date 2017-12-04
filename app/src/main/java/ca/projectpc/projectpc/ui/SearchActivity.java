@@ -1,15 +1,19 @@
 package ca.projectpc.projectpc.ui;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.provider.Telephony;
 import android.view.View;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import ca.projectpc.projectpc.R;
 import ca.projectpc.projectpc.api.IServiceCallback;
 import ca.projectpc.projectpc.api.Service;
 import ca.projectpc.projectpc.api.ServiceResult;
+import ca.projectpc.projectpc.api.services.AuthService;
 import ca.projectpc.projectpc.api.services.SystemService;
 
 public class SearchActivity extends BaseActivity {
@@ -36,18 +40,34 @@ public class SearchActivity extends BaseActivity {
         }
         setTitle(getString(categoryId));
 
-        // Set content view
-        setContentView(R.layout.activity_search);
-
         // Show floating action button (to create new post)
         showFloatingActionButton();
+
+        try {
+            // Get auth service
+            AuthService authService = Service.get(AuthService.class);
+            AuthService.SessionData sessionData = authService.getSessionData();
+
+            // Update username and email on sidebar
+            View navigationRootView = mNavigationView.getHeaderView(0);
+            TextView titleTextView = (TextView)navigationRootView.findViewById(R.id.nav_header_title);
+            TextView emailTextView = (TextView)navigationRootView.findViewById(R.id.nav_header_email);
+            titleTextView.setText(String.format("%s (%s %s)", sessionData.userName,
+                    sessionData.firstName, sessionData.lastName));
+            emailTextView.setText(sessionData.email);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        // Set content view
+        setContentView(R.layout.activity_search);
 
         // TODO: Fetch data from server depending on the category (mCategory)
     }
 
     @Override
     public void onClickFloatingActionButton(View view) {
-        // TODO: Go to create post activity
+        // TODO: Go to create post activity (if in category, pre-fill edit text in create post activity)
     }
 
     @Override
@@ -122,19 +142,46 @@ public class SearchActivity extends BaseActivity {
 
     @Override
     public void onNavigationItemSelected(int id) {
-        Class c = null;
         if (id == R.id.nav_inbox) {
-            // TODO: Show inbox activity
+            // Show inbox activity
+            Intent intent = new Intent(this, InboxActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_settings) {
             // TODO: Show settings activity
         } else if (id == R.id.nav_sign_out) {
-            // TODO: Sign out and go to login activity
-        } else {
-            c = SearchActivity.class;
-        }
+            try {
+                AuthService authService = Service.get(AuthService.class);
+                authService.logout(new IServiceCallback<Void>() {
+                    @Override
+                    public void onEnd(ServiceResult<Void> result) {
+                        if (!result.hasError()) {
+                            // Remove auto-login information
+                            SharedPreferences preferences = getSharedPreferences("CurrentUser",
+                                    MODE_PRIVATE);
+                            SharedPreferences.Editor editor = preferences.edit();
+                            editor.putString("email", null);
+                            editor.putString("password", null);
+                            editor.apply();
 
-        if (c != null) {
-            Intent intent = new Intent(this, c);
+                            // Return to login activity
+                            Intent intent = new Intent(getBaseContext(), LoginActivity.class);
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            // The API failed to complete the request and returned an exception
+                            result.getException().printStackTrace();
+                            Toast.makeText(getBaseContext(), R.string.service_unable_to_process_request,
+                                    Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+            } catch (Exception ex) {
+                // Unable to get service (internal error)
+                ex.printStackTrace();
+                Toast.makeText(this, R.string.service_internal_error, Toast.LENGTH_LONG).show();
+            }
+        } else {
+            Intent intent = new Intent(this, SearchActivity.class);
             intent.putExtra("internal_navigation_id", id);
             startActivity(intent);
             finish();

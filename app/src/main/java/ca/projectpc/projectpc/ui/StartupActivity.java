@@ -38,6 +38,7 @@ public class StartupActivity extends AppCompatActivity {
                             // Navigate to login activity
                             Intent intent = new Intent(getBaseContext(), LoginActivity.class);
                             startActivity(intent);
+                            finish();
                         } else {
                             throw result.getException();
                         }

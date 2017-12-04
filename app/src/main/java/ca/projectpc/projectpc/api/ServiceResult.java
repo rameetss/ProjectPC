@@ -47,6 +47,10 @@ public class ServiceResult<TResult> {
         return mException;
     }
 
+    public void throwException() throws Exception {
+        throw mException;
+    }
+
     public boolean isCancelled() {
         return mCancelled;
     }

@@ -2,6 +2,7 @@ package ca.projectpc.projectpc.api.services;
 
 import ca.projectpc.projectpc.api.IServiceCallback;
 import ca.projectpc.projectpc.api.Service;
+import ca.projectpc.projectpc.api.ServiceResult;
 import ca.projectpc.projectpc.api.ServiceTask;
 import ca.projectpc.projectpc.utility.Hash;
 
@@ -19,10 +20,27 @@ public class AuthService extends Service {
         int passwordHash;
     }
 
-    public class AuthResult {
+    public class SessionData implements Cloneable {
         public boolean authorized;
         public String userId;
-        public int roleType;
+        public String userName;
+        public String firstName;
+        public String lastName;
+        public String email;
+        public int role;
+
+        protected Object clone() throws CloneNotSupportedException {
+            return super.clone();
+        }
+    }
+
+    public class AuthResult extends SessionData {
+    }
+
+    private SessionData mSessionData;
+
+    public SessionData getSessionData() throws Exception {
+        return (SessionData)mSessionData.clone();
     }
 
     public ServiceTask createAccount(String email, String firstName, String lastName,
@@ -39,7 +57,16 @@ public class AuthService extends Service {
         parameters.passwordHash = Hash.FNV1A_32(epBytes);
 
         return sendRequest("POST", "/auth/create", parameters, CreateAccountParameters.class,
-                AuthResult.class, null, callback);
+                AuthResult.class, new IServiceCallback<AuthResult>() {
+                    @Override
+                    public void onEnd(ServiceResult<AuthResult> result) {
+                        if (result.hasData()) {
+                            mSessionData = result.getData();
+                        }
+                    }
+                },
+                callback
+        );
     }
 
     public ServiceTask login(String email, String password,
@@ -52,10 +79,26 @@ public class AuthService extends Service {
         parameters.passwordHash = Hash.FNV1A_32(epBytes);
 
         return sendRequest("POST", "/auth/login", parameters, LoginParameters.class,
-                AuthResult.class, null, callback);
+                AuthResult.class, new IServiceCallback<AuthResult>() {
+                    @Override
+                    public void onEnd(ServiceResult<AuthResult> result) {
+                        if (result.hasData()) {
+                            mSessionData = result.getData();
+                        }
+                    }
+                },
+                callback
+        );
     }
 
-    public ServiceTask delete(final IServiceCallback<Void> callback) throws Exception {
-        return sendRequest("DELETE", "/auth/delete", null, callback);
+    public ServiceTask logout(final IServiceCallback<Void> callback) throws Exception {
+        return sendRequest("DELETE", "/auth/delete", new IServiceCallback<Void>() {
+            @Override
+            public void onEnd(ServiceResult<Void> result) {
+                // Clear cookies before finishing up
+                clearCookies();
+                mSessionData = null;
+            }
+        }, callback);
     }
 }
