@@ -41,11 +41,14 @@ public class InboxActivity extends AppCompatActivity
                 R.color.colorPrimary
         );
 
+        // TODO: Fix this activity,
+        // it won't open (It has to do with the recycler view in the other activity)
+
         // Setup recycler view
-        mRecyclerView = (RecyclerView) findViewById(R.id.inbox_recycler_view);
+        //mRecyclerView = (RecyclerView) findViewById(R.id.inbox_threads_recycler_view);
 
         // Refresh messages
-        refresh();
+        //refresh();
     }
 
     @Override
@@ -110,10 +113,10 @@ public class InboxActivity extends AppCompatActivity
                 super(itemView);
 
                 mCardView = (CardView) itemView.findViewById(R.id.item_inbox_card_view);
-                mMessageText = (TextView) itemView.findViewById(R.id.item_inbox_message_text_view);
-                mMessageSender = (TextView) itemView.findViewById(R.id.item_inbox_sender_text_view);
+                mMessageText = (TextView) itemView.findViewById(R.id.item_inbox_message);
+                mMessageSender = (TextView) itemView.findViewById(R.id.item_inbox_sender);
                 mMessageTimeReceived =
-                        (TextView) itemView.findViewById(R.id.item_inbox_time_received_text_view);
+                        (TextView) itemView.findViewById(R.id.item_inbox_time_received);
             }
         }
 

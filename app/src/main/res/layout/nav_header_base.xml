@@ -30,7 +30,6 @@
     <TextView
         android:id="@+id/nav_header_email"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="dev@projectpc.ca" />
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

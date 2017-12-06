@@ -38,9 +38,9 @@ public class LoginActivity extends AppCompatActivity implements Dialog.OnCancelL
         setContentView(R.layout.activity_login);
 
         // Get controls
-        mEmailEditText = (EditText)findViewById(R.id.login_email_edit_text);
-        mPasswordEditText = (EditText)findViewById(R.id.login_password_edit_text);
-        mLoginButton = (Button)findViewById(R.id.login_login_button);
+        mEmailEditText = (EditText) findViewById(R.id.login_email);
+        mPasswordEditText = (EditText) findViewById(R.id.login_password);
+        mLoginButton = (Button) findViewById(R.id.login_login);
 
         mPasswordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override

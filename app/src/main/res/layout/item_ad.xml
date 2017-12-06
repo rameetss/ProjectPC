@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="6dp"
+    android:clickable="true"
+    android:elevation="4dp"
+    android:focusable="true"
+    android:padding="4dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp">
+
+        <ImageView
+            android:id="@+id/item_ad_thumbnail"
+            android:layout_width="120dp"
+            android:layout_height="90dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:padding="4dp" />
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_alignBottom="@+id/item_ad_thumbnail"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/ic_message_primary_dark" />
+
+        <TextView
+            android:id="@+id/item_ad_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/item_ad_thumbnail"
+            android:layout_marginStart="11dp"
+            android:layout_toEndOf="@+id/item_ad_thumbnail"
+            android:gravity="start"
+            android:text="Kingston DDR4 2400 8GB"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+
+        <TextView
+            android:id="@+id/item_ad_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/item_ad_distance"
+            android:layout_below="@+id/item_ad_distance"
+            android:text="Nov 22"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
+
+        <TextView
+            android:id="@+id/item_ad_distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/item_ad_title"
+            android:layout_below="@+id/item_ad_title"
+            android:text="7 KM"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
+
+        <TextView
+            android:id="@+id/item_ad_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/item_ad_currency"
+            android:layout_alignBottom="@+id/item_ad_currency"
+            android:layout_marginStart="11dp"
+            android:layout_toEndOf="@+id/item_ad_currency"
+            android:text="500"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textColor="#000000" />
+
+        <TextView
+            android:id="@+id/item_ad_currency"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/item_ad_date"
+            android:layout_below="@+id/item_ad_date"
+            android:text="CAD"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textColor="#000000" />
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>

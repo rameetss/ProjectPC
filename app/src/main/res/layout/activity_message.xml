@@ -8,7 +8,7 @@
     tools:context="ca.projectpc.projectpc.ui.MessageActivity">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/message_messages_recycler_view"
+        android:id="@+id/message_messages"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -52,7 +52,7 @@
             android:maxLines="6" />
 
         <ImageButton
-            android:id="@+id/message_send_button"
+            android:id="@+id/message_send"
             android:layout_width="64dp"
             android:layout_height="48dp"
             android:layout_gravity="bottom"

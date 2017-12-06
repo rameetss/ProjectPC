@@ -1,13 +1,17 @@
 package ca.projectpc.projectpc.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.provider.Telephony;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.MenuItem;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,9 +29,11 @@ public class SearchActivity extends BaseActivity {
     private int mNavigationId;
     private int mMenuId;
     private String mCategory;
-    RecyclerView recyclerView;
-    //a list to store all the products
-    List<Item> itemList;
+
+    RecyclerView mRecyclerView;
+
+    // TODO: This is temporary, we're going to fetch this data every time refresh is called
+    List<Item> mItemList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,71 +44,6 @@ public class SearchActivity extends BaseActivity {
         Intent callingIntent = getIntent();
         mNavigationId = callingIntent.getIntExtra("internal_navigation_id", R.id.nav_home);
         mMenuId = callingIntent.getIntExtra("internal_menu_id", 0);
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        //initializing the itemlist
-        itemList = new ArrayList<>();
-
-        //adding some items to our list
-        itemList.add(
-                new Item(
-                        1,
-                        "Asus Gaming Tower",
-                        "Feb 3",
-                        2.7,
-                        250,
-                        R.drawable.computer_case));
-
-        itemList.add(
-                new Item(
-                        1,
-                        "500W Power Supply",
-                        "May 8",
-                        5,
-                        65,
-                        R.drawable.power_supply));
-
-        itemList.add(
-                new Item(
-                        1,
-                        "8GB Kingston RAM",
-                        "Nov 9",
-                        4,
-                        200,
-                        R.drawable.ram));
-        itemList.add(
-                new Item(
-                        1,
-                        "Asus Gaming Tower",
-                        "Feb 3",
-                        2.7,
-                        250,
-                        R.drawable.computer_case));
-
-        itemList.add(
-                new Item(
-                        1,
-                        "500W Power Supply",
-                        "May 8",
-                        5,
-                        65,
-                        R.drawable.power_supply));
-
-        itemList.add(
-                new Item(
-                        1,
-                        "8GB Kingston RAM",
-                        "Nov 9",
-                        4,
-                        200,
-                        R.drawable.ram));
-        //creating recyclerview adapter
-        Adapter adapter = new Adapter(this, itemList);
-
-        //setting adapter to recyclerview
-        recyclerView.setAdapter(adapter);
 
         // Get category
         int categoryId = navIdToCategoryStringId(mNavigationId);
@@ -124,8 +65,8 @@ public class SearchActivity extends BaseActivity {
 
             // Update username and email on sidebar
             View navigationRootView = mNavigationView.getHeaderView(0);
-            TextView titleTextView = (TextView)navigationRootView.findViewById(R.id.nav_header_title);
-            TextView emailTextView = (TextView)navigationRootView.findViewById(R.id.nav_header_email);
+            TextView titleTextView = (TextView) navigationRootView.findViewById(R.id.nav_header_title);
+            TextView emailTextView = (TextView) navigationRootView.findViewById(R.id.nav_header_email);
             titleTextView.setText(String.format("%s (%s %s)", sessionData.userName,
                     sessionData.firstName, sessionData.lastName));
             emailTextView.setText(sessionData.email);
@@ -137,6 +78,69 @@ public class SearchActivity extends BaseActivity {
         setContentView(R.layout.activity_search);
 
         // TODO: Fetch data from server depending on the category (mCategory)
+        // TODO: The following code is temporary
+        // Find recycler view
+        mRecyclerView = (RecyclerView) findViewById(R.id.search_ads_recycler_view);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        //initializing the itemlist
+        mItemList = new ArrayList<>();
+
+        //adding some items to our list
+        mItemList.add(new Item(
+                1,
+                "Asus Gaming Tower",
+                "Feb 3",
+                2.7,
+                250,
+                R.drawable.computer_case));
+
+        mItemList.add(new Item(
+                1,
+                "500W Power Supply",
+                "May 8",
+                5,
+                65,
+                R.drawable.power_supply));
+
+        mItemList.add(new Item(
+                1,
+                "8GB Kingston RAM",
+                "Nov 9",
+                4,
+                200,
+                R.drawable.ram));
+
+        mItemList.add(new Item(
+                1,
+                "Asus Gaming Tower",
+                "Feb 3",
+                2.7,
+                250,
+                R.drawable.computer_case));
+
+        mItemList.add(new Item(
+                1,
+                "500W Power Supply",
+                "May 8",
+                5,
+                65,
+                R.drawable.power_supply));
+
+        mItemList.add(new Item(
+                1,
+                "8GB Kingston RAM",
+                "Nov 9",
+                4,
+                200,
+                R.drawable.ram));
+
+        // Create recycler view adapter
+        ItemAdapter adapter = new ItemAdapter(this, mItemList);
+
+        //setting adapter to recycler view
+        mRecyclerView.setAdapter(adapter);
     }
 
     @Override
@@ -204,6 +208,104 @@ public class SearchActivity extends BaseActivity {
                 break;
         }
         return strId;
+    }
+
+    public class Item {
+        private int mId;
+        private String mTitle;
+        private String mDate;
+        private double mDistance;
+        private double mPrice;
+        private int mImage; // TODO: Download (not gonna be a int when downloaded)
+
+        public Item(int id, String title, String date, double distance, double price, int image) {
+            mId = id;
+            mTitle = title;
+            mDate = date;
+            mDistance = distance;
+            mPrice = price;
+            mImage = image;
+        }
+
+        public int getId() {
+            return mId;
+        }
+
+        public String getTitle() {
+            return mTitle;
+        }
+
+        public String getDate() {
+            return mDate;
+        }
+
+        public double getDistance() {
+            return mDistance;
+        }
+
+        public double getPrice() {
+            return mPrice;
+        }
+
+        public int getImage() {
+            return mImage;
+        }
+    }
+
+    // TODO: Clean this up
+    public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ProductViewHolder> {
+        private Context mContext;
+        private List<Item> mItemList;
+
+        //getting the context and product list with constructor
+        public ItemAdapter(Context context, List<Item> itemList) {
+            mContext = context;
+            mItemList = itemList;
+        }
+
+        @Override
+        public ProductViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            //inflating and returning our view holder
+            LayoutInflater inflater = LayoutInflater.from(mContext);
+            View view = inflater.inflate(R.layout.item_ad, null);
+            return new ProductViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(ProductViewHolder holder, int position) {
+            //getting the product of the specified position
+            Item product = mItemList.get(position);
+
+            //binding the data with the viewholder views
+            holder.mTitleTextView.setText(product.getTitle());
+            holder.mDateTextView.setText(product.getDate());
+            holder.mDistanceTextView.setText(Double.toString(product.getDistance()));
+            holder.mPriceTextView.setText(Double.toString(product.getPrice()));
+
+            holder.mThumbnailImageView.setImageDrawable(mContext.getResources().getDrawable(product.getImage()));
+        }
+
+        @Override
+        public int getItemCount() {
+            return mItemList.size();
+        }
+
+        // TODO: Add currency view
+        class ProductViewHolder extends RecyclerView.ViewHolder {
+
+            TextView mTitleTextView, mDateTextView, mDistanceTextView, mPriceTextView;
+            ImageView mThumbnailImageView;
+
+            public ProductViewHolder(View itemView) {
+                super(itemView);
+
+                mTitleTextView = itemView.findViewById(R.id.item_ad_title);
+                mDateTextView = itemView.findViewById(R.id.item_ad_date);
+                mDistanceTextView = itemView.findViewById(R.id.item_ad_distance);
+                mPriceTextView = itemView.findViewById(R.id.item_ad_price);
+                mThumbnailImageView = itemView.findViewById(R.id.item_ad_thumbnail);
+            }
+        }
     }
 
     /**********************************************************

@@ -27,7 +27,8 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp">
 
-            <EditText android:id="@+id/login_email_edit_text"
+            <EditText
+                android:id="@+id/login_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textEmailAddress"
@@ -42,7 +43,8 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp">
 
-            <EditText android:id="@+id/login_password_edit_text"
+            <EditText
+                android:id="@+id/login_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
@@ -53,7 +55,7 @@
 
         <!-- Login Button -->
         <android.support.v7.widget.AppCompatButton
-            android:id="@+id/login_login_button"
+            android:id="@+id/login_login"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
@@ -64,7 +66,7 @@
 
         <!-- Register Label -->
         <TextView
-            android:id="@+id/login_register_text_view"
+            android:id="@+id/login_register"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"

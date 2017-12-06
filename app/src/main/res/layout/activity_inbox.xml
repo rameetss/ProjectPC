@@ -7,7 +7,7 @@
     tools:context="ca.projectpc.projectpc.ui.InboxActivity">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/inbox_recycler_view"
+        android:id="@+id/inbox_threads_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical" />

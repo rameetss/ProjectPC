@@ -48,14 +48,14 @@ public class RegisterActivity extends AppCompatActivity implements DialogInterfa
         setContentView(R.layout.activity_register);
 
         // Get controls
-        mUserNameEditText = (EditText) findViewById(R.id.register_user_name_edit_text);
-        mFirstNameEditText = (EditText) findViewById(R.id.register_first_name_edit_text);
-        mLastNameEditText = (EditText) findViewById(R.id.register_last_name_edit_text);
-        mEmailEditText = (EditText) findViewById(R.id.register_email_edit_text);
-        mPasswordEditText = (EditText) findViewById(R.id.register_password_edit_text);
-        mConfirmPasswordEditText = (EditText) findViewById(R.id.register_confirm_password_edit_text);
-        mRegisterButton = (Button) findViewById(R.id.register_register_button);
-        mLoginTextView = (TextView) findViewById(R.id.register_login_text_view);
+        mUserNameEditText = (EditText) findViewById(R.id.register_user_name);
+        mFirstNameEditText = (EditText) findViewById(R.id.register_first_name);
+        mLastNameEditText = (EditText) findViewById(R.id.register_last_name);
+        mEmailEditText = (EditText) findViewById(R.id.register_email);
+        mPasswordEditText = (EditText) findViewById(R.id.register_password);
+        mConfirmPasswordEditText = (EditText) findViewById(R.id.register_confirm_password);
+        mRegisterButton = (Button) findViewById(R.id.register_register);
+        mLoginTextView = (TextView) findViewById(R.id.register_login);
 
         mConfirmPasswordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override

@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!-- TODO: Do some redesigning and cleaning -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
@@ -12,13 +14,14 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/default_padding">
 
-        <ImageView
+        <!-- TODO: Not needed at the top -->
+        <!-- <ImageView
             android:src="@drawable/logo_long"
             android:contentDescription="@string/app_name"
             android:layout_width="wrap_content"
             android:layout_height="72dp"
             android:layout_marginBottom="24dp"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal" /> -->
 
         <!-- Title Label -->
         <android.support.design.widget.TextInputLayout
@@ -119,27 +122,27 @@
 
         <ImageView
             android:id="@+id/image_one"
-            android:src="@drawable/upload_file"
+            android:src="@drawable/ic_file_upload_primary_dark"
             android:layout_width="80dp"
             android:layout_height="100dp"
             />
             <ImageView
                 android:id="@+id/image_two"
-                android:src="@drawable/upload_file"
+                android:src="@drawable/ic_file_upload_primary_dark"
                 android:layout_toRightOf="@+id/image_one"
                 android:layout_width="80dp"
                 android:layout_height="100dp"
                 />
             <ImageView
                 android:id="@+id/image_three"
-                android:src="@drawable/upload_file"
+                android:src="@drawable/ic_file_upload_primary_dark"
                 android:layout_toRightOf="@+id/image_two"
                 android:layout_width="80dp"
                 android:layout_height="100dp"
                 />
             <ImageView
                 android:id="@+id/image_four"
-                android:src="@drawable/upload_file"
+                android:src="@drawable/ic_file_upload_primary_dark"
                 android:layout_toRightOf="@+id/image_three"
                 android:layout_width="80dp"
                 android:layout_height="100dp"
