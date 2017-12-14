@@ -29,6 +29,13 @@
     <string name="category_case">Case</string>
     <string name="category_misc">Miscellaneous</string>
 
+    <!-- Currencies -->
+    <string-array name="currencies">
+        <item>CAD</item>
+        <item>USD</item>
+        <item>EUR</item>
+    </string-array>
+
     <!-- Startup activity -->
     <string name="prompt_loading">Loading…</string>
 
@@ -69,12 +76,45 @@
     <!-- Inbox activity -->
     <string name="title_activity_inbox">Inbox</string>
 
+    <!-- Edit/Post Ad activity -->
+    <string name="title_activity_edit_ad">Edit Ad</string>
+    <string name="title_activity_post_ad">Post Ad</string>
+    <string name="title_activity_post_in">Posting in %s</string>
+    <string name="action_edit_ad">Save Changes</string>
+    <string name="action_post_ad">Post Ad</string>
+    <string name="action_set_primary">Set as thumbnail</string>
+    <string name="action_remove">Remove</string>
+    <string name="prompt_image_options">Image Options</string>
+    <string name="prompt_select_image">Select an image</string>
+    <string name="prompt_title">Title</string>
+    <string name="prompt_description">Description</string>
+    <string name="prompt_price">Price</string>
+    <string name="prompt_location">Location</string> <!-- TODO: Get via GPS, then geocode using https://maps.google.com/maps/api/geocode/json?address=40.72,-73.96-->
+    <string name="prompt_enter_tags">Enter tags</string>
+    <string name="prompt_discard_post">Are you sure you want to discard this post?</string>
+    <string name="prompt_discard_post_changes">Are you sure you want to discard the changes?</string>
+    <string name="prompt_are_you_sure_post">Are you sure you want to post this ad?</string>
+    <string name="error_invalid_title">Invalid title</string>
+    <string name="error_invalid_description">Invalid description</string>
+    <string name="error_invalid_price">Invalid price</string>
+    <string name="error_invalid_location">Invalid location</string>
+    <string name="error_unable_open_image">Unable to open image. Check permissions.</string>
+    <string name="title_progress_posting">Posting…</string>
+    <string name="prompt_ad_posted">Your ad has been posted.</string>
+
     <!-- Message activity -->
     <string name="title_activity_message">Message</string>
     <string name="prompt_enter_message">Enter message</string>
 
+    <!-- Alert -->
+    <string name="title_alert_cancel">Cancel?</string>
+    <string name="title_alert_discard">Discard?</string>
+    <string name="title_alert_are_you_sure">Are you sure?</string>
+
     <!-- Service -->
     <string name="service_internal_error">Internal error</string>
+    <string name="service_unauthorized">Unauthorized</string>
+    <string name="service_image_limit">Image limit reached</string>
     <string name="service_unable_to_process_request">Unable to process request</string>
 
 </resources>

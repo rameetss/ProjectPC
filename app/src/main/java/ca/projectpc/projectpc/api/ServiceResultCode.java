@@ -3,6 +3,7 @@ package ca.projectpc.projectpc.api;
 public class ServiceResultCode {
     public static final int Ok = 1000;
     public static final int InternalError = 1001;
+    public static final int Unauthorized = 1002;
 
     public static final int InvalidUserId = 1100;
     public static final int InvalidCredentials = 1101;

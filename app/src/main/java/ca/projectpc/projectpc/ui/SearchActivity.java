@@ -3,7 +3,9 @@ package ca.projectpc.projectpc.ui;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.provider.Telephony;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -13,17 +15,22 @@ import ca.projectpc.projectpc.R;
 import ca.projectpc.projectpc.api.IServiceCallback;
 import ca.projectpc.projectpc.api.Service;
 import ca.projectpc.projectpc.api.ServiceResult;
-import ca.projectpc.projectpc.api.services.AuthService;
-import ca.projectpc.projectpc.api.services.SystemService;
+import ca.projectpc.projectpc.api.service.AuthService;
 
-public class SearchActivity extends BaseActivity {
+public class SearchActivity extends BaseActivity
+        implements SwipeRefreshLayout.OnRefreshListener {
     private int mNavigationId;
     private int mMenuId;
     private String mCategory;
 
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+    RecyclerView mRecyclerView;
+    LinearLayoutManager mLinearLayoutManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_search);
 
         // Get passed information
         Intent callingIntent = getIntent();
@@ -37,11 +44,13 @@ public class SearchActivity extends BaseActivity {
         // Set toolbar title
         if (categoryId == 0) {
             categoryId = R.string.app_name;
+        } else {
+            // Show floating action button (to create new post)
+            showFloatingActionButton();
         }
-        setTitle(getString(categoryId));
 
-        // Show floating action button (to create new post)
-        showFloatingActionButton();
+        // Set title
+        setTitle(getString(categoryId));
 
         try {
             // Get auth service
@@ -59,15 +68,30 @@ public class SearchActivity extends BaseActivity {
             ex.printStackTrace();
         }
 
-        // Set content view
-        setContentView(R.layout.activity_search);
+        // Setup swipe refresh layout
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.search_swipe_refresh);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setColorScheme(
+                R.color.colorAccent,
+                R.color.colorPrimary
+        );
+
+        // Create linear layout manager for recycler view
+        mLinearLayoutManager = new LinearLayoutManager(this);
+
+        // Find recycler view
+        mRecyclerView = (RecyclerView) findViewById(R.id.search_ads_recycler_view);
+        mRecyclerView.setLayoutManager(mLinearLayoutManager);
 
         // TODO: Fetch data from server depending on the category (mCategory)
+        // ...
     }
 
     @Override
     public void onClickFloatingActionButton(View view) {
-        // TODO: Go to create post activity (if in category, pre-fill edit text in create post activity)
+        Intent intent = new Intent(this, PostAdActivity.class);
+        intent.putExtra("category", mCategory);
+        startActivity(intent);
     }
 
     @Override
@@ -87,6 +111,15 @@ public class SearchActivity extends BaseActivity {
         // This is for menu options
 
         return true;
+    }
+
+    @Override
+    public void onRefresh() {
+        // TODO: Refresh
+
+        // Set as complete, for now
+        mSwipeRefreshLayout.setRefreshing(true);
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     private int navIdToCategoryStringId(int id) {

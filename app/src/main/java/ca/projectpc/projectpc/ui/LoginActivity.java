@@ -22,7 +22,7 @@ import ca.projectpc.projectpc.api.Service;
 import ca.projectpc.projectpc.api.ServiceResult;
 import ca.projectpc.projectpc.api.ServiceResultCode;
 import ca.projectpc.projectpc.api.ServiceTask;
-import ca.projectpc.projectpc.api.services.AuthService;
+import ca.projectpc.projectpc.api.service.AuthService;
 
 public class LoginActivity extends AppCompatActivity implements Dialog.OnCancelListener {
     private EditText mEmailEditText;
@@ -38,9 +38,9 @@ public class LoginActivity extends AppCompatActivity implements Dialog.OnCancelL
         setContentView(R.layout.activity_login);
 
         // Get controls
-        mEmailEditText = (EditText) findViewById(R.id.login_email_edit_text);
-        mPasswordEditText = (EditText) findViewById(R.id.login_password_edit_text);
-        mLoginButton = (Button) findViewById(R.id.login_login_button);
+        mEmailEditText = (EditText) findViewById(R.id.login_email);
+        mPasswordEditText = (EditText) findViewById(R.id.login_password);
+        mLoginButton = (Button) findViewById(R.id.login_login);
 
         mPasswordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -110,6 +110,10 @@ public class LoginActivity extends AppCompatActivity implements Dialog.OnCancelL
                     dialog.dismiss();
                     mLoginTask = null;
 
+                    if (result.isCancelled()) {
+                        return;
+                    }
+
                     if (!result.hasError()) {
                         // Check if we logged in successfully
                         if (result.getCode() == ServiceResultCode.Ok) {
@@ -148,7 +152,7 @@ public class LoginActivity extends AppCompatActivity implements Dialog.OnCancelL
 
     @Override
     public void onCancel(DialogInterface dialog) {
-        if (mLoginTask != null) {
+        if (mLoginTask != null && !mLoginTask.isCancelled()) {
             mLoginTask.cancel();
         }
     }
