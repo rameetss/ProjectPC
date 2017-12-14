@@ -29,6 +29,13 @@
     <string name="category_case">Case</string>
     <string name="category_misc">Miscellaneous</string>
 
+    <!-- Currencies -->
+    <string-array name="currencies">
+        <item>CAD</item>
+        <item>USD</item>
+        <item>EUR</item>
+    </string-array>
+
     <!-- Startup activity -->
     <string name="prompt_loading">Loading…</string>
 
@@ -69,31 +76,27 @@
     <!-- Inbox activity -->
     <string name="title_activity_inbox">Inbox</string>
 
-    <!-- Post Ad activity -->
-    <string name="post_button">Post Ad</string>
-    <string name="post_title">Title</string>
-    <string name="post_description">Description</string>
-    <string name="post_tags">Tags (seperate with commas)</string>
-    <string name="post_price">Price</string>
-    <string name="post_location">Location</string>
-    <string name="upload_image">Upload Image(s)</string>
-
-    <!---spinner sstuff -->
-    <string-array name="spinner_currencies">
-        <item>CAD</item>
-        <item>USD</item>
-        <item>EUR</item>
-    </string-array>
-
+    <!-- Edit/Post Ad activity -->
+    <string name="title_activity_edit_ad">Edit Ad</string>
+    <string name="title_activity_post_ad">Post Ad</string>
+    <string name="action_edit_ad">Save Changes</string>
+    <string name="action_post_ad">Post Ad</string>
+    <string name="prompt_title">Title</string>
+    <string name="prompt_description">Description</string>
+    <string name="prompt_price">Price</string>
+    <string name="prompt_location">Location</string> <!-- TODO: Get via GPS, then geocode using https://maps.google.com/maps/api/geocode/json?address=40.72,-73.96-->
+    <string name="prompt_discard_post">Are you sure you want to discard this post?</string>
+    <string name="prompt_discard_post_changes">Are you sure you want to discard the changes?</string>
 
     <!-- Message activity -->
     <string name="title_activity_message">Message</string>
     <string name="prompt_enter_message">Enter message</string>
 
+    <string name="title_alert_cancel">Cancel?</string>
+    <string name="title_alert_discard">Discard?</string>
+
     <!-- Service -->
     <string name="service_internal_error">Internal error</string>
     <string name="service_unable_to_process_request">Unable to process request</string>
-    <string name="title_activity_post_ad">PostAdActivity</string>
-    <string name="title_activity_adapter">Adapter</string>
 
 </resources>

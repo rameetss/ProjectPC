@@ -14,7 +14,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.EditText;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -42,7 +41,7 @@ public abstract class BaseActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 onClickFloatingActionButton(view);
-                Intent intent = new Intent(BaseActivity.this, PostAdActivity.class);
+                Intent intent = new Intent(BaseActivity.this, EditAdActivity.class);
                 startActivity(intent);
             }
         });
@@ -79,8 +78,6 @@ public abstract class BaseActivity extends AppCompatActivity
         // Only trigger event if the ID is different than the current one
         if (id != getNavigationId()) {
             onNavigationItemSelected(id);
-            Intent intent = new Intent(BaseActivity.this, SearchActivity.class);
-            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

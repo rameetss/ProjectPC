@@ -1,6 +1,7 @@
 package ca.projectpc.projectpc.ui;
 
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -18,8 +19,9 @@ import ca.projectpc.projectpc.R;
 import ca.projectpc.projectpc.api.IServiceCallback;
 import ca.projectpc.projectpc.api.Service;
 import ca.projectpc.projectpc.api.ServiceResult;
-import ca.projectpc.projectpc.api.services.MessageService;
+import ca.projectpc.projectpc.api.service.MessageService;
 
+// NOTE: This might be removed in favour of emailing.
 public class InboxActivity extends AppCompatActivity
         implements SwipeRefreshLayout.OnRefreshListener {
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -31,7 +33,10 @@ public class InboxActivity extends AppCompatActivity
         setContentView(R.layout.activity_inbox);
 
         // Enable back button
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         // Setup swipe refresh layout
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.inbox_swipe_refresh);
@@ -41,14 +46,11 @@ public class InboxActivity extends AppCompatActivity
                 R.color.colorPrimary
         );
 
-        // TODO: Fix this activity,
-        // it won't open (It has to do with the recycler view in the other activity)
-
         // Setup recycler view
-        //mRecyclerView = (RecyclerView) findViewById(R.id.inbox_threads_recycler_view);
+        mRecyclerView = (RecyclerView) findViewById(R.id.inbox_threads_recycler_view);
 
         // Refresh messages
-        //refresh();
+        refresh();
     }
 
     @Override

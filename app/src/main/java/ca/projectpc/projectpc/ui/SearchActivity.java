@@ -1,39 +1,31 @@
 package ca.projectpc.projectpc.ui;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.provider.Telephony;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.MenuItem;
-import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import ca.projectpc.projectpc.R;
 import ca.projectpc.projectpc.api.IServiceCallback;
 import ca.projectpc.projectpc.api.Service;
 import ca.projectpc.projectpc.api.ServiceResult;
-import ca.projectpc.projectpc.api.services.AuthService;
-import ca.projectpc.projectpc.api.services.SystemService;
+import ca.projectpc.projectpc.api.service.AuthService;
 
-public class SearchActivity extends BaseActivity {
+public class SearchActivity extends BaseActivity
+        implements SwipeRefreshLayout.OnRefreshListener {
     private int mNavigationId;
     private int mMenuId;
     private String mCategory;
 
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     RecyclerView mRecyclerView;
-
-    // TODO: This is temporary, we're going to fetch this data every time refresh is called
-    List<Item> mItemList;
+    LinearLayoutManager mLinearLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,73 +66,23 @@ public class SearchActivity extends BaseActivity {
             ex.printStackTrace();
         }
 
-        // Set content view
-        setContentView(R.layout.activity_search);
+        // Setup swipe refresh layout
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.search_swipe_refresh);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setColorScheme(
+                R.color.colorAccent,
+                R.color.colorPrimary
+        );
 
-        // TODO: Fetch data from server depending on the category (mCategory)
-        // TODO: The following code is temporary
+        // Create linear layout manager for recycler view
+        mLinearLayoutManager = new LinearLayoutManager(this);
+
         // Find recycler view
         mRecyclerView = (RecyclerView) findViewById(R.id.search_ads_recycler_view);
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setLayoutManager(mLinearLayoutManager);
 
-        //initializing the itemlist
-        mItemList = new ArrayList<>();
-
-        //adding some items to our list
-        mItemList.add(new Item(
-                1,
-                "Asus Gaming Tower",
-                "Feb 3",
-                2.7,
-                250,
-                R.drawable.computer_case));
-
-        mItemList.add(new Item(
-                1,
-                "500W Power Supply",
-                "May 8",
-                5,
-                65,
-                R.drawable.power_supply));
-
-        mItemList.add(new Item(
-                1,
-                "8GB Kingston RAM",
-                "Nov 9",
-                4,
-                200,
-                R.drawable.ram));
-
-        mItemList.add(new Item(
-                1,
-                "Asus Gaming Tower",
-                "Feb 3",
-                2.7,
-                250,
-                R.drawable.computer_case));
-
-        mItemList.add(new Item(
-                1,
-                "500W Power Supply",
-                "May 8",
-                5,
-                65,
-                R.drawable.power_supply));
-
-        mItemList.add(new Item(
-                1,
-                "8GB Kingston RAM",
-                "Nov 9",
-                4,
-                200,
-                R.drawable.ram));
-
-        // Create recycler view adapter
-        ItemAdapter adapter = new ItemAdapter(this, mItemList);
-
-        //setting adapter to recycler view
-        mRecyclerView.setAdapter(adapter);
+        // TODO: Fetch data from server depending on the category (mCategory)
+        // ...
     }
 
     @Override
@@ -165,6 +107,15 @@ public class SearchActivity extends BaseActivity {
         // This is for menu options
 
         return true;
+    }
+
+    @Override
+    public void onRefresh() {
+        // TODO: Refresh
+
+        // Set as complete, for now
+        mSwipeRefreshLayout.setRefreshing(true);
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     private int navIdToCategoryStringId(int id) {
@@ -208,104 +159,6 @@ public class SearchActivity extends BaseActivity {
                 break;
         }
         return strId;
-    }
-
-    public class Item {
-        private int mId;
-        private String mTitle;
-        private String mDate;
-        private double mDistance;
-        private double mPrice;
-        private int mImage; // TODO: Download (not gonna be a int when downloaded)
-
-        public Item(int id, String title, String date, double distance, double price, int image) {
-            mId = id;
-            mTitle = title;
-            mDate = date;
-            mDistance = distance;
-            mPrice = price;
-            mImage = image;
-        }
-
-        public int getId() {
-            return mId;
-        }
-
-        public String getTitle() {
-            return mTitle;
-        }
-
-        public String getDate() {
-            return mDate;
-        }
-
-        public double getDistance() {
-            return mDistance;
-        }
-
-        public double getPrice() {
-            return mPrice;
-        }
-
-        public int getImage() {
-            return mImage;
-        }
-    }
-
-    // TODO: Clean this up
-    public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ProductViewHolder> {
-        private Context mContext;
-        private List<Item> mItemList;
-
-        //getting the context and product list with constructor
-        public ItemAdapter(Context context, List<Item> itemList) {
-            mContext = context;
-            mItemList = itemList;
-        }
-
-        @Override
-        public ProductViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            //inflating and returning our view holder
-            LayoutInflater inflater = LayoutInflater.from(mContext);
-            View view = inflater.inflate(R.layout.item_ad, null);
-            return new ProductViewHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(ProductViewHolder holder, int position) {
-            //getting the product of the specified position
-            Item product = mItemList.get(position);
-
-            //binding the data with the viewholder views
-            holder.mTitleTextView.setText(product.getTitle());
-            holder.mDateTextView.setText(product.getDate());
-            holder.mDistanceTextView.setText(Double.toString(product.getDistance()));
-            holder.mPriceTextView.setText(Double.toString(product.getPrice()));
-
-            holder.mThumbnailImageView.setImageDrawable(mContext.getResources().getDrawable(product.getImage()));
-        }
-
-        @Override
-        public int getItemCount() {
-            return mItemList.size();
-        }
-
-        // TODO: Add currency view
-        class ProductViewHolder extends RecyclerView.ViewHolder {
-
-            TextView mTitleTextView, mDateTextView, mDistanceTextView, mPriceTextView;
-            ImageView mThumbnailImageView;
-
-            public ProductViewHolder(View itemView) {
-                super(itemView);
-
-                mTitleTextView = itemView.findViewById(R.id.item_ad_title);
-                mDateTextView = itemView.findViewById(R.id.item_ad_date);
-                mDistanceTextView = itemView.findViewById(R.id.item_ad_distance);
-                mPriceTextView = itemView.findViewById(R.id.item_ad_price);
-                mThumbnailImageView = itemView.findViewById(R.id.item_ad_thumbnail);
-            }
-        }
     }
 
     /**********************************************************

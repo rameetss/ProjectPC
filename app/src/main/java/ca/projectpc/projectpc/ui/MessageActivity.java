@@ -1,5 +1,6 @@
 package ca.projectpc.projectpc.ui;
 
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -12,8 +13,11 @@ public class MessageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_message);
 
         // Enable back button
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
-
+        // ...
     }
 }

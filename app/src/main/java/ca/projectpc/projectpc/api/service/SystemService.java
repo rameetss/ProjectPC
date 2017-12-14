@@ -1,4 +1,4 @@
-package ca.projectpc.projectpc.api.services;
+package ca.projectpc.projectpc.api.service;
 
 import ca.projectpc.projectpc.api.IServiceCallback;
 import ca.projectpc.projectpc.api.Service;
@@ -9,7 +9,7 @@ public class SystemService extends Service {
         public String version;
     }
 
-    public ServiceTask getVersion(final IServiceCallback<VersionResult> callback) throws Exception {
+    public ServiceTask getVersion(IServiceCallback<VersionResult> callback) throws Exception {
         return sendRequest("GET", "/system/version", VersionResult.class, null, callback);
     }
 }

@@ -1,10 +1,15 @@
-package ca.projectpc.projectpc.api.services;
+package ca.projectpc.projectpc.api.service;
+
+import android.support.annotation.Nullable;
 
 import java.util.List;
 
 import ca.projectpc.projectpc.api.IServiceCallback;
 import ca.projectpc.projectpc.api.Service;
 import ca.projectpc.projectpc.api.ServiceTask;
+import ca.projectpc.projectpc.api.service.result.ArrayResult;
+import ca.projectpc.projectpc.api.service.result.BasicIdResult;
+import ca.projectpc.projectpc.api.service.result.DataResult;
 
 public class PostService extends Service {
     private class CreatePostParameters {
@@ -14,11 +19,14 @@ public class PostService extends Service {
         Double price;
         String currency;
         String body;
+        String location;
+        Double latitude;
+        Double longitude;
     }
 
     private class UploadImageParameters {
         String postId;
-        boolean thumbnail;
+        Boolean thumbnail;
         String imageData;
     }
 
@@ -44,22 +52,62 @@ public class PostService extends Service {
         Double price;
         String currency;
         String body;
+        String location;
+        Double latitude;
+        Double longitude;
     }
 
     private class DownloadImageParameters {
         String imageId;
     }
 
-    public class BasicIdResult {
-        public String id;
-    }
-
     public class DownloadImageResult {
         public String imageData;
     }
 
+    private class GetAllPostsForCategoryParameters {
+        String category;
+        List<String> tags;
+    }
+
+    private class GetPostsForCategoryParameters {
+        String category;
+        List<String> tags;
+        Integer start;
+        Integer count;
+    }
+
+    public class PostStatus {
+        public static final int Unlisted = 0;
+        public static final int Listed = 1;
+        public static final int Deleted = 2;
+        public static final int Sold = 3;
+    }
+
+    public class Post extends DataResult {
+        public String authorId;
+        public Integer status;
+        public String title;
+        public String category;
+        public String[] tags;
+        public Double price;
+        public String currency;
+        public String[] imageIds;
+        public String thumbnailId;
+        public String thumbnailImageId;
+        public String body;
+        public String location;
+        public Double latitude;
+        public Double longitude;
+    }
+
+    public class GetPostsResult extends ArrayResult<Post> {
+        // No extra variables
+    }
+
     public ServiceTask createPost(String title, String category, List<String> tags, Double price,
-                                  String currency, String body,
+                                  String currency, String body, String location,
+                                  @Nullable Double latitude, @Nullable Double longitude,
                                   final IServiceCallback<BasicIdResult> callback)
             throws Exception {
         CreatePostParameters parameters = new CreatePostParameters();
@@ -69,6 +117,9 @@ public class PostService extends Service {
         parameters.price = price;
         parameters.currency = currency;
         parameters.body = body;
+        parameters.location = location;
+        parameters.latitude = latitude;
+        parameters.longitude = longitude;
 
         return sendRequest("POST", "/post/create", parameters, CreatePostParameters.class,
                 BasicIdResult.class, null, callback);
@@ -98,7 +149,7 @@ public class PostService extends Service {
     }
 
     public ServiceTask setThumbnailImage(String postId, String imageId,
-                                          final IServiceCallback<BasicIdResult> callback)
+                                         final IServiceCallback<BasicIdResult> callback)
             throws Exception {
         SetThumbnailImageParameters parameters = new SetThumbnailImageParameters();
         parameters.postId = postId;
@@ -109,7 +160,7 @@ public class PostService extends Service {
     }
 
     public ServiceTask setListed(String postId, String imageId,
-                                 final IServiceCallback<BasicIdResult> callback)
+                                 IServiceCallback<BasicIdResult> callback)
             throws Exception {
         SetListedParameters parameters = new SetListedParameters();
         parameters.postId = postId;
@@ -118,9 +169,12 @@ public class PostService extends Service {
                 SetListedParameters.class, BasicIdResult.class, null, callback);
     }
 
-    public ServiceTask updatePost(String postId, String title, String category, List<String> tags,
-                                  Double price, String currency, String body,
-                                  final IServiceCallback<BasicIdResult> callback)
+    public ServiceTask updatePost(String postId, @Nullable String title, @Nullable String category,
+                                  @Nullable List<String> tags, @Nullable Double price,
+                                  @Nullable String currency, @Nullable String body,
+                                  @Nullable String location, @Nullable Double latitude,
+                                  @Nullable Double longitude,
+                                  IServiceCallback<BasicIdResult> callback)
             throws Exception {
         UpdatePostParameters parameters = new UpdatePostParameters();
         parameters.postId = postId;
@@ -130,13 +184,16 @@ public class PostService extends Service {
         parameters.price = price;
         parameters.currency = currency;
         parameters.body = body;
+        parameters.location = location;
+        parameters.latitude = latitude;
+        parameters.longitude = longitude;
 
         return sendRequest("POST", "/post/update", parameters, UpdatePostParameters.class,
                 BasicIdResult.class, null, callback);
     }
 
     public ServiceTask downloadImage(String imageId,
-                                     final IServiceCallback<DownloadImageResult> callback)
+                                     IServiceCallback<DownloadImageResult> callback)
             throws Exception {
         DownloadImageParameters parameters = new DownloadImageParameters();
         parameters.imageId = imageId;
@@ -145,5 +202,34 @@ public class PostService extends Service {
                 DownloadImageResult.class, null, callback);
     }
 
-    // TODO: Get posts
+    public ServiceTask getAllPostsForCategory(String category, @Nullable List<String> tags,
+                                              IServiceCallback<GetPostsResult> callback)
+            throws Exception {
+        GetAllPostsForCategoryParameters parameters = new GetAllPostsForCategoryParameters();
+        parameters.category = category;
+        parameters.tags = tags;
+
+        return sendRequest("POST", "/post/getAllPostsForCategory", parameters,
+                GetAllPostsForCategoryParameters.class, GetPostsResult.class, null, callback);
+    }
+
+    public ServiceTask getPostsForCategory(String category, @Nullable List<String> tags,
+                                           int start, int count,
+                                           IServiceCallback<GetPostsResult> callback)
+            throws Exception {
+        GetPostsForCategoryParameters parameters = new GetPostsForCategoryParameters();
+        parameters.category = category;
+        parameters.tags = tags;
+        parameters.start = start;
+        parameters.count = count;
+
+        return sendRequest("POST", "/post/getPostsForCategory", parameters,
+                GetPostsForCategoryParameters.class, GetPostsResult.class, null, callback);
+    }
+
+    public ServiceTask getMyPosts(IServiceCallback<GetPostsResult> callback)
+            throws Exception {
+        return sendRequest("POST", "/post/getMyPosts", GetPostsResult.class, null,
+                callback);
+    }
 }

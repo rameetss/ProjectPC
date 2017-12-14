@@ -23,8 +23,8 @@
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp">
+            android:layout_marginTop="@dimen/input_layout_padding"
+            android:layout_marginBottom="@dimen/input_layout_padding">
 
             <EditText
                 android:id="@+id/register_user_name"
@@ -38,8 +38,8 @@
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp">
+            android:layout_marginTop="@dimen/input_layout_padding"
+            android:layout_marginBottom="@dimen/input_layout_padding">
 
             <EditText
                 android:id="@+id/register_first_name"
@@ -53,8 +53,8 @@
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp">
+            android:layout_marginTop="@dimen/input_layout_padding"
+            android:layout_marginBottom="@dimen/input_layout_padding">
 
             <EditText
                 android:id="@+id/register_last_name"
@@ -68,8 +68,8 @@
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp">
+            android:layout_marginTop="@dimen/input_layout_padding"
+            android:layout_marginBottom="@dimen/input_layout_padding">
 
             <EditText
                 android:id="@+id/register_email"
@@ -83,8 +83,8 @@
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp">
+            android:layout_marginTop="@dimen/input_layout_padding"
+            android:layout_marginBottom="@dimen/input_layout_padding">
 
             <EditText
                 android:id="@+id/register_password"
@@ -98,8 +98,8 @@
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp">
+            android:layout_marginTop="@dimen/input_layout_padding"
+            android:layout_marginBottom="@dimen/input_layout_padding">
 
             <EditText
                 android:id="@+id/register_confirm_password"
@@ -131,4 +131,5 @@
             android:onClick="onLogin"/>
 
     </LinearLayout>
+
 </ScrollView>

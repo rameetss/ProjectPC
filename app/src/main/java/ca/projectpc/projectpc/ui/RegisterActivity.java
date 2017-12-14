@@ -16,14 +16,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.Objects;
-
 import ca.projectpc.projectpc.R;
 import ca.projectpc.projectpc.api.IServiceCallback;
 import ca.projectpc.projectpc.api.Service;
 import ca.projectpc.projectpc.api.ServiceResult;
 import ca.projectpc.projectpc.api.ServiceResultCode;
-import ca.projectpc.projectpc.api.services.AuthService;
+import ca.projectpc.projectpc.api.service.AuthService;
 
 public class RegisterActivity extends AppCompatActivity implements DialogInterface.OnClickListener {
     public static final int MIN_USER_NAME_LENGTH = 6;

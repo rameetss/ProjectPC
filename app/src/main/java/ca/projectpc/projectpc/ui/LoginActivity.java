@@ -22,7 +22,7 @@ import ca.projectpc.projectpc.api.Service;
 import ca.projectpc.projectpc.api.ServiceResult;
 import ca.projectpc.projectpc.api.ServiceResultCode;
 import ca.projectpc.projectpc.api.ServiceTask;
-import ca.projectpc.projectpc.api.services.AuthService;
+import ca.projectpc.projectpc.api.service.AuthService;
 
 public class LoginActivity extends AppCompatActivity implements Dialog.OnCancelListener {
     private EditText mEmailEditText;
