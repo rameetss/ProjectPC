@@ -16,12 +16,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Objects;
+
 import ca.projectpc.projectpc.R;
 import ca.projectpc.projectpc.api.IServiceCallback;
 import ca.projectpc.projectpc.api.Service;
 import ca.projectpc.projectpc.api.ServiceResult;
 import ca.projectpc.projectpc.api.ServiceResultCode;
-import ca.projectpc.projectpc.api.service.AuthService;
+import ca.projectpc.projectpc.api.services.AuthService;
 
 public class RegisterActivity extends AppCompatActivity implements DialogInterface.OnClickListener {
     public static final int MIN_USER_NAME_LENGTH = 6;
@@ -46,14 +48,14 @@ public class RegisterActivity extends AppCompatActivity implements DialogInterfa
         setContentView(R.layout.activity_register);
 
         // Get controls
-        mUserNameEditText = (EditText) findViewById(R.id.register_user_name);
-        mFirstNameEditText = (EditText) findViewById(R.id.register_first_name);
-        mLastNameEditText = (EditText) findViewById(R.id.register_last_name);
-        mEmailEditText = (EditText) findViewById(R.id.register_email);
-        mPasswordEditText = (EditText) findViewById(R.id.register_password);
-        mConfirmPasswordEditText = (EditText) findViewById(R.id.register_confirm_password);
-        mRegisterButton = (Button) findViewById(R.id.register_register);
-        mLoginTextView = (TextView) findViewById(R.id.register_login);
+        mUserNameEditText = (EditText) findViewById(R.id.register_user_name_edit_text);
+        mFirstNameEditText = (EditText) findViewById(R.id.register_first_name_edit_text);
+        mLastNameEditText = (EditText) findViewById(R.id.register_last_name_edit_text);
+        mEmailEditText = (EditText) findViewById(R.id.register_email_edit_text);
+        mPasswordEditText = (EditText) findViewById(R.id.register_password_edit_text);
+        mConfirmPasswordEditText = (EditText) findViewById(R.id.register_confirm_password_edit_text);
+        mRegisterButton = (Button) findViewById(R.id.register_register_button);
+        mLoginTextView = (TextView) findViewById(R.id.register_login_text_view);
 
         mConfirmPasswordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override

@@ -12,17 +12,17 @@
         android:padding="@dimen/default_padding">
 
         <TextView
-            android:id="@+id/item_inbox_message"
+            android:id="@+id/item_inbox_message_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <TextView
-            android:id="@+id/item_inbox_sender"
+            android:id="@+id/item_inbox_sender_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <TextView
-            android:id="@+id/item_inbox_time_received"
+            android:id="@+id/item_inbox_time_received_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 

@@ -9,7 +9,7 @@ import ca.projectpc.projectpc.R;
 import ca.projectpc.projectpc.api.IServiceCallback;
 import ca.projectpc.projectpc.api.Service;
 import ca.projectpc.projectpc.api.ServiceResult;
-import ca.projectpc.projectpc.api.service.SystemService;
+import ca.projectpc.projectpc.api.services.SystemService;
 
 public class StartupActivity extends AppCompatActivity {
     public static final String API_ENDPOINT = "https://ppc.indigogames.ca/api/";
@@ -25,6 +25,7 @@ public class StartupActivity extends AppCompatActivity {
         Service.setTimeout(API_TIMEOUT);
 
         // TODO: Get required permissions (File reading permissions, GPS permissions)
+
 
         // Check system service
         try {

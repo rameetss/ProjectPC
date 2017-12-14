@@ -22,7 +22,7 @@ import ca.projectpc.projectpc.api.Service;
 import ca.projectpc.projectpc.api.ServiceResult;
 import ca.projectpc.projectpc.api.ServiceResultCode;
 import ca.projectpc.projectpc.api.ServiceTask;
-import ca.projectpc.projectpc.api.service.AuthService;
+import ca.projectpc.projectpc.api.services.AuthService;
 
 public class LoginActivity extends AppCompatActivity implements Dialog.OnCancelListener {
     private EditText mEmailEditText;
@@ -38,9 +38,9 @@ public class LoginActivity extends AppCompatActivity implements Dialog.OnCancelL
         setContentView(R.layout.activity_login);
 
         // Get controls
-        mEmailEditText = (EditText) findViewById(R.id.login_email);
-        mPasswordEditText = (EditText) findViewById(R.id.login_password);
-        mLoginButton = (Button) findViewById(R.id.login_login);
+        mEmailEditText = (EditText) findViewById(R.id.login_email_edit_text);
+        mPasswordEditText = (EditText) findViewById(R.id.login_password_edit_text);
+        mLoginButton = (Button) findViewById(R.id.login_login_button);
 
         mPasswordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override

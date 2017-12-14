@@ -1,4 +1,4 @@
-package ca.projectpc.projectpc.api.service;
+package ca.projectpc.projectpc.api.services;
 
 import ca.projectpc.projectpc.api.IServiceCallback;
 import ca.projectpc.projectpc.api.Service;
@@ -7,12 +7,6 @@ import ca.projectpc.projectpc.api.ServiceTask;
 import ca.projectpc.projectpc.utility.Hash;
 
 public class AuthService extends Service {
-    public class RoleType {
-        public static final int Admin = 0;
-        public static final int Moderator = 1;
-        public static final int User = 2;
-    }
-
     private class CreateAccountParameters {
         String email;
         String firstName;
@@ -46,12 +40,12 @@ public class AuthService extends Service {
     private SessionData mSessionData;
 
     public SessionData getSessionData() throws Exception {
-        return (SessionData)mSessionData.clone();
+        return (SessionData) mSessionData.clone();
     }
 
     public ServiceTask createAccount(String email, String firstName, String lastName,
                                      String userName, String password,
-                                     IServiceCallback<AuthResult> callback)
+                                     final IServiceCallback<AuthResult> callback)
             throws Exception {
         CreateAccountParameters parameters = new CreateAccountParameters();
         parameters.email = email;
@@ -76,7 +70,7 @@ public class AuthService extends Service {
     }
 
     public ServiceTask login(String email, String password,
-                             IServiceCallback<AuthResult> callback)
+                             final IServiceCallback<AuthResult> callback)
             throws Exception {
         LoginParameters parameters = new LoginParameters();
         parameters.email = email;
@@ -97,7 +91,7 @@ public class AuthService extends Service {
         );
     }
 
-    public ServiceTask logout(IServiceCallback<Void> callback) throws Exception {
+    public ServiceTask logout(final IServiceCallback<Void> callback) throws Exception {
         return sendRequest("DELETE", "/auth/delete", new IServiceCallback<Void>() {
             @Override
             public void onEnd(ServiceResult<Void> result) {

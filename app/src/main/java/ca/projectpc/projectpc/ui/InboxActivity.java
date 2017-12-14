@@ -1,7 +1,6 @@
 package ca.projectpc.projectpc.ui;
 
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -19,9 +18,8 @@ import ca.projectpc.projectpc.R;
 import ca.projectpc.projectpc.api.IServiceCallback;
 import ca.projectpc.projectpc.api.Service;
 import ca.projectpc.projectpc.api.ServiceResult;
-import ca.projectpc.projectpc.api.service.MessageService;
+import ca.projectpc.projectpc.api.services.MessageService;
 
-// NOTE: This might be removed in favour of emailing.
 public class InboxActivity extends AppCompatActivity
         implements SwipeRefreshLayout.OnRefreshListener {
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -33,10 +31,7 @@ public class InboxActivity extends AppCompatActivity
         setContentView(R.layout.activity_inbox);
 
         // Enable back button
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Setup swipe refresh layout
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.inbox_swipe_refresh);
@@ -47,7 +42,7 @@ public class InboxActivity extends AppCompatActivity
         );
 
         // Setup recycler view
-        mRecyclerView = (RecyclerView) findViewById(R.id.inbox_threads_recycler_view);
+        mRecyclerView = (RecyclerView) findViewById(R.id.inbox_recycler_view);
 
         // Refresh messages
         refresh();
@@ -115,10 +110,10 @@ public class InboxActivity extends AppCompatActivity
                 super(itemView);
 
                 mCardView = (CardView) itemView.findViewById(R.id.item_inbox_card_view);
-                mMessageText = (TextView) itemView.findViewById(R.id.item_inbox_message);
-                mMessageSender = (TextView) itemView.findViewById(R.id.item_inbox_sender);
+                mMessageText = (TextView) itemView.findViewById(R.id.item_inbox_message_text_view);
+                mMessageSender = (TextView) itemView.findViewById(R.id.item_inbox_sender_text_view);
                 mMessageTimeReceived =
-                        (TextView) itemView.findViewById(R.id.item_inbox_time_received);
+                        (TextView) itemView.findViewById(R.id.item_inbox_time_received_text_view);
             }
         }
 
