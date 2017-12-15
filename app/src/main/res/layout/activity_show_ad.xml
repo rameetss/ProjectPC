@@ -14,7 +14,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical"
             android:padding="@dimen/default_padding">
 
@@ -63,7 +63,7 @@
 
                 <TextView
                     android:id="@+id/show_ad_price"
-                    android:layout_width="600dp"
+                    android:layout_width="580dp"
                     android:layout_height="24dp"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="0.5"
@@ -109,9 +109,9 @@
             <TextView
                 android:id="@+id/show_ad_description"
                 android:layout_width="match_parent"
-                android:layout_height="169dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="Nice computer case, hardly used. Had it for 25 years and decided to sell it cause I need money to fund my new app HeartAttak. 2000 obo. Nice computer case, hardly used. Had it for 25 years and decided to sell it cause I need money to fund my new app HeartAttak. 2000 obo. Nice computer case, hardly used. Had it for 25 years and decided to sell it cause I need money to fund my new app HeartAttak. 2000 obo. Nice computer case, hardly used. Had it for 25 years and decided to sell it cause I need money to fund my new app HeartAttak. 2000 obo." />
+                android:text="@string/show_ad_description" />
 
         </LinearLayout>
 
