@@ -67,6 +67,7 @@ public class PostAdActivity extends AppCompatActivity {
     private File[] mImages;
     private File mThumbnailImage;
     private List<String> mTags;
+    private Location mLocation;
 
     /**
      *
@@ -199,7 +200,11 @@ public class PostAdActivity extends AppCompatActivity {
         // Set title
         setTitle(String.format(getString(R.string.title_activity_post_in), mCategory));
 
-        mLocationEditText.setText(getLocationString());
+        // Set location string
+        mLocation = getLocation();
+        if (mLocation != null) {
+            mLocationEditText.setText(getLocationString(mLocation));
+        }
     }
 
     /**
@@ -219,7 +224,10 @@ public class PostAdActivity extends AppCompatActivity {
                     ImageView imageView = mImageViews.get(imageIndex);
 
                     // Store image for later uploading
-                    mImages[imageIndex] = file;
+                    mImages[imageIndex] = file; // TODO: Debug the file location
+
+                    // TODO: We seem to be storing an old image file, perhaps the image
+                    // is deleted after this method's end?
 
                     // Use glide to open into the image view
                     Glide.with(getBaseContext()).load(file).into(imageView);
@@ -313,22 +321,18 @@ public class PostAdActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (i == AlertDialog.BUTTON_POSITIVE) {
-                    // Show progress dialog
-                    mProgressDialog = ProgressDialog.show(PostAdActivity.this,
-                            getString(R.string.title_progress_posting),
-                            getString(R.string.prompt_wait), true, true,
-                            new DialogInterface.OnCancelListener() {
-                                @Override
-                                public void onCancel(DialogInterface dialogInterface) {
-                                    if (mTask != null && !mTask.isCancelled()) {
-                                        mTask.cancel();
-                                    }
-                                }
-                            });
+                    // Get location coordinates (used later for measuring distance between user
+                    // and ad poster
+                    Double latitude = null;
+                    Double longitude = null;
+                    if (mLocation != null) {
+                        latitude = mLocation.getLatitude();
+                        longitude = mLocation.getLongitude();
+                    }
 
                     // Upload ad
                     uploadAd(title, mCategory, mTags, Double.parseDouble(price), currency,
-                            description, location, null, null);
+                            description, location, latitude, longitude);
                 }
             }
         });
@@ -354,12 +358,25 @@ public class PostAdActivity extends AppCompatActivity {
     private void uploadAd(String title, String category, List<String> tags, Double price,
                           String currency, String description, String location,
                           @Nullable Double latitude, @Nullable Double longitude) {
+        // Show progress dialog
+        mProgressDialog = ProgressDialog.show(this,
+                getString(R.string.title_progress_posting),
+                getString(R.string.prompt_wait), true, true,
+                new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialogInterface) {
+                        if (mTask != null && !mTask.isCancelled()) {
+                            mTask.cancel();
+                        }
+                    }
+                });
+
         // Upload
         try {
             final Context context = this;
             final PostService service = Service.get(PostService.class);
             mTask = service.createPost(title, mCategory, mTags, price, currency, description,
-                    location, null, null, new IServiceCallback<BasicIdResult>() {
+                    location, latitude, longitude, new IServiceCallback<BasicIdResult>() {
                         @Override
                         public void onEnd(ServiceResult<BasicIdResult> result) {
                             mTask = null;
@@ -367,8 +384,7 @@ public class PostAdActivity extends AppCompatActivity {
                                 return;
                             }
 
-                            if (!result.hasError() && result.hasData()
-                                    && result.getCode() == ServiceResultCode.Ok) {
+                            if (!result.hasError()) {
                                 String postId = result.getData().id;
 
                                 File lastImage = null;
@@ -493,7 +509,7 @@ public class PostAdActivity extends AppCompatActivity {
         try {
             final Context context = this;
             final PostService service = Service.get(PostService.class);
-            mTask = service.setListed(postId, new IServiceCallback<BasicIdResult>() {
+            mTask = service.setListed(postId, true, new IServiceCallback<BasicIdResult>() {
                 @Override
                 public void onEnd(ServiceResult<BasicIdResult> result) {
                     mTask = null;
@@ -506,11 +522,15 @@ public class PostAdActivity extends AppCompatActivity {
                         mProgressDialog = null;
                     }
 
-                    if (!result.hasError() && result.hasData()
-                            && result.getCode() == ServiceResultCode.Ok) {
+                    if (!result.hasError()) {
                         Toast.makeText(context, R.string.prompt_ad_posted,
                                 Toast.LENGTH_LONG).show();
                         finish();
+                    } else {
+                        result.getException().printStackTrace();
+                        Toast.makeText(context,
+                                getString(R.string.service_unable_to_process_request),
+                                Toast.LENGTH_LONG).show();
                     }
                 }
             });
@@ -526,44 +546,39 @@ public class PostAdActivity extends AppCompatActivity {
         }
     }
 
-    private boolean checkLocationPermission() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return false;
+    private Location getLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            return null;
         }
-        return true;
+
+        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        if (locationManager != null) {
+            return locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+        }
+
+        return null;
     }
 
-    private String getLocationString() {
-        if (checkLocationPermission()) {
-            LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-            if (locationManager != null) {
-                Location lastKnownLocationPassive = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
-                return getLocation(lastKnownLocationPassive);
-            } else {
-                return "";
-            }
-        } else {
-            return "";
-        }
-    }
-
-    private String getLocation(Location location) {
-        Geocoder geocoder = new Geocoder(getBaseContext(), Locale.getDefault());
-
+    private String getLocationString(Location location) {
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
         try {
             List<Address> addresses = geocoder.getFromLocation(location.getLatitude(),
                     location.getLongitude(), 1);
-            return addresses.get(0).getLocality() + ", " + addresses.get(0).getCountryName();
-        } catch (IOException e) {
-            e.printStackTrace();
+
+            // Get first address information
+            Address address = addresses.get(0);
+
+            return String.format("%s, %s",
+                    address.getLocality(),
+                    address.getCountryName()
+            );
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
+
         return "";
     }
 }

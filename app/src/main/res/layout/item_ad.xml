@@ -22,6 +22,7 @@
             android:padding="4dp" />
 
         <ImageView
+            android:id="@+id/item_ad_message"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_alignBottom="@+id/item_ad_thumbnail"
@@ -36,7 +37,6 @@
             android:layout_marginStart="11dp"
             android:layout_toEndOf="@+id/item_ad_thumbnail"
             android:gravity="start"
-            android:text="Kingston DDR4 2400 8GB"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
 
         <TextView
@@ -45,7 +45,6 @@
             android:layout_height="wrap_content"
             android:layout_alignStart="@+id/item_ad_distance"
             android:layout_below="@+id/item_ad_distance"
-            android:text="Nov 22"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
 
         <TextView
@@ -54,7 +53,6 @@
             android:layout_height="wrap_content"
             android:layout_alignStart="@+id/item_ad_title"
             android:layout_below="@+id/item_ad_title"
-            android:text="7 KM"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
 
         <TextView
@@ -65,7 +63,6 @@
             android:layout_alignBottom="@+id/item_ad_currency"
             android:layout_marginStart="11dp"
             android:layout_toEndOf="@+id/item_ad_currency"
-            android:text="500"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
             android:textColor="#000000" />
 
@@ -75,7 +72,6 @@
             android:layout_height="wrap_content"
             android:layout_alignStart="@+id/item_ad_date"
             android:layout_below="@+id/item_ad_date"
-            android:text="CAD"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
             android:textColor="#000000" />
 

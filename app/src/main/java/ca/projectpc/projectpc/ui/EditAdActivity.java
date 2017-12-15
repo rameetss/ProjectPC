@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -18,9 +19,11 @@ import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.pchmn.materialchips.ChipsInput;
 import com.pchmn.materialchips.model.ChipInterface;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +33,10 @@ import ca.projectpc.projectpc.api.Service;
 import ca.projectpc.projectpc.api.ServiceResult;
 import ca.projectpc.projectpc.api.ServiceTask;
 import ca.projectpc.projectpc.api.service.PostService;
+
+// TODO: Do main stuff
+
+// TODO: Rewrite from scratch
 
 // TODO/NOTE: THIS IS ALL EXPERIMENTAL, DO NOT TOUCH.
 
@@ -54,9 +61,12 @@ public class EditAdActivity extends AppCompatActivity {
     private ProgressDialog mProgressDialog;
     private ServiceTask mTask;
 
-    private String mAdId;
+    private String mPostId;
     private List<ImageView> mImageViews;
     private Bitmap[] mImages;
+    private File[] mChangedImages;
+    private File mChangedThumbnailImage;
+    private List<String> mTags;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,12 +94,15 @@ public class EditAdActivity extends AppCompatActivity {
         mTagsChipsInput.addChipsListener(new ChipsInput.ChipsListener() {
             @Override
             public void onChipAdded(final ChipInterface chipInterface, int i) {
-                // ...
+                mTags.add(chipInterface.getLabel());
             }
 
             @Override
             public void onChipRemoved(ChipInterface chipInterface, int i) {
-                // ...
+                String label = chipInterface.getLabel();
+                if (mTags.contains(label)) {
+                    mTags.remove(label);
+                }
             }
 
             @Override
@@ -134,92 +147,10 @@ public class EditAdActivity extends AppCompatActivity {
             mImageViews.add(imageView);
         }
 
-        // Check if ad is being edited or created
         Intent intent = getIntent();
-        mAdId = intent.getStringExtra("id");
+        mPostId = intent.getStringExtra("postId");
 
-        if (mAdId != null) {
-            // Download ad information
-            try {
-                final Context context = this;
-                PostService service = Service.get(PostService.class);
-                mTask = service.getPost(mAdId,
-                        new IServiceCallback<PostService.GetPostResult>() {
-                            @Override
-                            public void onEnd(ServiceResult<PostService.GetPostResult> result) {
-                                if (mProgressDialog != null) {
-                                    mProgressDialog.dismiss();
-                                }
-
-                                if (result.isCancelled()) {
-                                    return;
-                                }
-
-                                if (!result.hasError()) {
-                                    // Get data
-                                    PostService.GetPostResult data = result.getData();
-
-                                    // Get currency
-                                    SpinnerAdapter currencyAdapter = mCurrenciesSpinner.getAdapter();
-                                    int currencyIndex = 0;
-                                    for (; currencyIndex < currencyAdapter.getCount();
-                                         currencyIndex++) {
-                                        String currency = (String) currencyAdapter.getItem(currencyIndex);
-                                        if (currency.equals(data.currency)) {
-                                            break;
-                                        }
-                                    }
-
-                                    // Update UI
-                                    mTitleEditText.setText(data.title);
-                                    mDescriptionEditText.setText(data.body);
-                                    mCurrenciesSpinner.setSelection(currencyIndex);
-                                    mPriceEditText.setText(data.price.toString());
-                                    if (data.location != null) {
-                                        mLocationEditText.setText(data.location);
-                                    }
-
-                                    // Add tags
-                                    for (String tag : data.tags) {
-                                        mTagsChipsInput.addChip(tag, "");
-                                    }
-
-                                    // Download images
-                                    for (String imageId : data.imageIds) {
-
-                                    }
-                                } else {
-                                    // The API failed to complete the request and returned an
-                                    // exception
-                                    result.getException().printStackTrace();
-                                    Toast.makeText(
-                                            context,
-                                            R.string.service_unable_to_process_request,
-                                            Toast.LENGTH_LONG
-                                    ).show();
-                                }
-                            }
-                        });
-
-                // Show progress dialog
-                mProgressDialog = ProgressDialog.show(this,
-                        getString(R.string.title_activity_edit_ad),
-                        getString(R.string.prompt_wait), true, true,
-                        new DialogInterface.OnCancelListener() {
-                            @Override
-                            public void onCancel(DialogInterface dialogInterface) {
-                                if (mTask != null && !mTask.isCancelled()) {
-                                    mTask.cancel();
-                                }
-                            }
-                        }
-                );
-            } catch (Exception ex) {
-                // Unable to get service (internal error)
-                ex.printStackTrace();
-                Toast.makeText(this, R.string.service_internal_error, Toast.LENGTH_LONG).show();
-            }
-        }
+        downloadAd(mPostId);
     }
 
     @Override
@@ -241,10 +172,7 @@ public class EditAdActivity extends AppCompatActivity {
     public void onBackPressed() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.title_alert_discard);
-        builder.setMessage(mAdId == null
-                ? R.string.prompt_discard_post
-                : R.string.prompt_discard_post_changes
-        );
+        builder.setMessage(R.string.prompt_discard_post_changes);
         builder.setPositiveButton(R.string.action_yes, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -257,8 +185,138 @@ public class EditAdActivity extends AppCompatActivity {
         builder.show();
     }
 
+    private void downloadAd(String postId) {
+        // Show progress dialog
+        mProgressDialog = ProgressDialog.show(this,
+                getString(R.string.title_progress_posting),
+                getString(R.string.prompt_wait), true, true,
+                new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialogInterface) {
+                        if (mTask != null && !mTask.isCancelled()) {
+                            mTask.cancel();
+                        }
+                    }
+                });
+
+        // Download ad information
+        try {
+            final Context context = this;
+            PostService service = Service.get(PostService.class);
+            mTask = service.getPost(mPostId,
+                    new IServiceCallback<PostService.GetPostResult>() {
+                        @Override
+                        public void onEnd(ServiceResult<PostService.GetPostResult> result) {
+                            if (mProgressDialog != null) {
+                                mProgressDialog.dismiss();
+                            }
+
+                            if (result.isCancelled()) {
+                                return;
+                            }
+
+                            if (!result.hasError()) {
+                                // Get data
+                                PostService.GetPostResult data = result.getData();
+
+                                // Get currency
+                                SpinnerAdapter currencyAdapter = mCurrenciesSpinner.getAdapter();
+                                int currencyIndex = 0;
+                                for (; currencyIndex < currencyAdapter.getCount();
+                                     currencyIndex++) {
+                                    String currency = (String) currencyAdapter.getItem(currencyIndex);
+                                    if (currency.equals(data.currency)) {
+                                        break;
+                                    }
+                                }
+
+                                // Update UI
+                                mTitleEditText.setText(data.title);
+                                mDescriptionEditText.setText(data.body);
+                                mCurrenciesSpinner.setSelection(currencyIndex);
+                                mPriceEditText.setText(data.price.toString());
+                                if (data.location != null) {
+                                    mLocationEditText.setText(data.location);
+                                }
+
+                                // Add tags
+                                for (String tag : data.tags) {
+                                    mTagsChipsInput.addChip(tag, "");
+                                }
+
+                                // Download images
+                                for (int i = 0; i < data.imageIds.length; i++) {
+                                    String imageId = data.imageIds[i];
+                                    downloadImage(imageId, i, i == data.imageIds.length - 1);
+                                }
+                            } else {
+                                // The API failed to complete the request and returned an
+                                // exception
+                                result.getException().printStackTrace();
+                                Toast.makeText(
+                                        context,
+                                        R.string.service_unable_to_process_request,
+                                        Toast.LENGTH_LONG
+                                ).show();
+                            }
+                        }
+                    });
+        } catch (Exception ex) {
+            // Unable to get service (internal error)
+            ex.printStackTrace();
+            Toast.makeText(this, R.string.service_internal_error, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void downloadImage(String imageId, final int index, final boolean lastImage) {
+        try {
+            final Context context = this;
+            final PostService service = Service.get(PostService.class);
+            mTask = service.downloadImage(imageId, new IServiceCallback<PostService.DownloadImageResult>() {
+                @Override
+                public void onEnd(ServiceResult<PostService.DownloadImageResult> result) {
+                    mTask = null;
+                    if (result.isCancelled()) {
+                        return;
+                    }
+                    if (!result.hasError()) {
+                        // Decode image
+                        byte[] buffer = Base64.decode(result.getData().imageData, Base64.DEFAULT);
+
+                        // Show in image view
+                        ImageView imageView = mImageViews.get(index);
+                        Glide.with(context).load(buffer).into(imageView);
+
+                        // Dismiss progress if this was the last image downloaded
+                        if (lastImage && mProgressDialog != null) {
+                            mProgressDialog.dismiss();
+                            mProgressDialog = null;
+                        }
+                    } else {
+                        result.getException().printStackTrace();
+                        Toast.makeText(context,
+                                getString(R.string.service_unable_to_process_request),
+                                Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
+        } catch (Exception ex) {
+            // Unable to get service (internal error)
+            ex.printStackTrace();
+            Toast.makeText(this, R.string.service_internal_error,
+                    Toast.LENGTH_LONG).show();
+            if (mProgressDialog != null) {
+                mProgressDialog.dismiss();
+                mProgressDialog = null;
+            }
+        }
+    }
+
     public void onSave(View view) {
         // TODO: Show are you sure message (are you sure you wish to post ad/make the changes?)
+
+
+        // TODO/NOTE: When saving an ad, unlist it first
 
         // TODO: Upload...
         Toast.makeText(this, "Saving ad...", Toast.LENGTH_LONG).show();
