@@ -10,7 +10,6 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent">
 
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -37,7 +36,7 @@
             </HorizontalScrollView>
 
             <RelativeLayout
-                android:layout_width="353dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
@@ -60,39 +59,30 @@
                     android:layout_toEndOf="@+id/show_ad_title"
                     android:src="@drawable/ic_message_primary_dark" />
 
-
             </RelativeLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/show_ad_currency"
                     android:layout_width="match_parent"
-                    android:layout_height="22dp"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_below="@+id/show_ad_title"
+                    android:layout_height="24dp"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="0.5"
                     android:text="CAD"
-                    android:textSize="18sp"
-                    tools:layout_editor_absoluteX="0dp"
-                    tools:layout_editor_absoluteY="27dp" />
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/show_ad_price"
-                    android:layout_width="608dp"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
+                    android:layout_width="600dp"
+                    android:layout_height="24dp"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="0.5"
                     android:text="2000"
-                    android:textSize="18sp"
-                    tools:layout_editor_absoluteX="35dp"
-                    tools:layout_editor_absoluteY="27dp" />
+                    android:textSize="18sp" />
 
             </LinearLayout>
 
@@ -102,21 +92,20 @@
                 android:layout_marginTop="10dp">
 
                 <ImageView
-                    android:id="@+id/location_icon"
+                    android:id="@+id/show_ad_location_icon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentStart="true"
-                    android:src="@drawable/location_icon"
-                    />
+                    android:src="@drawable/ic_location_primary_dark" />
 
                 <TextView
                     android:id="@+id/show_ad_address_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_toEndOf="@+id/location_icon"
-                    android:text="170 jatt is jatt, Bramptn, ON"
+                    android:layout_toEndOf="@+id/show_ad_location_icon"
+                    android:text="170 jatt is jatt, Brampton, ON"
                     android:textColor="@color/colorAccent"/>
 
                 <TextView
@@ -131,7 +120,6 @@
 
 
             </RelativeLayout>
-
 
             <TextView
                 android:id="@+id/show_ad_description"
