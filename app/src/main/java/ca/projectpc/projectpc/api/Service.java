@@ -1,6 +1,8 @@
 package ca.projectpc.projectpc.api;
 
 import android.annotation.SuppressLint;
+import android.os.Handler;
+import android.os.Looper;
 
 import com.google.gson.Gson;
 
@@ -135,7 +137,7 @@ public abstract class Service {
         // be ended forcefully through task.cancel(); which is part of the ServiceTask API.
         @SuppressLint("StaticFieldLeak")
         HttpTask task = new HttpTask(requestUrl, buffer, sTimeout) {
-            private Future<ServiceMessage<TResult>> mFutureTask;
+            private Future<Void> mFutureTask;
 
             @Override
             protected void onEnd(final AsyncTaskResult<HttpResponse> result) {
@@ -170,9 +172,9 @@ public abstract class Service {
                         }
 
                         // Read stream
-                        mFutureTask = Task.run(new Callable<ServiceMessage<TResult>>() {
+                        mFutureTask = Task.run(new Callable<Void>() {
                             @Override
-                            public ServiceMessage<TResult> call() throws Exception {
+                            public Void call() throws Exception {
                                 // Choose the correct stream, if the server response code isn't 200
                                 // (HTTP OK) Java will throw a FileNotFoundException when accessing
                                 // getInputStream on the connection object, so instead we read from
@@ -191,40 +193,49 @@ public abstract class Service {
                                     builder.append(line);
                                 }
 
-                                ServiceMessage<TResult> message = new ServiceMessage<>(resultClass);
+                                final ServiceMessage<TResult> message =
+                                        new ServiceMessage<>(resultClass);
                                 message.deserialize(builder.toString());
 
-                                return message;
+                                // Run callback on UI thread
+                                Handler handler = new Handler(Looper.getMainLooper());
+                                handler.post(new Runnable() {
+                                    public void run() {
+                                        try {
+                                            if (message.getError() != null) {
+                                                Exception exception =
+                                                        new Exception(message.getError());
+
+                                                ServiceResult<TResult> callbackResult
+                                                        = new ServiceResult<>(message.getCode(),
+                                                        exception);
+                                                if (internalCallback != null)
+                                                    internalCallback.onEnd(callbackResult);
+                                                if (callback != null)
+                                                    callback.onEnd(callbackResult);
+                                            } else {
+                                                ServiceResult<TResult> callbackResult
+                                                        = new ServiceResult<>(message.getCode(),
+                                                        message.getData());
+                                                if (internalCallback != null)
+                                                    internalCallback.onEnd(callbackResult);
+                                                if (callback != null)
+                                                    callback.onEnd(callbackResult);
+                                            }
+                                        } catch (Exception ex) {
+                                            ServiceResult<TResult> callbackResult
+                                                    = new ServiceResult<>(response.getCode(), ex);
+                                            if (internalCallback != null)
+                                                internalCallback.onEnd(callbackResult);
+                                            if (callback != null)
+                                                callback.onEnd(callbackResult);
+                                        }
+                                    }
+                                });
+
+                                return null;
                             }
                         });
-
-                        try {
-                            ServiceMessage<TResult> message = mFutureTask.get();
-                            if (message.getError() != null) {
-                                Exception exception = new Exception(message.getError());
-
-                                ServiceResult<TResult> callbackResult
-                                        = new ServiceResult<>(message.getCode(), exception);
-                                if (internalCallback != null)
-                                    internalCallback.onEnd(callbackResult);
-                                if (callback != null)
-                                    callback.onEnd(callbackResult);
-                            } else {
-                                ServiceResult<TResult> callbackResult
-                                        = new ServiceResult<>(message.getCode(), message.getData());
-                                if (internalCallback != null)
-                                    internalCallback.onEnd(callbackResult);
-                                if (callback != null)
-                                    callback.onEnd(callbackResult);
-                            }
-                        } catch (Exception ex) {
-                            ServiceResult<TResult> callbackResult
-                                    = new ServiceResult<>(response.getCode(), ex);
-                            if (internalCallback != null)
-                                internalCallback.onEnd(callbackResult);
-                            if (callback != null)
-                                callback.onEnd(callbackResult);
-                        }
                     } else {
                         ServiceResult<TResult> callbackResult
                                 = new ServiceResult<>(0, result.getException());

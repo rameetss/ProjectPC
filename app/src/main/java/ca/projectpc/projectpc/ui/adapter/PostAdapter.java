@@ -18,7 +18,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.text.DecimalFormat;
@@ -33,8 +32,6 @@ import ca.projectpc.projectpc.api.ServiceTask;
 import ca.projectpc.projectpc.api.service.PostService;
 import ca.projectpc.projectpc.ui.ShowAdActivity;
 import ca.projectpc.projectpc.ui.glide.GlideApp;
-//import ca.projectpc.projectpc.ui.glide.GlideApp;
-//import ca.projectpc.projectpc.ui.glide.GlideAppModule;
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder> {
     private Context mContext;
@@ -115,11 +112,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                             }
 
                             if (!result.hasError()) {
-                                // TODO/NOTE: This isn't working all the time, but we will assume
-                                // it does
-                                Log.d("PostAdapter",
-                                        String.format("Downloaded image %s", post.thumbnailId));
-
+                                // Decode image
                                 byte[] buffer = Base64.decode(result.getData().imageData,
                                         Base64.DEFAULT);
 

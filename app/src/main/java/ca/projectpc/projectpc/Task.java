@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 public class Task {
     private static final int CPU_COUNT = Runtime.getRuntime().availableProcessors();
     private static final int CORE_POOL_SIZE = CPU_COUNT;
-    private static final int MAXIMUM_POOL_SIZE = CPU_COUNT * 4;
+    private static final int MAXIMUM_POOL_SIZE = CPU_COUNT * 8;
     private static final int KEEP_ALIVE_SECONDS = 60;
 
     private static final ThreadPoolExecutor sExecutor = new ThreadPoolExecutor(
