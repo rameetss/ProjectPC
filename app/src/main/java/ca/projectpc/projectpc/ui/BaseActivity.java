@@ -45,6 +45,7 @@ public abstract class BaseActivity extends AppCompatActivity
     /**
      * Save away any dynamic instance state in activity into the given Bundle,
      * to be later received in onCreate(Bundle) if the activity needs to be re-created.
+     *
      * @param savedInstanceState Last saved state
      */
     @Override
@@ -95,8 +96,9 @@ public abstract class BaseActivity extends AppCompatActivity
     /**
      * Called only activated if user attempts to navigate to different page.
      * Used for implementing navigation to other pages
+     *
      * @param item Navigation item which was clicked
-     * @return Should navigate
+     * @return Success or failure as a Boolean
      */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -115,6 +117,7 @@ public abstract class BaseActivity extends AppCompatActivity
 
     /**
      * Generates menu options for action bar
+     *
      * @param menu Menu to generate options for
      * @return Whether generation was successful or not
      */

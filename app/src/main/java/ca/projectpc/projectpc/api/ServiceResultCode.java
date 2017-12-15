@@ -17,6 +17,9 @@
 
 package ca.projectpc.projectpc.api;
 
+/**
+ *
+ */
 public class ServiceResultCode {
     public static final int Ok = 1000;
     public static final int InternalError = 1001;

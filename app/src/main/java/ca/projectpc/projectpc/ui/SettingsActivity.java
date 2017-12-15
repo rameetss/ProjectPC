@@ -34,10 +34,10 @@ import ca.projectpc.projectpc.R;
 
 public class SettingsActivity extends AppCompatActivity {
     /**
+     * Save any dynamic instance state in activity into the given Bundle,
+     * to be later received in onCreate(Bundle) if the activity needs to be re-created.
      *
-     * @param savedInstanceState
-     * Enable back button
-     * Load settings fragment
+     * @param savedInstanceState Last saved state
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +54,12 @@ public class SettingsActivity extends AppCompatActivity {
                 new MainPreferenceFragment()).commit();
     }
 
+    /**
+     * Send the user back to the home page when the options item is selected
+     *
+     * @param item The selected menu item
+     * @return Success or failure as a Boolean
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
@@ -62,6 +68,11 @@ public class SettingsActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Fetch users settings preferences and bind them to the shared preferences
+     *
+     * @param preference Users preference
+     */
     private static void bindPreferenceSummaryToValue(Preference preference) {
         preference.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
 
@@ -72,8 +83,8 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     /**
-     * A preference value change listener that updates the preference's summary
-     * to reflect its new value.
+     * Listens for a preference that's been changed and updates the preference summary
+     * to save the users preference.
      */
     private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener =
             new Preference.OnPreferenceChangeListener() {
@@ -102,8 +113,16 @@ public class SettingsActivity extends AppCompatActivity {
                 }
             };
 
-
+    /**
+     * Preference fragment class to display settings preferences
+     */
     public static class MainPreferenceFragment extends PreferenceFragment {
+        /**
+         * Preferences are initially added via xml resource file to display layout,
+         * remaining preferences are loaded from the PreferenceSummary.
+         *
+         * @param savedInstanceState Last saved state
+         */
         @Override
         public void onCreate(final Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);

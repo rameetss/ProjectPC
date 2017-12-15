@@ -59,12 +59,13 @@ public class SearchActivity extends BaseActivity
     private List<PostService.Post> mPosts;
     private PostAdapter mAdapter;
 
-    @Override
     /**
-     * Setup search, get info, category and title
-     * update and refresh recycler view
-     * setup swipe refresh layout and layout manager for recycler view
+     * Save any dynamic instance state in activity into the given Bundle,
+     * to be later received in onCreate(Bundle) if the activity needs to be re-created.
+     *
+     * @param savedInstanceState Last saved state
      */
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
@@ -135,6 +136,9 @@ public class SearchActivity extends BaseActivity
         refresh();
     }
 
+    /**
+     * Handle when the user presses the back button
+     */
     @Override
     public void onBackPressed() {
         if (!mSearchView.isIconified()) {
@@ -145,6 +149,11 @@ public class SearchActivity extends BaseActivity
         super.onBackPressed();
     }
 
+    /**
+     * Handle the user clicking the floating add button
+     *
+     * @param view The floating button
+     */
     @Override
     public void onClickFloatingActionButton(View view) {
         Intent intent = new Intent(this, PostAdActivity.class);
@@ -175,6 +184,13 @@ public class SearchActivity extends BaseActivity
         return true;
     }
 
+    /**
+     * Called when creating options menu, used to initialize the SearchManager service
+     * and associate the searchable configuration with the respective SearchView.
+     *
+     * @param menu Menu to generate options for
+     * @return success or failure as Boolean
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
@@ -207,6 +223,10 @@ public class SearchActivity extends BaseActivity
         return true;
     }
 
+    /**
+     * Refresh the SwipeLayout by initializing the PostService, fetching the relevant ads,
+     * and displaying them.
+     */
     private void refresh() {
         // Set as complete, for now
         mSwipeRefreshLayout.setRefreshing(true);
@@ -269,12 +289,21 @@ public class SearchActivity extends BaseActivity
         }
     }
 
+    /**
+     * Call refresh()
+     */
     @Override
     public void onRefresh() {
         // Refresh
         refresh();
     }
 
+    /**
+     * Get the string name for the category based on the id passed.
+     *
+     * @param id Category layout id
+     * @return String name of the category
+     */
     private int navIdToCategoryStringId(int id) {
         int strId = 0;
         switch (id) {
@@ -327,9 +356,11 @@ public class SearchActivity extends BaseActivity
     }
 
     /**
+     * Start the relevant activity based on the provided layout id selected from
+     * the navigation drawer. If the selected navigation item is logout, initialize the
+     * authentication service to logout the user.
      *
-     * @param id
-     *
+     * @param id The id of the navigation item selected
      */
     @Override
     public void onNavigationItemSelected(int id) {

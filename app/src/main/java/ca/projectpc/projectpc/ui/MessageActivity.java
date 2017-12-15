@@ -24,6 +24,13 @@ import android.os.Bundle;
 import ca.projectpc.projectpc.R;
 
 public class MessageActivity extends AppCompatActivity {
+
+    /**
+     * Save any dynamic instance state in activity into the given Bundle,
+     * to be later received in onCreate(Bundle) if the activity needs to be re-created.
+     *
+     * @param savedInstanceState Last saved state
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -55,6 +55,7 @@ public class LoginActivity extends AppCompatActivity implements Dialog.OnCancelL
     /**
      * Called when activity is loaded, loads preferences and automatically logs user in
      * if credentials are stored in the preferences.
+     *
      * @param savedInstanceState Last saved state
      */
     @Override
@@ -62,7 +63,7 @@ public class LoginActivity extends AppCompatActivity implements Dialog.OnCancelL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        // Get controls
+        // Initialize user input fields and login button
         mEmailEditText = (EditText) findViewById(R.id.login_email);
         mPasswordEditText = (EditText) findViewById(R.id.login_password);
         mLoginButton = (Button) findViewById(R.id.login_login);
@@ -79,10 +80,10 @@ public class LoginActivity extends AppCompatActivity implements Dialog.OnCancelL
             }
         });
 
-        // Get preferences
+        // Get saved user preferences
         mPreferences = getSharedPreferences("CurrentUser", MODE_PRIVATE);
 
-        // Check if intent information was passed
+        // Fetch email and password from intent
         Intent callingIntent = getIntent();
         String email = callingIntent.getStringExtra("email");
         String password = callingIntent.getStringExtra("password");
@@ -101,8 +102,11 @@ public class LoginActivity extends AppCompatActivity implements Dialog.OnCancelL
     }
 
     /**
-     * Preform check on login information, attempt login and return any errors to the user
-     * @param view Sender
+     * Called when user clicks login button. Initialize the authentication service, check
+     * entered information for validity, and attempt a login with the provided information.
+     * Display a login dialog in the interim.
+     *
+     * @param view The layout login button that was clicked.
      */
     public void onLogin(View view) {
         try {
@@ -174,8 +178,10 @@ public class LoginActivity extends AppCompatActivity implements Dialog.OnCancelL
     }
 
     /**
-     * Open register activity
-     * @param view Sender
+     * Called when the user clicks the register button. Simply send the user to the
+     * registration page.
+     *
+     * @param view The layout register button that was clicked.
      */
     public void onRegister(View view) {
         Intent intent = new Intent(this, RegisterActivity.class);
@@ -196,9 +202,10 @@ public class LoginActivity extends AppCompatActivity implements Dialog.OnCancelL
     }
 
     /**
-     * Called when the progress dialog is cancelled, terminates any running task
+     * Called when the progress dialog is cancelled, terminates the login task keeping
+     * the user on the login page.
      *
-     * @param dialog Dialog which was cancelled
+     * @param dialog DialogInterface where cancel was clicked.
      */
     @Override
     public void onCancel(DialogInterface dialog) {

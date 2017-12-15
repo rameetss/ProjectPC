@@ -55,8 +55,8 @@ import ca.projectpc.projectpc.ui.glide.GlideApp;
 import pl.aprilapps.easyphotopicker.EasyImage;
 
 public class EditAdActivity extends AppCompatActivity {
-    private static final int MAX_IMAGES = 8;
 
+    private static final int MAX_IMAGES = 8;
     private LinearLayout mImageContainer;
     private EditText mTitleEditText;
     private EditText mDescriptionEditText;
@@ -87,13 +87,13 @@ public class EditAdActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_ad);
 
-        // Enable back button
+        // Change ActionBar from having NavigationDrawer to having a back button
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        // Get controls
+        // Initialize all relevant user input fields
         mTitleEditText = (EditText) findViewById(R.id.edit_post_title);
         mDescriptionEditText = (EditText) findViewById(R.id.edit_post_description);
         mCurrenciesSpinner = (Spinner) findViewById(R.id.edit_post_currencies);
@@ -101,11 +101,12 @@ public class EditAdActivity extends AppCompatActivity {
         mLocationEditText = (EditText) findViewById(R.id.edit_post_location);
         mTagsChipsInput = (ChipsInput) findViewById(R.id.edit_post_tags);
 
-        // Do show detailed chip info
         mTagsChipsInput.setShowChipDetailed(false);
-
-        // Check for valid tags
+        // Create chips tag list for storing later entered chips
         mTags = new ArrayList<>();
+
+        // Listener for when the user is adding tags to 'chip' them out,
+        // displaying categorically.
         mTagsChipsInput.addChipsListener(new ChipsInput.ChipsListener() {
             @Override
             public void onChipAdded(final ChipInterface chipInterface, int i) {
@@ -133,14 +134,13 @@ public class EditAdActivity extends AppCompatActivity {
             }
         });
 
-        // Get image container
+        // Create ImageViews for users to add images to the ad post,
+        // initially setting the src images to a filler
         mImageContainer = (LinearLayout) findViewById(R.id.edit_post_image_container);
 
-        // Get image view size
         int imageViewWidth = (int) getResources().getDimension(R.dimen.post_image_width);
         int imageViewHeight = (int) getResources().getDimension(R.dimen.post_image_height);
 
-        // Create image views
         mImageViews = new ArrayList<>();
         mImages = new String[MAX_IMAGES];
         mChangedImages = new File[MAX_IMAGES];
@@ -203,6 +203,13 @@ public class EditAdActivity extends AppCompatActivity {
         downloadAd(mPostId);
     }
 
+    /**
+     * Called when a menu item is selected to navigate the user back to
+     * the home page.
+     *
+     * @param item MenuItem that was selected
+     * @return If the selection was handled
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -214,10 +221,10 @@ public class EditAdActivity extends AppCompatActivity {
         }
     }
 
-    private void pressBack() {
-        super.onBackPressed();
-    }
-
+    /**
+     * Handle when the user presses the back button. Alert the user that going back will
+     * discard changes to the ad.
+     */
     @Override
     public void onBackPressed() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -227,7 +234,7 @@ public class EditAdActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (i == AlertDialog.BUTTON_POSITIVE) {
-                    pressBack();
+                    EditAdActivity.super.onBackPressed();
                 }
             }
         });
@@ -235,6 +242,12 @@ public class EditAdActivity extends AppCompatActivity {
         builder.show();
     }
 
+    /**
+     * Called when the activity begins to download editable ad data from
+     * the server, setting the appropriate text fields afterwards.
+     *
+     * @param postId Database identification for the ad to fetch data for
+     */
     private void downloadAd(String postId) {
         // Show progress dialog
         mProgressDialog = ProgressDialog.show(this,
@@ -318,44 +331,53 @@ public class EditAdActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Called to download the ad images uploaded upon posting. Done separately from
+     * downloadAd to reduce cluttering. Called recursively until all ad specific images
+     * are downloaded.
+     *
+     * @param imageId   Current ID of the image to download
+     * @param index     Current position in the images array
+     * @param lastImage Whether or not the image to download is the last of the uploaded images
+     */
     private void downloadImage(String imageId, final int index, final boolean lastImage) {
         try {
             final Context context = this;
             final PostService service = Service.get(PostService.class);
             mTask = service.downloadImage(imageId,
                     new IServiceCallback<PostService.DownloadImageResult>() {
-                @Override
-                public void onEnd(ServiceResult<PostService.DownloadImageResult> result) {
-                    mTask = null;
-                    if (result.isCancelled()) {
-                        return;
-                    }
-                    if (!result.hasError()) {
-                        // Decode image
-                        byte[] buffer = Base64.decode(result.getData().imageData, Base64.DEFAULT);
+                        @Override
+                        public void onEnd(ServiceResult<PostService.DownloadImageResult> result) {
+                            mTask = null;
+                            if (result.isCancelled()) {
+                                return;
+                            }
+                            if (!result.hasError()) {
+                                // Decode image
+                                byte[] buffer = Base64.decode(result.getData().imageData, Base64.DEFAULT);
 
-                        // Show in image view
-                        ImageView imageView = mImageViews.get(index);
-                        imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-                        GlideApp.with(context)
-                                .load(buffer)
-                                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                                .skipMemoryCache(true)
-                                .into(imageView);
+                                // Show in image view
+                                ImageView imageView = mImageViews.get(index);
+                                imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                                GlideApp.with(context)
+                                        .load(buffer)
+                                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                        .skipMemoryCache(true)
+                                        .into(imageView);
 
-                        // Dismiss progress if this was the last image downloaded
-                        if (lastImage && mProgressDialog != null) {
-                            mProgressDialog.dismiss();
-                            mProgressDialog = null;
+                                // Dismiss progress if this was the last image downloaded
+                                if (lastImage && mProgressDialog != null) {
+                                    mProgressDialog.dismiss();
+                                    mProgressDialog = null;
+                                }
+                            } else {
+                                result.getException().printStackTrace();
+                                Toast.makeText(context,
+                                        getString(R.string.service_unable_to_process_request),
+                                        Toast.LENGTH_LONG).show();
+                            }
                         }
-                    } else {
-                        result.getException().printStackTrace();
-                        Toast.makeText(context,
-                                getString(R.string.service_unable_to_process_request),
-                                Toast.LENGTH_LONG).show();
-                    }
-                }
-            });
+                    });
         } catch (Exception ex) {
             // Unable to get service (internal error)
             ex.printStackTrace();
@@ -368,6 +390,12 @@ public class EditAdActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Called when the user clicks the 'Save' button after editing the ad. Remove the previous ad
+     * listing, send the updated information to the server, and list the new updated ad.
+     *
+     * @param view The layout button that was clicked
+     */
     public void onSave(View view) {
         // TODO: Show are you sure message (are you sure you wish to post ad/make the changes?)
 

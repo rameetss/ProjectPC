@@ -70,7 +70,6 @@ import pl.aprilapps.easyphotopicker.EasyImage;
 public class PostAdActivity extends AppCompatActivity {
     private static final int MAX_IMAGES = 8;
 
-    private LinearLayout mImageContainer;
     private EditText mTitleEditText;
     private EditText mDescriptionEditText;
     private Spinner mCurrenciesSpinner;
@@ -89,27 +88,22 @@ public class PostAdActivity extends AppCompatActivity {
     private Location mLocation;
 
     /**
-     *
-     * @param savedInstanceState
-     * Enable android back button compatibility with app
-     * Grab user controls for editing post
-     * Generate ID tags for parts for search activity
-     * Grab image container, size and generate view
-     * grab category and set title for post
-     *
+     * Save away any dynamic instance state in activity into the given Bundle,
+     * to be later received in onCreate(Bundle) if the activity needs to be re-created.
+     * @param savedInstanceState Last saved state
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_ad);
 
-        // Enable back button
+        // Change ActionBar from having NavigationDrawer to having a back button
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        // Get controls
+        // Initialize all relevant user input fields
         mTitleEditText = (EditText) findViewById(R.id.edit_post_title);
         mDescriptionEditText = (EditText) findViewById(R.id.edit_post_description);
         mCurrenciesSpinner = (Spinner) findViewById(R.id.edit_post_currencies);
@@ -117,13 +111,12 @@ public class PostAdActivity extends AppCompatActivity {
         mLocationEditText = (EditText) findViewById(R.id.edit_post_location);
         mTagsChipsInput = (ChipsInput) findViewById(R.id.edit_post_tags);
 
-        // Do show detailed chip info
         mTagsChipsInput.setShowChipDetailed(false);
-
-        // Create tags list
+        // Create chips tag list for storing later entered chips
         mTags = new ArrayList<>();
 
-        // Check for valid tags
+        // Listener for when the user is adding tags to 'chip' them out,
+        // displaying categorically.
         mTagsChipsInput.addChipsListener(new ChipsInput.ChipsListener() {
             @Override
             public void onChipAdded(final ChipInterface chipInterface, int i) {
@@ -155,14 +148,10 @@ public class PostAdActivity extends AppCompatActivity {
             }
         });
 
-        // Get image container
-        mImageContainer = (LinearLayout) findViewById(R.id.edit_post_image_container);
-
-        // Get image view size
+        LinearLayout mImageContainer = (LinearLayout) findViewById(R.id.edit_post_image_container);
         int imageViewWidth = (int) getResources().getDimension(R.dimen.post_image_width);
         int imageViewHeight = (int) getResources().getDimension(R.dimen.post_image_height);
 
-        // Create image views
         mImageViews = new ArrayList<>();
         mImages = new File[MAX_IMAGES];
         for (int i = 0; i < MAX_IMAGES; i++) {
@@ -216,14 +205,14 @@ public class PostAdActivity extends AppCompatActivity {
             mImageViews.add(imageView);
         }
 
-        // Get category
+        // Get ad category sent by the intent
         Intent intent = getIntent();
         mCategory = intent.getStringExtra("category");
 
         // Set title
         setTitle(String.format(getString(R.string.title_activity_post_in), mCategory));
 
-        // Set location string
+        // Set location EditText based on last known location
         mLocation = LatLong.getLocation(this);
         if (mLocation != null) {
             mLocationEditText.setText(getLocationString(mLocation));
@@ -276,6 +265,13 @@ public class PostAdActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    /**
+     * Called when a menu item is selected to navigate the user back to
+     * the home page.
+     *
+     * @param item MenuItem that was selected
+     * @return If the selection was handled
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -285,10 +281,6 @@ public class PostAdActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    private void pressBack() {
-        super.onBackPressed();
     }
 
     /**
@@ -303,7 +295,7 @@ public class PostAdActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (i == AlertDialog.BUTTON_POSITIVE) {
-                    pressBack();
+                    PostAdActivity.super.onBackPressed();
                 }
             }
         });
@@ -311,6 +303,12 @@ public class PostAdActivity extends AppCompatActivity {
         builder.show();
     }
 
+    /**
+     * Called when the user clicks the save button. Check all fields for valid entries,
+     * display an 'Are you sure' dialog, then call uploadAd passing relevant ad data.
+     *
+     * @param view The layout save button that was clicked.
+     */
     public void onSave(View view) {
         // Check input
         final String title = mTitleEditText.getText().toString();
@@ -365,7 +363,7 @@ public class PostAdActivity extends AppCompatActivity {
 
                     // Upload ad
                     uploadAd(title, mCategory, mTags, Double.parseDouble(price), currency,
-                            description, location, latitude, longitude);
+                            description, location);
                 }
             }
         });
@@ -373,9 +371,20 @@ public class PostAdActivity extends AppCompatActivity {
         builder.show();
     }
 
+    /**
+     * Method to take the passed ad parameters and send the data to the server
+     * to create an ad and list it.
+     *
+     * @param title Ad title
+     * @param category Ad category
+     * @param tags Any tags added for the ad
+     * @param price Ad price
+     * @param currency Currency the ad price is in
+     * @param description Ad description
+     * @param location Location of the Ad
+     */
     private void uploadAd(String title, String category, List<String> tags, Double price,
-                          String currency, String description, String location,
-                          @Nullable Double latitude, @Nullable Double longitude) {
+                          String currency, String description, String location) {
         // Show progress dialog
         mProgressDialog = ProgressDialog.show(this,
                 getString(R.string.title_progress_posting),
@@ -394,7 +403,7 @@ public class PostAdActivity extends AppCompatActivity {
             final Context context = this;
             final PostService service = Service.get(PostService.class);
             mTask = service.createPost(title, mCategory, mTags, price, currency, description,
-                    location, latitude, longitude, new IServiceCallback<BasicIdResult>() {
+                    location, null, null, new IServiceCallback<BasicIdResult>() {
                         @Override
                         public void onEnd(ServiceResult<BasicIdResult> result) {
                             mTask = null;
@@ -443,6 +452,15 @@ public class PostAdActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Upload the images for the ad to the server. Method was generated separately from
+     * uploadAd in order to reduce cluttering.
+     *
+     * @param postId Database identification of the post to match images to.
+     * @param image The file location of the image to upload.
+     * @param thumbnail Is the image being passed a thumbnail?
+     * @param lastImage Is the image being passed the last of the images?
+     */
     private void uploadImage(final String postId, File image, boolean thumbnail,
                              final boolean lastImage) {
         try {
@@ -509,6 +527,12 @@ public class PostAdActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Called in order to list an ad publicly. Initialize the PostService, send the postId to
+     * the server and await result.
+     *
+     * @param postId Post identification to tell the server what to list
+     */
     private void setListed(String postId) {
         try {
             final Context context = this;
@@ -550,6 +574,12 @@ public class PostAdActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Called to fetch the proper string output for 'city, country' given a Location.
+     *
+     * @param location The location to Geocode into 'city, country'.
+     * @return String in format "city, country".
+     */
     private String getLocationString(Location location) {
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
         try {

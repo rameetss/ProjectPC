@@ -58,11 +58,10 @@ public class RegisterActivity extends AppCompatActivity implements DialogInterfa
     private SharedPreferences mPreferences;
 
     /**
+     * Save away any dynamic instance state in activity into the given Bundle,
+     * to be later received in onCreate(Bundle) if the activity needs to be re-created.
      *
-     * @param savedInstanceState
-     * Open layout, grab user input
-     * Check password against confirm password
-     * Grab user preferences and confirm registration in onRegister View
+     * @param savedInstanceState Last saved state
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,17 +94,11 @@ public class RegisterActivity extends AppCompatActivity implements DialogInterfa
         mPreferences = getSharedPreferences("CurrentUser", MODE_PRIVATE);
     }
 
-    private void setUiEnabled(boolean enabled) {
-        mUserNameEditText.setEnabled(enabled);
-        mFirstNameEditText.setEnabled(enabled);
-        mLastNameEditText.setEnabled(enabled);
-        mEmailEditText.setEnabled(enabled);
-        mPasswordEditText.setEnabled(enabled);
-        mConfirmPasswordEditText.setEnabled(enabled);
-        mRegisterButton.setEnabled(enabled);
-        mLoginTextView.setEnabled(enabled);
-    }
-
+    /**
+     * Called when the user clicks the register button. Alert the user to confirm the entered info.
+     *
+     * @param view The layout button that was clicked.
+     */
     public void onRegister(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.action_create_account);
@@ -115,6 +108,11 @@ public class RegisterActivity extends AppCompatActivity implements DialogInterfa
         builder.show();
     }
 
+    /**
+     * Called when the user clicks the login button, if the user decides to login instead.
+     *
+     * @param view The layout button that was clicked.
+     */
     public void onLogin(View view) {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
@@ -122,16 +120,16 @@ public class RegisterActivity extends AppCompatActivity implements DialogInterfa
     }
 
     /**
+     * Called when user clicks register button. Initialize the authenticator service,
+     * check all user input fields for valid entries, and send the data to the service
+     * for registration. If successful, log the user in and send them to the home page.
      *
-     * @param d
-     * @param which
-     * Check all information for validity and output appropriate dialog
-     * progress dialog
-     * Try to register user with app database using info provided
+     * @param d DialogInterface required for the implemented method, however not used
+     * @param whichButton Used to determine if the dialog button pressed was positive or negative
      */
     @Override
-    public void onClick(DialogInterface d, int which) {
-        if (which == DialogInterface.BUTTON_POSITIVE) {
+    public void onClick(DialogInterface d, int whichButton) {
+        if (whichButton == DialogInterface.BUTTON_POSITIVE) {
             try {
                 AuthService authService = Service.get(AuthService.class);
 

@@ -63,6 +63,12 @@ public class ShowAdActivity extends AppCompatActivity {
 
     private String mPostId;
 
+    /**
+     * Save any dynamic instance state in activity into the given Bundle,
+     * to be later received in onCreate(Bundle) if the activity needs to be re-created.
+     *
+     * @param savedInstanceState Last saved state
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,12 +99,25 @@ public class ShowAdActivity extends AppCompatActivity {
         downloadAd(mPostId);
     }
 
+    /**
+     * When user clicks on options menu item, inflate the show ad menu and return true.
+     *
+     * @param menu Menu item that was clicked
+     * @return Success or failure as a Boolean
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_show_ad, menu);
         return true;
     }
 
+    /**
+     * Handle what happens when the user selects a menu option. Either send them back to
+     * the home page or send them to the edit post page.
+     *
+     * @param item Menu item selected
+     * @return Success or failure as a Boolean
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -119,6 +138,9 @@ public class ShowAdActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Cancel the show ad, send user back to ad listings
+     */
     @Override
     public void onBackPressed() {
         // TODO/NOTE: Task cancellation
@@ -126,8 +148,14 @@ public class ShowAdActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
-    // TODO: Fix design for image views, they're not right
+    /**
+     * Called when the activity begins to download ad data from
+     * the server, setting the appropriate text fields afterwards.
+     *
+     * @param postId Database identification for the ad to fetch data for
+     */
     private void downloadAd(String postId) {
+        // TODO: Fix design for image views, they're not right
         try {
             final Context context = this;
             PostService service = Service.get(PostService.class);
@@ -205,6 +233,14 @@ public class ShowAdActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Called to download the ad images uploaded upon posting. Done separately from
+     * downloadAd to reduce cluttering. Called recursively until all ad specific images
+     * are downloaded.
+     *
+     * @param imageId   Current ID of the image to download
+     * @param imageView Current position in the images array
+     */
     private void downloadImage(String imageId, final ImageView imageView) {
         try {
             final Context context = this;
@@ -244,6 +280,12 @@ public class ShowAdActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Open message activity in order to send message to user who
+     * posted the ad when the user has clicked the message button.
+     *
+     * @param view The send message button
+     */
     public void onSendMessage(View view) {
 
     }
