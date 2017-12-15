@@ -37,6 +37,8 @@ public class SettingsActivity extends AppCompatActivity {
      * Save any dynamic instance state in activity into the given Bundle,
      * to be later received in onCreate(Bundle) if the activity needs to be re-created.
      *
+     * From-https://www.androidhive.info/2017/07/android-implementing-preferences-settings-screen/
+     *
      * @param savedInstanceState Last saved state
      */
     @Override
@@ -151,3 +153,4 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 }
+
