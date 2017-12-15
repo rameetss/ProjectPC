@@ -87,7 +87,7 @@
     <string name="prompt_title">Title</string>
     <string name="prompt_description">Description</string>
     <string name="prompt_price">Price</string>
-    <string name="prompt_location">Location</string> <!-- TODO: Get via GPS, then geocode using https://maps.google.com/maps/api/geocode/json?address=40.72,-73.96-->
+    <string name="prompt_location">Location</string>
     <string name="prompt_enter_tags">Enter tags</string>
     <string name="prompt_discard_post">Are you sure you want to discard this post?</string>
     <string name="prompt_discard_post_changes">Are you sure you want to discard the changes?</string>

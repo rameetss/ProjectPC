@@ -19,6 +19,7 @@ import ca.projectpc.projectpc.R;
 import ca.projectpc.projectpc.api.IServiceCallback;
 import ca.projectpc.projectpc.api.Service;
 import ca.projectpc.projectpc.api.ServiceResult;
+import ca.projectpc.projectpc.api.ServiceTask;
 import ca.projectpc.projectpc.api.service.PostService;
 import ca.projectpc.projectpc.ui.adapter.PostAdapter;
 
@@ -33,6 +34,7 @@ public class SearchResultsActivity extends AppCompatActivity
 
     private String mCategory;
     private List<String> mTags;
+    private ServiceTask mTask;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -93,7 +95,10 @@ public class SearchResultsActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        // TODO: Cancellation
+        if (mTask != null && !mTask.isCancelled()) {
+            mTask.cancel();
+            return;
+        }
 
         super.onBackPressed();
     }
@@ -110,7 +115,7 @@ public class SearchResultsActivity extends AppCompatActivity
         try {
             final Context context = this;
             PostService service = Service.get(PostService.class);
-            service.getAllPostsForCategory(mCategory, mTags,
+            mTask = service.getAllPostsForCategory(mCategory, mTags,
                     new IServiceCallback<PostService.GetPostsResult>() {
                         @Override
                         public void onEnd(ServiceResult<PostService.GetPostsResult> result) {
@@ -118,6 +123,10 @@ public class SearchResultsActivity extends AppCompatActivity
 
                             // Clear adapter
                             mPosts.clear();
+
+                            if (result.isCancelled()) {
+                                return;
+                            }
 
                             if (!result.hasError() && result.hasData()) {
                                 mPosts.addAll(Arrays.asList(result.getData().result));
