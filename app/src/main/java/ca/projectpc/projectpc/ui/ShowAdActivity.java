@@ -43,6 +43,7 @@ import ca.projectpc.projectpc.R;
 import ca.projectpc.projectpc.api.IServiceCallback;
 import ca.projectpc.projectpc.api.Service;
 import ca.projectpc.projectpc.api.ServiceResult;
+import ca.projectpc.projectpc.api.ServiceResultCode;
 import ca.projectpc.projectpc.api.ServiceTask;
 import ca.projectpc.projectpc.api.service.PostService;
 import ca.projectpc.projectpc.api.service.result.BasicIdResult;
@@ -166,9 +167,14 @@ public class ShowAdActivity extends AppCompatActivity {
                 @Override
                 public void onEnd(ServiceResult<BasicIdResult> result) {
                     if (!result.hasError()) {
-                        Toast.makeText(context, R.string.prompt_ad_deleted,
-                                Toast.LENGTH_LONG).show();
-                        finish();
+                        if (result.getCode() == ServiceResultCode.Ok) {
+                            Toast.makeText(context, R.string.prompt_ad_deleted,
+                                    Toast.LENGTH_LONG).show();
+                            finish();
+                        } else if (result.getCode() == ServiceResultCode.Unauthorized) {
+                            Toast.makeText(context, R.string.service_unauthorized,
+                                    Toast.LENGTH_LONG).show();
+                        }
                     } else {
                         // The API failed to complete the request and returned an exception
                         result.getException().printStackTrace();
