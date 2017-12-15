@@ -1,6 +1,8 @@
 package ca.projectpc.projectpc.ui;
 
+import android.Manifest;
 import android.content.Intent;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -32,6 +34,12 @@ public class StartupActivity extends AppCompatActivity {
                 .saveInRootPicturesDirectory();
 
         // TODO: Get required permissions (File reading permissions, GPS permissions)
+        // Permissions
+        String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.CAMERA};
+
+        ActivityCompat.requestPermissions(this, permissions, 5);
 
         // Check system service
         try {

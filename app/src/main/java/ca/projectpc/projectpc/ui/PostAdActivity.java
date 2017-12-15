@@ -497,19 +497,13 @@ public class PostAdActivity extends AppCompatActivity {
     }
 
     private String getLocationString() {
-        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-        if (locationManager != null) {
-            Location lastKnownLocationGPS;
-            if (checkLocationPermission()) {
-                lastKnownLocationGPS = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            } else {
-                lastKnownLocationGPS = null;
-            }
-            if (lastKnownLocationGPS != null) {
-                return getLocation(lastKnownLocationGPS);
-            } else {
+        if (checkLocationPermission()) {
+            LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+            if (locationManager != null) {
                 Location lastKnownLocationPassive = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
                 return getLocation(lastKnownLocationPassive);
+            } else {
+                return "";
             }
         } else {
             return "";
