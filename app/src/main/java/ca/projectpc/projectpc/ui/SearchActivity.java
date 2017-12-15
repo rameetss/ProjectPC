@@ -43,6 +43,11 @@ public class SearchActivity extends BaseActivity
     private PostAdapter mAdapter;
 
     @Override
+    /**
+     * Setup search, get info, category and title
+     * update and refresh recycler view
+     * setup swipe refresh layout and layout manager for recycler view
+     */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
@@ -304,6 +309,11 @@ public class SearchActivity extends BaseActivity
         return R.menu.menu_base_drawer;
     }
 
+    /**
+     *
+     * @param id
+     *
+     */
     @Override
     public void onNavigationItemSelected(int id) {
         if (id == R.id.nav_inbox) {

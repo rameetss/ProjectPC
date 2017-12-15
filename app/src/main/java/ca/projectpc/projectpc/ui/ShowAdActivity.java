@@ -31,6 +31,14 @@ import ca.projectpc.projectpc.api.service.PostService;
 public class ShowAdActivity extends AppCompatActivity {
     private LinearLayout mImageContainer;
 
+    /**
+     *
+     * @param savedInstanceState
+     * Enable back button
+     * Grab UI and Image container for Ad
+     * Grab post ID for search and filter
+     * grab Ad info
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +81,12 @@ public class ShowAdActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
+    /**
+     *
+     * @param postId
+     * Grab context and set title, create image views and schedule downloads
+     * catch api exception where completion of request failed and returned
+     */
     private void downloadAd(String postId) {
         try {
             final Context context = this;
@@ -123,6 +137,12 @@ public class ShowAdActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     *
+     * @param imageId
+     * @param imageView
+     * Download image from post service and load into image view
+     */
     private void downloadImage(String imageId, final ImageView imageView) {
         try {
             final Context context = this;
