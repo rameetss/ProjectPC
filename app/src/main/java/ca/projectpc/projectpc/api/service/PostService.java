@@ -259,6 +259,7 @@ public class PostService extends Service {
                 SetListedParameters.class, BasicIdResult.class, null, callback);
     }
 
+    // TODO: Javadocs
     public ServiceTask removePost(String postId, IServiceCallback<BasicIdResult> callback)
             throws Exception {
         RemovePostParameters parameters = new RemovePostParameters();
@@ -268,13 +269,11 @@ public class PostService extends Service {
                 RemovePostParameters.class, BasicIdResult.class, null, callback);
     }
 
-    public ServiceTask updatePost(String postId, @Nullable String title,
     /**
      * Method to update a post with new edited data
      *
      * @param postId ID of the post to edit
      * @param title Updated ad title
-     * @param category Updated ad category
      * @param tags Updated ad tags
      * @param price Updated ad price
      * @param currency Updated ad currency
@@ -286,7 +285,7 @@ public class PostService extends Service {
      * @return The result of the sendRequest method
      * @throws Exception sendRequest may throw Exception
      */
-    public ServiceTask updatePost(String postId, @Nullable String title, @Nullable String category,
+    public ServiceTask updatePost(String postId, @Nullable String title,
                                   @Nullable List<String> tags, @Nullable Double price,
                                   @Nullable String currency, @Nullable String body,
                                   @Nullable String location, @Nullable Double latitude,

@@ -142,9 +142,6 @@ public class ShowAdActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
                 return true;
-            case R.id.menu_action_bookmark:
-                // TODO: Implement
-                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
