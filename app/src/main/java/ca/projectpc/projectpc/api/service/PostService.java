@@ -47,27 +47,42 @@ public class PostService extends Service {
         Double longitude;
     }
 
+    /**
+     * Subclass to store relevant image parameters
+     */
     private class UploadImageParameters {
         String postId;
         Boolean thumbnail;
         String imageData;
     }
 
+    /**
+     * Subclass to store vars needed to remove image
+     */
     private class RemoveImageParameters {
         String postId;
         String imageId;
     }
 
+    /**
+     * Subclass to store thumbnail parameters
+     */
     private class SetThumbnailImageParameters {
         String postId;
         String imageId;
     }
 
+    /**
+     * Subclass to store parameters needed for listing the ad
+     */
     private class SetListedParameters {
         String postId;
         boolean listed;
     }
 
+    /**
+     * Subclass to store post updating related data
+     */
     private class UpdatePostParameters {
         String postId;
         String title;
@@ -80,19 +95,31 @@ public class PostService extends Service {
         Double longitude;
     }
 
+    /**
+     * Subclass to store download image parameters
+     */
     private class DownloadImageParameters {
         String imageId;
     }
 
+    /**
+     * Subclass to get result from downloading an image
+     */
     public class DownloadImageResult {
         public String imageData;
     }
 
+    /**
+     * Subclass to store vars for fetching all posts of a certain category
+     */
     private class GetAllPostsForCategoryParameters {
         String category;
         List<String> tags;
     }
 
+    /**
+     * Subclass to store vars for getting specific number of posts from a certain category
+     */
     private class GetPostsForCategoryParameters {
         String category;
         List<String> tags;
@@ -100,14 +127,23 @@ public class PostService extends Service {
         Integer count;
     }
 
+    /**
+     * Subclass to store var for removing a post
+     */
     private class RemovePostParameters {
         String postId;
     }
 
+    /**
+     * Subclass to store var for fetching a single post
+     */
     private class GetPostParameters {
         String postId;
     }
 
+    /**
+     * Subclass to store the status of a post
+     */
     public class PostStatus {
         public static final int Unlisted = 0;
         public static final int Listed = 1;
@@ -115,6 +151,9 @@ public class PostService extends Service {
         public static final int Sold = 3;
     }
 
+    /**
+     * Subclass to store all post related data, including original author
+     */
     public class Post extends DataResult {
         public String authorId;
         public String authorEmail;
@@ -133,9 +172,15 @@ public class PostService extends Service {
         public Double longitude;
     }
 
+    /**
+     * Subclass to fetch the results of a post as an ArrayResult
+     */
     public class GetPostsResult extends ArrayResult<Post> {
     }
 
+    /**
+     * Subclass to fetch the result of a post
+     */
     public class GetPostResult extends Post {
     }
 
