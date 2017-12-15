@@ -20,6 +20,7 @@ import ca.projectpc.projectpc.api.ServiceResult;
 import ca.projectpc.projectpc.api.service.SystemService;
 import pl.aprilapps.easyphotopicker.EasyImage;
 
+
 public class StartupActivity extends AppCompatActivity {
     public static final int REQUEST_PERMISSIONS = 10000;
     public static final String[] PERMISSIONS = {
@@ -33,6 +34,11 @@ public class StartupActivity extends AppCompatActivity {
     public static final String API_ENDPOINT = "http://s1.indigogames.ca:44008/api/";
     public static final int API_TIMEOUT = 25000;
 
+    /**
+     *
+     * @param savedInstanceState
+     * Initialize API, EasyImage and grab all necessary permissions on startup
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

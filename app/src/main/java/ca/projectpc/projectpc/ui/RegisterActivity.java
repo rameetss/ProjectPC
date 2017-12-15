@@ -40,6 +40,13 @@ public class RegisterActivity extends AppCompatActivity implements DialogInterfa
 
     private SharedPreferences mPreferences;
 
+    /**
+     *
+     * @param savedInstanceState
+     * Open layout, grab user input
+     * Check password against confirm password
+     * Grab user preferences and confirm registration in onRegister View
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,6 +104,14 @@ public class RegisterActivity extends AppCompatActivity implements DialogInterfa
         finish();
     }
 
+    /**
+     *
+     * @param d
+     * @param which
+     * Check all information for validity and output appropriate dialog
+     * progress dialog
+     * Try to register user with app database using info provided
+     */
     @Override
     public void onClick(DialogInterface d, int which) {
         if (which == DialogInterface.BUTTON_POSITIVE) {

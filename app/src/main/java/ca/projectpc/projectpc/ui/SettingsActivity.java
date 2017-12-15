@@ -16,6 +16,12 @@ import android.view.MenuItem;
 import ca.projectpc.projectpc.R;
 
 public class SettingsActivity extends AppCompatActivity {
+    /**
+     *
+     * @param savedInstanceState
+     * Enable back button
+     * Load settings fragment
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +84,7 @@ public class SettingsActivity extends AppCompatActivity {
                     return true;
                 }
             };
+
 
     public static class MainPreferenceFragment extends PreferenceFragment {
         @Override
