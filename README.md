@@ -16,11 +16,13 @@ These items are needed to compile this application:
 - Android Studio v3.0.1
 - Device must be running Android 5.0 or above
 - Device must have USB debugging enabled
+- ProjectPC-Backend must be set up and configured in the app to use the local endpoint
 
 ### Compiling/Installing
 1. Run `Android Studio` and load `ProjectPC` project
-2. Compile the project
-3. Install apk to device
+2. Open `ui.StartupActivity` and edit `API_ENDPOINT` from `http://127.0.0.1:4040/api/` to your local network IP (ie. 192.168.0.125) `http://192.168.0.125:4040/api/`
+3. Compile the project
+4. Install apk to device
 
 ### Authors
 - Thaghsan Mohanarathnam

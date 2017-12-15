@@ -21,7 +21,11 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -40,8 +44,10 @@ import com.pchmn.materialchips.ChipsInput;
 import com.pchmn.materialchips.model.ChipInterface;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import ca.projectpc.projectpc.R;
 import ca.projectpc.projectpc.api.IServiceCallback;
@@ -49,7 +55,9 @@ import ca.projectpc.projectpc.api.Service;
 import ca.projectpc.projectpc.api.ServiceResult;
 import ca.projectpc.projectpc.api.ServiceTask;
 import ca.projectpc.projectpc.api.service.PostService;
+import ca.projectpc.projectpc.api.service.result.BasicIdResult;
 import ca.projectpc.projectpc.ui.glide.GlideApp;
+import ca.projectpc.projectpc.utility.LatLong;
 import pl.aprilapps.easyphotopicker.EasyImage;
 
 public class EditAdActivity extends AppCompatActivity {
@@ -67,6 +75,7 @@ public class EditAdActivity extends AppCompatActivity {
     private ServiceTask mTask;
 
     private String mPostId;
+    private String mCategory;
     private List<ImageView> mImageViews;
     private String[] mImages;
     private String mThumbnailImage;
@@ -74,6 +83,7 @@ public class EditAdActivity extends AppCompatActivity {
     private File[] mChangedImages;
     private File mChangedThumbnailImage;
     private List<String> mTags;
+    private Location mLocation;
 
     /**
      * Save any dynamic instance state in activity into the given Bundle,
@@ -172,8 +182,10 @@ public class EditAdActivity extends AppCompatActivity {
                                     // Set as primary
                                     if (mChangedImages[imageIndex] == null) {
                                         mThumbnailImageNew = mImages[imageIndex];
+                                        mChangedThumbnailImage = null;
                                     } else {
                                         mChangedThumbnailImage = mChangedImages[imageIndex];
+                                        mThumbnailImageNew = null;
                                     }
                                 } else if (which == 1) {
                                     // Remove image
@@ -186,8 +198,11 @@ public class EditAdActivity extends AppCompatActivity {
                                     } else {
                                         if (mChangedThumbnailImage == mChangedImages[imageIndex]) {
                                             mChangedThumbnailImage = null;
+                                            mThumbnailImage = null;
+                                            mThumbnailImageNew = null;
                                         }
                                         mChangedImages[imageIndex] = null;
+                                        mImages[imageIndex] = null;
                                     }
 
                                     imageView.setImageResource(R.drawable.ic_add_box_gray);
@@ -206,6 +221,12 @@ public class EditAdActivity extends AppCompatActivity {
 
             mImageContainer.addView(imageView);
             mImageViews.add(imageView);
+        }
+
+        // Set location string
+        mLocation = LatLong.getLocation(this);
+        if (mLocation != null) {
+            mLocationEditText.setText(getLocationString(mLocation));
         }
 
         Intent intent = getIntent();
@@ -249,7 +270,7 @@ public class EditAdActivity extends AppCompatActivity {
     private void downloadAd(String postId) {
         // Show progress dialog
         mProgressDialog = ProgressDialog.show(this,
-                getString(R.string.title_progress_posting),
+                getString(R.string.title_progress_loading),
                 getString(R.string.prompt_wait), true, true,
                 new DialogInterface.OnCancelListener() {
                     @Override
@@ -283,6 +304,7 @@ public class EditAdActivity extends AppCompatActivity {
                                 // Store data
                                 mImages = data.imageIds;
                                 mThumbnailImage = data.thumbnailImageId;
+                                mCategory = data.category;
 
                                 // Get currency
                                 SpinnerAdapter currencyAdapter = mCurrenciesSpinner.getAdapter();
@@ -345,6 +367,7 @@ public class EditAdActivity extends AppCompatActivity {
                     if (result.isCancelled()) {
                         return;
                     }
+
                     if (!result.hasError()) {
                         // Decode image
                         byte[] buffer = Base64.decode(result.getData().imageData, Base64.DEFAULT);
@@ -383,14 +406,145 @@ public class EditAdActivity extends AppCompatActivity {
         }
     }
 
+    private void uploadAd(String title, String category, List<String> tags, Double price,
+                          String currency, String description, String location,
+                          @Nullable Double latitude, @Nullable Double longitude) {
+        // Show progress dialog
+        mProgressDialog = ProgressDialog.show(this,
+                getString(R.string.title_progress_saving),
+                getString(R.string.prompt_wait), true, true,
+                new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialogInterface) {
+                        if (mTask != null && !mTask.isCancelled()) {
+                            mTask.cancel();
+                        }
+                    }
+                });
+
+        // Update ad information
+        try {
+            final Context context = this;
+            PostService service = Service.get(PostService.class);
+            mTask = service.updatePost(mPostId, title, tags, price, currency, description,
+                    location, latitude, longitude, new IServiceCallback<BasicIdResult>() {
+                        @Override
+                        public void onEnd(ServiceResult<BasicIdResult> result) {
+                            mTask = null;
+                            if (result.isCancelled()) {
+                                return;
+                            }
+
+                            if (!result.hasError()) {
+                                // TODO: Upload changed images
+                        /*
+    private String mThumbnailImage;
+    private String mThumbnailImageNew;
+    private File[] mChangedImages;
+    private File mChangedThumbnailImage;
+                         */
+                                // ...
+
+
+                            } else {
+                                // The API failed to complete the request and returned an
+                                // exception
+                                result.getException().printStackTrace();
+                                Toast.makeText(context, R.string.service_unable_to_process_request,
+                                        Toast.LENGTH_LONG).show();
+                                if (mProgressDialog != null) {
+                                    mProgressDialog.dismiss();
+                                    mProgressDialog = null;
+                                }
+                            }
+                        }
+                    });
+        } catch (Exception ex) {
+            // Unable to get service (internal error)
+            ex.printStackTrace();
+            Toast.makeText(this, R.string.service_internal_error, Toast.LENGTH_LONG).show();
+        }
+    }
+
     public void onSave(View view) {
-        // TODO: Show are you sure message (are you sure you wish to post ad/make the changes?)
+        // Check input
+        final String title = mTitleEditText.getText().toString();
+        if (title.isEmpty()) {
+            Toast.makeText(this, R.string.error_invalid_title,
+                    Toast.LENGTH_LONG).show();
+            mTitleEditText.requestFocus();
+            return;
+        }
 
+        final String description = mDescriptionEditText.getText().toString();
+        if (description.isEmpty()) {
+            Toast.makeText(this, R.string.error_invalid_description,
+                    Toast.LENGTH_LONG).show();
+            mDescriptionEditText.requestFocus();
+            return;
+        }
 
-        // TODO/NOTE: When saving an ad, unlist it first
+        final String price = mPriceEditText.getText().toString();
+        if (price.isEmpty()) {
+            Toast.makeText(this, R.string.error_invalid_price,
+                    Toast.LENGTH_LONG).show();
+            mPriceEditText.requestFocus();
+            return;
+        }
 
-        // TODO: Upload...
-        Toast.makeText(this, "Saving ad...", Toast.LENGTH_LONG).show();
-        finish();
+        final String location = mLocationEditText.getText().toString();
+        if (location.isEmpty()) {
+            Toast.makeText(this, R.string.error_invalid_location,
+                    Toast.LENGTH_LONG).show();
+            mLocationEditText.requestFocus();
+            return;
+        }
+
+        final String currency = mCurrenciesSpinner.getSelectedItem().toString();
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.title_alert_are_you_sure);
+        builder.setMessage(R.string.prompt_are_you_sure_edit);
+        builder.setPositiveButton(R.string.action_yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                if (i == AlertDialog.BUTTON_POSITIVE) {
+                    // Get location coordinates (used later for measuring distance between user
+                    // and ad poster
+                    Double latitude = null;
+                    Double longitude = null;
+                    if (mLocation != null) {
+                        latitude = mLocation.getLatitude();
+                        longitude = mLocation.getLongitude();
+                    }
+
+                    // Upload ad
+                    uploadAd(title, mCategory, mTags, Double.parseDouble(price), currency,
+                            description, location, latitude, longitude);
+                }
+            }
+        });
+        builder.setNegativeButton(R.string.action_no, null);
+        builder.show();
+    }
+
+    private String getLocationString(Location location) {
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocation(location.getLatitude(),
+                    location.getLongitude(), 1);
+
+            // Get first address information
+            Address address = addresses.get(0);
+
+            return String.format("%s, %s",
+                    address.getLocality(),
+                    address.getCountryName()
+            );
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        return "";
     }
 }

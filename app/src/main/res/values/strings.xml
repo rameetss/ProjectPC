@@ -90,13 +90,19 @@
     <string name="prompt_discard_post">Are you sure you want to discard this post?</string>
     <string name="prompt_discard_post_changes">Are you sure you want to discard the changes?</string>
     <string name="prompt_are_you_sure_post">Are you sure you want to post this ad?</string>
+    <string name="prompt_are_you_sure_edit">Are you sure you want to save your changes?</string>
     <string name="error_invalid_title">Invalid title</string>
     <string name="error_invalid_description">Invalid description</string>
     <string name="error_invalid_price">Invalid price</string>
     <string name="error_invalid_location">Invalid location</string>
     <string name="error_unable_open_image">Unable to open image. Check permissions.</string>
     <string name="title_progress_posting">Posting…</string>
+    <string name="title_progress_loading">Loading…</string>
+    <string name="title_progress_saving">Saving…</string>
     <string name="prompt_ad_posted">Your ad has been posted.</string>
+    <string name="prompt_ad_deleted">Your ad has been deleted.</string>
+    <string name="prompt_email_title">ProjectPC: About %s</string>
+    <string name="prompt_email_choose_client">Choose email client</string>
 
     <!-- Show Ad -->
     <string name="title_activity_show_ad">Ad</string>
@@ -109,7 +115,7 @@
     <string name="action_search">Search</string>
     <string name="action_settings">Settings</string>
     <string name="action_edit">Edit</string>
-    <string name="action_bookmark">Bookmark</string>
+    <string name="action_delete">Delete</string>
 
     <!-- Message activity -->
     <string name="title_activity_message">Message</string>
@@ -119,7 +125,6 @@
     <string name="title_activity_settings">Settings</string>
     <string name="prompt_notifications">Notifications</string>
     <string name="action_clear_cache_button">Clear Cache</string>
-    <string name="action_clear_bookmarks_button">Clear Bookmarks</string>
     <string name="prompt_select_ringtone">Ringtone</string>
     <string name="prompt_select_silent">Silent</string>
 

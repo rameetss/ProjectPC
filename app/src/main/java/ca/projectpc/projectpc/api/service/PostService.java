@@ -65,7 +65,6 @@ public class PostService extends Service {
     private class UpdatePostParameters {
         String postId;
         String title;
-        String category;
         List<String> tags;
         Double price;
         String currency;
@@ -95,6 +94,10 @@ public class PostService extends Service {
         Integer count;
     }
 
+    private class RemovePostParameters {
+        String postId;
+    }
+
     private class GetPostParameters {
         String postId;
     }
@@ -108,6 +111,7 @@ public class PostService extends Service {
 
     public class Post extends DataResult {
         public String authorId;
+        public String authorEmail;
         public Integer status;
         public String title;
         public String category;
@@ -194,7 +198,16 @@ public class PostService extends Service {
                 SetListedParameters.class, BasicIdResult.class, null, callback);
     }
 
-    public ServiceTask updatePost(String postId, @Nullable String title, @Nullable String category,
+    public ServiceTask removePost(String postId, IServiceCallback<BasicIdResult> callback)
+            throws Exception {
+        RemovePostParameters parameters = new RemovePostParameters();
+        parameters.postId = postId;
+
+        return sendRequest("POST", "/post/delete", parameters,
+                RemovePostParameters.class, BasicIdResult.class, null, callback);
+    }
+
+    public ServiceTask updatePost(String postId, @Nullable String title,
                                   @Nullable List<String> tags, @Nullable Double price,
                                   @Nullable String currency, @Nullable String body,
                                   @Nullable String location, @Nullable Double latitude,
@@ -204,7 +217,6 @@ public class PostService extends Service {
         UpdatePostParameters parameters = new UpdatePostParameters();
         parameters.postId = postId;
         parameters.title = title;
-        parameters.category = category;
         parameters.tags = tags;
         parameters.price = price;
         parameters.currency = currency;

@@ -114,7 +114,6 @@ public class SearchResultsActivity extends AppCompatActivity
     public void onBackPressed() {
         if (mTask != null && !mTask.isCancelled()) {
             mTask.cancel();
-            return;
         }
 
         super.onBackPressed();

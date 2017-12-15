@@ -90,8 +90,14 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         holder.mMessageImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO: Send message
-                Toast.makeText(mContext, "Send message!", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.putExtra(Intent.EXTRA_EMAIL, new String[]{post.authorEmail});
+                intent.putExtra(Intent.EXTRA_SUBJECT, String.format(
+                        mContext.getString(R.string.prompt_email_title),
+                        post.title
+                ));
+                mContext.startActivity(Intent.createChooser(intent,
+                        mContext.getString(R.string.prompt_choose_email_client)));
             }
         });
 
@@ -106,6 +112,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             } else {
                 distanceString = new DecimalFormat("0.0").format(distance / 1000) + "km";
             }
+        } else {
+            distanceString = post.location;
         }
 
         // Set text

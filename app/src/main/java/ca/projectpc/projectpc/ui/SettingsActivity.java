@@ -119,16 +119,6 @@ public class SettingsActivity extends AppCompatActivity {
                     return true;
                 }
             });
-
-            Preference bookmarksButton = findPreference("clear_bookmarks");
-            bookmarksButton.setOnPreferenceClickListener(
-                    new Preference.OnPreferenceClickListener() {
-                        @Override
-                        public boolean onPreferenceClick(Preference preference) {
-                            // TODO: Clear bookmarks
-                            return true;
-                        }
-                    });
         }
     }
 }

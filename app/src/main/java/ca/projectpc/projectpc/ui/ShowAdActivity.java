@@ -22,19 +22,18 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.text.DecimalFormat;
@@ -42,16 +41,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ca.projectpc.projectpc.R;
-import ca.projectpc.projectpc.Task;
 import ca.projectpc.projectpc.api.IServiceCallback;
 import ca.projectpc.projectpc.api.Service;
 import ca.projectpc.projectpc.api.ServiceResult;
 import ca.projectpc.projectpc.api.ServiceTask;
 import ca.projectpc.projectpc.api.service.PostService;
+import ca.projectpc.projectpc.api.service.result.BasicIdResult;
 import ca.projectpc.projectpc.ui.glide.GlideApp;
 import ca.projectpc.projectpc.utility.LatLong;
 
-// TODO: Use fab
 public class ShowAdActivity extends AppCompatActivity {
     private LinearLayout mImageContainer;
     private TextView mTitleTextView;
@@ -60,8 +58,10 @@ public class ShowAdActivity extends AppCompatActivity {
     private TextView mPriceTextView;
     private TextView mLocationTextView;
     private TextView mDistanceTextView;
+    private FloatingActionButton mSendMessageButton;
 
     private String mPostId;
+    private List<ServiceTask> mTasks;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -81,6 +81,18 @@ public class ShowAdActivity extends AppCompatActivity {
         mPriceTextView = (TextView) findViewById(R.id.show_ad_price);
         mLocationTextView = (TextView) findViewById(R.id.show_ad_location);
         mDistanceTextView = (TextView) findViewById(R.id.show_ad_distance);
+        mSendMessageButton = (FloatingActionButton) findViewById(R.id.show_ad_send);
+
+        mSendMessageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO: Send message
+
+            }
+        });
+
+        // Create task queue
+        mTasks = new ArrayList<>();
 
         // Get image container
         mImageContainer = (LinearLayout) findViewById(R.id.show_ad_image_container);
@@ -111,8 +123,8 @@ public class ShowAdActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
                 return true;
-            case R.id.menu_action_bookmark:
-                // TODO: Implement
+            case R.id.menu_action_delete:
+                deleteAd();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -121,12 +133,45 @@ public class ShowAdActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        // TODO/NOTE: Task cancellation
+        // Cancel all the tasks
+        for (ServiceTask task : mTasks) {
+            if (task != null && !task.isCancelled() && task.isRunning()) {
+                task.cancel();
+            }
+        }
+
+        mTasks.clear();
 
         super.onBackPressed();
     }
 
-    // TODO: Fix design for image views, they're not right
+    private void deleteAd() {
+        try {
+            final Context context = this;
+            PostService service = Service.get(PostService.class);
+            service.removePost(mPostId, new IServiceCallback<BasicIdResult>() {
+                @Override
+                public void onEnd(ServiceResult<BasicIdResult> result) {
+                    if (!result.hasError()) {
+                        Toast.makeText(context, R.string.prompt_ad_deleted,
+                                Toast.LENGTH_LONG).show();
+                        finish();
+                    } else {
+                        // The API failed to complete the request and returned an exception
+                        result.getException().printStackTrace();
+                        Toast.makeText(context, R.string.service_unable_to_process_request,
+                                Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
+        } catch (Exception ex) {
+            // Unable to get service (internal error)
+            ex.printStackTrace();
+            Toast.makeText(this, R.string.service_internal_error,
+                    Toast.LENGTH_LONG).show();
+        }
+    }
+
     private void downloadAd(String postId) {
         try {
             final Context context = this;
@@ -134,8 +179,6 @@ public class ShowAdActivity extends AppCompatActivity {
             service.getPost(postId, new IServiceCallback<PostService.GetPostResult>() {
                 @Override
                 public void onEnd(ServiceResult<PostService.GetPostResult> result) {
-                    // TODO: Loading dialog?
-
                     if (result.isCancelled()) {
                         return;
                     }
@@ -154,8 +197,7 @@ public class ShowAdActivity extends AppCompatActivity {
                                     data.longitude, location.getLatitude(),
                                     location.getLongitude());
                             if (distance < 1000) {
-                                distanceString = new DecimalFormat("0.0").format(distance)
-                                        + "m";
+                                distanceString = new DecimalFormat("0.0").format(distance) + "m";
                             } else {
                                 distanceString = new DecimalFormat("0.0").format(distance / 1000)
                                         + "km";
@@ -211,7 +253,8 @@ public class ShowAdActivity extends AppCompatActivity {
             final PostService service = Service.get(PostService.class);
 
             // TODO: Make cancellable (put them in a task list)
-            service.downloadImage(imageId, new IServiceCallback<PostService.DownloadImageResult>() {
+            ServiceTask task = service.downloadImage(imageId,
+                    new IServiceCallback<PostService.DownloadImageResult>() {
                 @Override
                 public void onEnd(ServiceResult<PostService.DownloadImageResult> result) {
                     if (result.isCancelled()) {
@@ -236,6 +279,7 @@ public class ShowAdActivity extends AppCompatActivity {
                     }
                 }
             });
+            mTasks.add(task);
         } catch (Exception ex) {
             // Unable to get service (internal error)
             ex.printStackTrace();

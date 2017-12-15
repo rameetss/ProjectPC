@@ -8,11 +8,6 @@
             android:summary="Clears the cache"
             android:title="@string/action_clear_cache_button" />
 
-        <Preference
-            android:key="clear_bookmarks"
-            android:summary="Clears the bookmarks"
-            android:title="@string/action_clear_bookmarks_button" />
-
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/prompt_notifications">
