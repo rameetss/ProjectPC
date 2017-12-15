@@ -76,12 +76,6 @@ public class EditAdActivity extends AppCompatActivity {
 
     private String mPostId;
     private String mCategory;
-    private List<ImageView> mImageViews;
-    private String[] mImages;
-    private String mThumbnailImage;
-    private String mThumbnailImageNew;
-    private File[] mChangedImages;
-    private File mChangedThumbnailImage;
     private List<String> mTags;
     private Location mLocation;
 
@@ -151,80 +145,6 @@ public class EditAdActivity extends AppCompatActivity {
         // Get image view size
         int imageViewWidth = (int) getResources().getDimension(R.dimen.post_image_width);
         int imageViewHeight = (int) getResources().getDimension(R.dimen.post_image_height);
-
-        // Create image views
-        mImageViews = new ArrayList<>();
-        mImages = new String[MAX_IMAGES];
-        mChangedImages = new File[MAX_IMAGES];
-        for (int i = 0; i < MAX_IMAGES; i++) {
-            final int imageIndex = i;
-            final ImageView imageView = new ImageView(this);
-            imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-            imageView.setImageResource(R.drawable.ic_add_box_gray);
-            imageView.setLayoutParams(new LinearLayout.LayoutParams(
-                    imageViewWidth,
-                    imageViewHeight
-            ));
-            imageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    final String image = mImages[imageIndex];
-                    if (image != null) {
-                        // Show menu
-                        String[] options = {
-                                getString(R.string.action_set_primary),
-                                getString(R.string.action_remove)
-                        };
-
-                        AlertDialog.Builder builder = new AlertDialog.Builder(EditAdActivity.this);
-                        builder.setTitle(getString(R.string.prompt_image_options));
-                        builder.setItems(options, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int which) {
-                                if (which == 0) {
-                                    // Set as primary
-                                    if (mChangedImages[imageIndex] == null) {
-                                        mThumbnailImageNew = mImages[imageIndex];
-                                        mChangedThumbnailImage = null;
-                                    } else {
-                                        mChangedThumbnailImage = mChangedImages[imageIndex];
-                                        mThumbnailImageNew = null;
-                                    }
-                                } else if (which == 1) {
-                                    // Remove image
-                                    if (mChangedImages[imageIndex] == null) {
-                                        if (mThumbnailImage.equals(mImages[imageIndex])) {
-                                            mThumbnailImageNew = null;
-                                            mThumbnailImage = null;
-                                        }
-                                        mImages[imageIndex] = null;
-                                    } else {
-                                        if (mChangedThumbnailImage == mChangedImages[imageIndex]) {
-                                            mChangedThumbnailImage = null;
-                                            mThumbnailImage = null;
-                                            mThumbnailImageNew = null;
-                                        }
-                                        mChangedImages[imageIndex] = null;
-                                        mImages[imageIndex] = null;
-                                    }
-
-                                    imageView.setImageResource(R.drawable.ic_add_box_gray);
-                                    imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-                                }
-                            }
-                        });
-                        builder.show();
-                    } else {
-                        // Show add image dialog
-                        EasyImage.openChooserWithGallery(EditAdActivity.this,
-                                getString(R.string.prompt_select_image), imageIndex);
-                    }
-                }
-            });
-
-            mImageContainer.addView(imageView);
-            mImageViews.add(imageView);
-        }
 
         // Set location string
         mLocation = LatLong.getLocation(this);
@@ -318,8 +238,6 @@ public class EditAdActivity extends AppCompatActivity {
                                 PostService.GetPostResult data = result.getData();
 
                                 // Store data
-                                mImages = data.imageIds;
-                                mThumbnailImage = data.thumbnailImageId;
                                 mCategory = data.category;
 
                                 // Get currency
@@ -347,10 +265,26 @@ public class EditAdActivity extends AppCompatActivity {
                                     mTagsChipsInput.addChip(tag, "");
                                 }
 
+                                // Get image view size
+                                int imageViewWidth = (int) getResources().getDimension(
+                                        R.dimen.show_image_width);
+                                int imageViewHeight = (int) getResources().getDimension(
+                                        R.dimen.show_image_height);
+
                                 // Download images
                                 for (int i = 0; i < data.imageIds.length; i++) {
                                     String imageId = data.imageIds[i];
-                                    downloadImage(imageId, i, i == data.imageIds.length - 1);
+
+                                    ImageView imageView = new ImageView(context);
+                                    imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                                    imageView.setLayoutParams(new LinearLayout.LayoutParams(
+                                            imageViewWidth,
+                                            imageViewHeight
+                                    ));
+                                    mImageContainer.addView(imageView);
+
+                                    downloadImage(imageId, imageView,
+                                            i == data.imageIds.length - 1);
                                 }
                             } else {
                                 // The API failed to complete the request and returned an
@@ -377,10 +311,10 @@ public class EditAdActivity extends AppCompatActivity {
      * are downloaded.
      *
      * @param imageId   Current ID of the image to download
-     * @param index     Current position in the images array
+     * @param imageView Current image view to add the image to
      * @param lastImage Whether or not the image to download is the last of the uploaded images
      */
-    private void downloadImage(String imageId, final int index, final boolean lastImage) {
+    private void downloadImage(String imageId, final ImageView imageView, final boolean lastImage) {
         try {
             final Context context = this;
             final PostService service = Service.get(PostService.class);
@@ -398,7 +332,6 @@ public class EditAdActivity extends AppCompatActivity {
                         byte[] buffer = Base64.decode(result.getData().imageData, Base64.DEFAULT);
 
                                 // Show in image view
-                                ImageView imageView = mImageViews.get(index);
                                 imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
                                 GlideApp.with(context)
                                         .load(buffer)
@@ -431,7 +364,20 @@ public class EditAdActivity extends AppCompatActivity {
         }
     }
 
-    private void uploadAd(String title, String category, List<String> tags, Double price,
+    /**
+     * Called to upload an ad and the changes made to it, back to the server so those changes
+     * can be reflected throughout the application and clients
+     *
+     * @param title       Modified title
+     * @param tags        Modified tags
+     * @param price       New price
+     * @param currency    New currency
+     * @param description Modified description
+     * @param location    Modified location
+     * @param latitude    Modified latitude
+     * @param longitude   Modified longitude
+     */
+    private void uploadAd(String title, List<String> tags, Double price,
                           String currency, String description, String location,
                           @Nullable Double latitude, @Nullable Double longitude) {
         // Show progress dialog
@@ -461,16 +407,9 @@ public class EditAdActivity extends AppCompatActivity {
                             }
 
                             if (!result.hasError()) {
-                                // TODO: Upload changed images
-                        /*
-    private String mThumbnailImage;
-    private String mThumbnailImageNew;
-    private File[] mChangedImages;
-    private File mChangedThumbnailImage;
-                         */
-                                // ...
-
-
+                                Toast.makeText(context, R.string.prompt_ad_updated,
+                                        Toast.LENGTH_LONG).show();
+                                finish();
                             } else {
                                 // The API failed to complete the request and returned an
                                 // exception
@@ -550,15 +489,15 @@ public class EditAdActivity extends AppCompatActivity {
                     }
 
                     // Upload ad
-                    uploadAd(title, mCategory, mTags, Double.parseDouble(price), currency,
-                            description, location, latitude, longitude);
+                    uploadAd(title, mTags, Double.parseDouble(price), currency, description,
+                            location, latitude, longitude);
                 }
             }
         });
         builder.setNegativeButton(R.string.action_no, null);
         builder.show();
     }
-
+    
     private String getLocationString(Location location) {
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
         try {

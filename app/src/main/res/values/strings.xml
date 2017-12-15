@@ -100,6 +100,7 @@
     <string name="title_progress_loading">Loading…</string>
     <string name="title_progress_saving">Saving…</string>
     <string name="prompt_ad_posted">Your ad has been posted.</string>
+    <string name="prompt_ad_updated">Your ad has been updated.</string>
     <string name="prompt_ad_deleted">Your ad has been deleted.</string>
     <string name="prompt_email_title">ProjectPC: About %s</string>
     <string name="prompt_email_choose_client">Choose email client</string>

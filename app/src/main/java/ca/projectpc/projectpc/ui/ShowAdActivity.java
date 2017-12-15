@@ -22,7 +22,6 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
@@ -58,9 +57,10 @@ public class ShowAdActivity extends AppCompatActivity {
     private TextView mPriceTextView;
     private TextView mLocationTextView;
     private TextView mDistanceTextView;
-    private FloatingActionButton mSendMessageButton;
 
     private String mPostId;
+    private String mTitle;
+    private String mAuthorEmail;
     private List<ServiceTask> mTasks;
 
     /**
@@ -87,15 +87,6 @@ public class ShowAdActivity extends AppCompatActivity {
         mPriceTextView = (TextView) findViewById(R.id.show_ad_price);
         mLocationTextView = (TextView) findViewById(R.id.show_ad_location);
         mDistanceTextView = (TextView) findViewById(R.id.show_ad_distance);
-        mSendMessageButton = (FloatingActionButton) findViewById(R.id.show_ad_send);
-
-        mSendMessageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // TODO: Send message
-
-            }
-        });
 
         // Create task queue
         mTasks = new ArrayList<>();
@@ -198,15 +189,12 @@ public class ShowAdActivity extends AppCompatActivity {
      * @param postId Database identification for the ad to fetch data for
      */
     private void downloadAd(String postId) {
-        // TODO: Fix design for image views, they're not right
         try {
             final Context context = this;
             PostService service = Service.get(PostService.class);
             service.getPost(postId, new IServiceCallback<PostService.GetPostResult>() {
                 @Override
                 public void onEnd(ServiceResult<PostService.GetPostResult> result) {
-                    // TODO: Loading dialog?
-
                     if (result.isCancelled()) {
                         return;
                     }
@@ -231,6 +219,10 @@ public class ShowAdActivity extends AppCompatActivity {
                                         + "km";
                             }
                         }
+
+                        // Set ad info
+                        mTitle = data.title;
+                        mAuthorEmail = data.authorEmail;
 
                         // Set other info
                         mTitleTextView.setText(data.title);
@@ -288,7 +280,6 @@ public class ShowAdActivity extends AppCompatActivity {
             final Context context = this;
             final PostService service = Service.get(PostService.class);
 
-            // TODO: Make cancellable (put them in a task list)
             ServiceTask task = service.downloadImage(imageId,
                     new IServiceCallback<PostService.DownloadImageResult>() {
                 @Override
@@ -331,6 +322,13 @@ public class ShowAdActivity extends AppCompatActivity {
      * @param view The send message button
      */
     public void onSendMessage(View view) {
-
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("plain/text");
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{mAuthorEmail});
+        intent.putExtra(Intent.EXTRA_SUBJECT, String.format(
+                getString(R.string.prompt_email_title),
+                mTitle
+        ));
+        startActivity(Intent.createChooser(intent, ""));
     }
 }

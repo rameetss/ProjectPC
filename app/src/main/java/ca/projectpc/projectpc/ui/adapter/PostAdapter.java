@@ -111,7 +111,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                         mContext.getString(R.string.prompt_email_title),
                         post.title
                 ));
-                mContext.startActivity(Intent.createChooser(intent,""));
+                mContext.startActivity(Intent.createChooser(intent, ""));
             }
         });
 

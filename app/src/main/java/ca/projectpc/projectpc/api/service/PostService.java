@@ -259,7 +259,6 @@ public class PostService extends Service {
                 SetListedParameters.class, BasicIdResult.class, null, callback);
     }
 
-    // TODO: Javadocs
     public ServiceTask removePost(String postId, IServiceCallback<BasicIdResult> callback)
             throws Exception {
         RemovePostParameters parameters = new RemovePostParameters();
