@@ -61,6 +61,13 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         mShowSendMessageIcon = show;
     }
 
+    /**
+     * Called when creating a ViewHolder to inflate the specific ad.
+     *
+     * @param parent   Parent view to hold the ad row
+     * @param viewType Required for the implemented method, not used
+     * @return Inflated ViewHolder for the ad
+     */
     @Override
     public PostViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         mContext = parent.getContext();
@@ -70,6 +77,13 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         return new PostViewHolder(view);
     }
 
+    /**
+     * Called to bind the post ViewHolder to the row position, and set all relevant fields
+     * to the ad data.
+     *
+     * @param holder PostViewHolder containing the post data
+     * @param position Integer position in the ViewHolder
+     */
     @Override
     public void onBindViewHolder(final PostViewHolder holder, int position) {
         final PostService.Post post = mPosts.get(position);
@@ -175,6 +189,11 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         }
     }
 
+    /**
+     * Initialize the image downloader when the RecycledView is initialized.
+     *
+     * @param holder ViewHolder containing ad data.
+     */
     @Override
     public void onViewRecycled(PostViewHolder holder) {
         // Cancel download event for anything downloading
@@ -185,11 +204,19 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         super.onViewRecycled(holder);
     }
 
+    /**
+     * Fetch the number of posts
+     *
+     * @return number of posts
+     */
     @Override
     public int getItemCount() {
         return mPosts.size();
     }
 
+    /**
+     * Custom ViewHolder class for each ad post
+     */
     class PostViewHolder extends RecyclerView.ViewHolder {
         CardView mCardView;
         ImageView mThumbnailImageView;

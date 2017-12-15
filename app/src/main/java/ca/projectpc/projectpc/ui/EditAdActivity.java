@@ -21,11 +21,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.Location;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -102,7 +98,7 @@ public class EditAdActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        // Get controls
+        // Initialize all relevant user input fields
         mTitleEditText = (EditText) findViewById(R.id.edit_post_title);
         mDescriptionEditText = (EditText) findViewById(R.id.edit_post_description);
         mCurrenciesSpinner = (Spinner) findViewById(R.id.edit_post_currencies);
@@ -115,6 +111,9 @@ public class EditAdActivity extends AppCompatActivity {
 
         // Check for valid tags
         mTags = new ArrayList<>();
+
+        // Listener for when the user is adding tags to 'chip' them out,
+        // displaying categorically.
         mTagsChipsInput.addChipsListener(new ChipsInput.ChipsListener() {
             @Override
             public void onChipAdded(final ChipInterface chipInterface, int i) {
@@ -235,6 +234,13 @@ public class EditAdActivity extends AppCompatActivity {
         downloadAd(mPostId);
     }
 
+    /**
+     * Called when a menu item is selected to navigate the user back to
+     * the home page.
+     *
+     * @param item MenuItem that was selected
+     * @return If the selection was handled
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -246,10 +252,10 @@ public class EditAdActivity extends AppCompatActivity {
         }
     }
 
-    private void pressBack() {
-        super.onBackPressed();
-    }
-
+    /**
+     * Handle when the user presses the back button. Alert the user that going back will
+     * discard changes to the ad.
+     */
     @Override
     public void onBackPressed() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -259,7 +265,7 @@ public class EditAdActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (i == AlertDialog.BUTTON_POSITIVE) {
-                    pressBack();
+                    EditAdActivity.super.onBackPressed();
                 }
             }
         });
@@ -267,6 +273,12 @@ public class EditAdActivity extends AppCompatActivity {
         builder.show();
     }
 
+    /**
+     * Called when the activity begins to download editable ad data from
+     * the server, setting the appropriate text fields afterwards.
+     *
+     * @param postId Database identification for the ad to fetch data for
+     */
     private void downloadAd(String postId) {
         // Show progress dialog
         mProgressDialog = ProgressDialog.show(this,
@@ -355,6 +367,15 @@ public class EditAdActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Called to download the ad images uploaded upon posting. Done separately from
+     * downloadAd to reduce cluttering. Called recursively until all ad specific images
+     * are downloaded.
+     *
+     * @param imageId   Current ID of the image to download
+     * @param index     Current position in the images array
+     * @param lastImage Whether or not the image to download is the last of the uploaded images
+     */
     private void downloadImage(String imageId, final int index, final boolean lastImage) {
         try {
             final Context context = this;
@@ -372,28 +393,28 @@ public class EditAdActivity extends AppCompatActivity {
                         // Decode image
                         byte[] buffer = Base64.decode(result.getData().imageData, Base64.DEFAULT);
 
-                        // Show in image view
-                        ImageView imageView = mImageViews.get(index);
-                        imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-                        GlideApp.with(context)
-                                .load(buffer)
-                                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                                .skipMemoryCache(true)
-                                .into(imageView);
+                                // Show in image view
+                                ImageView imageView = mImageViews.get(index);
+                                imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                                GlideApp.with(context)
+                                        .load(buffer)
+                                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                        .skipMemoryCache(true)
+                                        .into(imageView);
 
-                        // Dismiss progress if this was the last image downloaded
-                        if (lastImage && mProgressDialog != null) {
-                            mProgressDialog.dismiss();
-                            mProgressDialog = null;
+                                // Dismiss progress if this was the last image downloaded
+                                if (lastImage && mProgressDialog != null) {
+                                    mProgressDialog.dismiss();
+                                    mProgressDialog = null;
+                                }
+                            } else {
+                                result.getException().printStackTrace();
+                                Toast.makeText(context,
+                                        getString(R.string.service_unable_to_process_request),
+                                        Toast.LENGTH_LONG).show();
+                            }
                         }
-                    } else {
-                        result.getException().printStackTrace();
-                        Toast.makeText(context,
-                                getString(R.string.service_unable_to_process_request),
-                                Toast.LENGTH_LONG).show();
-                    }
-                }
-            });
+                    });
         } catch (Exception ex) {
             // Unable to get service (internal error)
             ex.printStackTrace();
@@ -466,6 +487,12 @@ public class EditAdActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Called when the user clicks the 'Save' button after editing the ad. Remove the previous ad
+     * listing, send the updated information to the server, and list the new updated ad.
+     *
+     * @param view The layout button that was clicked
+     */
     public void onSave(View view) {
         // Check input
         final String title = mTitleEditText.getText().toString();

@@ -17,6 +17,11 @@
 
 package ca.projectpc.projectpc.api;
 
+/**
+ * Class to handle and fetch service results of a type TResult
+ *
+ * @param <TResult> Service result type
+ */
 public class ServiceResult<TResult> {
     private int mCode;
     private TResult mData;

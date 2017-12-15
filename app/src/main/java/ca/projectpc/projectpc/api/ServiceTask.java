@@ -28,6 +28,7 @@ public class ServiceTask {
 
     /**
      * Initializes instance with HttpTask
+     *
      * @param task Internal task
      */
     public ServiceTask(HttpTask task) {
@@ -43,6 +44,7 @@ public class ServiceTask {
 
     /**
      * Request was cancelled or not
+     *
      * @return Whether the request was cancelled or not
      */
     public boolean isCancelled() {
@@ -51,6 +53,7 @@ public class ServiceTask {
 
     /**
      * Task is running or not
+     *
      * @return Whether the task is running or not
      */
     public boolean isRunning() {

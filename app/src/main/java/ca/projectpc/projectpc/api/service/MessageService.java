@@ -26,6 +26,9 @@ import ca.projectpc.projectpc.api.service.result.ArrayResult;
 import ca.projectpc.projectpc.api.service.result.BasicIdResult;
 import ca.projectpc.projectpc.api.service.result.DataResult;
 
+/**
+ * Message service class to handle sending and receiving messages.
+ */
 public class MessageService extends Service {
     private class CreateMessageParameters {
         String postId;
@@ -54,6 +57,17 @@ public class MessageService extends Service {
         // No extra variables
     }
 
+    /**
+     * Method to create a sending message from parameter data using
+     * HTTP POST create request.
+     *
+     * @param postId   ID of the post user wants to send a message to
+     * @param targetId ID of the target user
+     * @param body     The message to be sent
+     * @param callback Service callback to receive success or fail result
+     * @return The result of the sendRequest method
+     * @throws Exception sendRequest may throw Exception
+     */
     public ServiceTask createMessage(String postId, String targetId, String body,
                                      IServiceCallback<BasicIdResult> callback)
             throws Exception {
@@ -66,6 +80,14 @@ public class MessageService extends Service {
                 BasicIdResult.class, null, callback);
     }
 
+    /**
+     * Method for fetching messages related to a specified post.
+     *
+     * @param postId ID of the post to fetch messages for
+     * @param callback Service callback to receive success or fail result
+     * @return The result of the sendRequest method
+     * @throws Exception sendRequest may throw Exception
+     */
     public ServiceTask getMessagesForPost(String postId,
                                           IServiceCallback<GetMessagesResult> callback)
             throws Exception {
@@ -76,12 +98,27 @@ public class MessageService extends Service {
                 GetMessagesForPostParameters.class, GetMessagesResult.class, null, callback);
     }
 
+    /**
+     * Method to fetch all messages
+     *
+     * @param callback Service callback to receive success or fail result
+     * @return The result of the sendRequest method
+     * @throws Exception sendRequest may throw Exception
+     */
     public ServiceTask getAllMessages(IServiceCallback<GetMessagesResult> callback)
             throws Exception {
         return sendRequest("POST", "/message/getAllMessages", GetMessagesResult.class, null,
                 callback);
     }
 
+    /**
+     * Method to fetch all message starting from a given date
+     *
+     * @param time The date with which to start fetching from
+     * @param callback Service callback to receive success or fail result
+     * @return The result of the sendRequest method
+     * @throws Exception sendRequest may throw Exception
+     */
     public ServiceTask getMessagesSince(Date time, IServiceCallback<GetMessagesResult> callback)
             throws Exception {
         GetMessagesSinceParameters parameters = new GetMessagesSinceParameters();

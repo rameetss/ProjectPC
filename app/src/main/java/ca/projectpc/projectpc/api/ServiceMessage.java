@@ -24,6 +24,7 @@ import com.google.gson.annotations.SerializedName;
  * Service messages are serialized into JSON objects which are specific to each result type,
  * this class is able to serialize and deserialize any data type which is used for communication
  * between the client and backend
+ *
  * @param <TData> Result data type
  */
 public class ServiceMessage<TData> {
@@ -43,6 +44,7 @@ public class ServiceMessage<TData> {
 
     /**
      * Initialize with required class info to allow serialization
+     *
      * @param classInfo Data class type information
      */
     public ServiceMessage(Class<TData> classInfo) {
@@ -55,6 +57,7 @@ public class ServiceMessage<TData> {
 
     /**
      * Get specific message code
+     *
      * @return Message code
      */
     public int getCode() {
@@ -63,6 +66,7 @@ public class ServiceMessage<TData> {
 
     /**
      * Get error string
+     *
      * @return Error string
      */
     public String getError() {
@@ -71,6 +75,7 @@ public class ServiceMessage<TData> {
 
     /**
      * Get message data
+     *
      * @return Message data
      */
     public TData getData() {
@@ -79,6 +84,7 @@ public class ServiceMessage<TData> {
 
     /**
      * Deserialize JSON string into message
+     *
      * @param data JSON serialized string
      */
     public void deserialize(String data) {
@@ -95,6 +101,7 @@ public class ServiceMessage<TData> {
 
     /**
      * Serialize class instance into JSON sting
+     *
      * @return String serialized in JSON format
      */
     public String serialize() {

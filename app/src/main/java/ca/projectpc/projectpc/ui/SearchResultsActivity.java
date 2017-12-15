@@ -53,6 +53,12 @@ public class SearchResultsActivity extends AppCompatActivity
     private List<String> mTags;
     private ServiceTask mTask;
 
+    /**
+     * Save any dynamic instance state in activity into the given Bundle,
+     * to be later received in onCreate(Bundle) if the activity needs to be re-created.
+     *
+     * @param savedInstanceState Last saved state
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,6 +91,7 @@ public class SearchResultsActivity extends AppCompatActivity
         mAdapter = new PostAdapter(mPosts);
         mRecyclerView.setAdapter(mAdapter);
 
+        // Fetch the categories from the SearchActivity intent
         Intent intent = getIntent();
         mCategory = intent.getStringExtra("category");
         String query = intent.getStringExtra("query");
@@ -99,6 +106,12 @@ public class SearchResultsActivity extends AppCompatActivity
         refresh();
     }
 
+    /**
+     * Send the user back to the home page when they've clicked the options item
+     *
+     * @param item The option item selected
+     * @return Success or failure as a Boolean
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -110,6 +123,9 @@ public class SearchResultsActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Cancel the fetching of results when the user presses the back button
+     */
     @Override
     public void onBackPressed() {
         if (mTask != null && !mTask.isCancelled()) {
@@ -119,11 +135,19 @@ public class SearchResultsActivity extends AppCompatActivity
         super.onBackPressed();
     }
 
+    /**
+     * Call the refresh method after user has swiped
+     */
     @Override
     public void onRefresh() {
         refresh();
     }
 
+
+    /**
+     * Refresh method to update search results. Initilizes the PostService, updates the adapter,
+     * and adds all posts.
+     */
     private void refresh() {
         // Set as complete, for now
         mSwipeRefreshLayout.setRefreshing(true);

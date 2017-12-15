@@ -94,6 +94,10 @@ public class InboxActivity extends AppCompatActivity
         // TODO: Cancel task
     }
 
+    /**
+     * Upon refreshing the layout (by swiping up), initialize the MessageService to fetch
+     * all messages from the database.
+     */
     private void refresh() {
         try {
             mSwipeRefreshLayout.setRefreshing(true);
@@ -129,6 +133,10 @@ public class InboxActivity extends AppCompatActivity
         refresh();
     }
 
+    /**
+     * Custom adapter class to handle RecyclerView message cards. Extends ViewHolder in order
+     * to place the messages in the layout properly.
+     */
     private class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
         class ViewHolder extends RecyclerView.ViewHolder {
             private CardView mCardView;
@@ -136,7 +144,13 @@ public class InboxActivity extends AppCompatActivity
             private TextView mMessageSender;
             private TextView mMessageTimeReceived;
 
-            public ViewHolder(View itemView) {
+            /**
+             * Initialize a class instance, setting the cardView and message information
+             * initialized above appropriately.
+             *
+             * @param itemView The view containing the cardView and message fields.
+             */
+            ViewHolder(View itemView) {
                 super(itemView);
 
                 mCardView = (CardView) itemView.findViewById(R.id.item_inbox_card_view);
@@ -153,6 +167,13 @@ public class InboxActivity extends AppCompatActivity
             mMessages = messages;
         }
 
+        /**
+         * Called when a ViewHolder is created to inflate the inbox message layout contained within.
+         *
+         * @param parent   ViewGroup parent containing the ViewHolder.
+         * @param viewType Int required by implemented method, not used.
+         * @return The created and inflated ViewHolder.
+         */
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(
@@ -160,6 +181,13 @@ public class InboxActivity extends AppCompatActivity
             return new ViewHolder(view);
         }
 
+        /**
+         * Called to bind a RecyclerView card to a ViewHolder and initialize a click listener
+         * for each card (each message).
+         *
+         * @param holder ViewHolder to bind the card to.
+         * @param position Position in the ViewHolder to bind the card
+         */
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
             final MessageService.Message message = mMessages.get(position);
@@ -175,6 +203,10 @@ public class InboxActivity extends AppCompatActivity
             //holder.mMessageSender.setText(message.)
         }
 
+        /**
+         * Called to fetch the number of cards in the ViewHolder
+         * @return number of cards
+         */
         @Override
         public int getItemCount() {
             return mMessages.size();

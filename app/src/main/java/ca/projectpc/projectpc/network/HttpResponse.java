@@ -37,6 +37,7 @@ public class HttpResponse {
 
     /**
      * Initializes response with request, HTTP connection, the response code and input stream
+     *
      * @param request HTTP request
      * @param connection HTTP connection
      * @param code HTTP response code
@@ -53,6 +54,7 @@ public class HttpResponse {
 
     /**
      * Closes connection
+     *
      * @throws IOException Thrown if the connection failed to close
      */
     public void close(boolean disposeConnection) throws IOException {
@@ -68,6 +70,7 @@ public class HttpResponse {
 
     /**
      * Dispose of resources
+     *
      * @throws Throwable An error occurred while closing the underlying connection
      */
     @Override
@@ -84,6 +87,7 @@ public class HttpResponse {
 
     /**
      * Gets request
+     *
      * @return HTTP request
      */
     public HttpRequest getRequest() {
@@ -92,6 +96,7 @@ public class HttpResponse {
 
     /**
      * Gets response data stream
+     *
      * @return HTTP data stream
      */
     public InputStream getDataStream() throws IOException {
@@ -100,6 +105,7 @@ public class HttpResponse {
 
     /**
      * Gets response error stream
+     *
      * @return HTTP error stream
      */
     public InputStream getErrorStream() throws IOException {
@@ -108,6 +114,7 @@ public class HttpResponse {
 
     /**
      * Gets HTTP response code
+     *
      * @return HTTP response code
      */
     public int getCode() {
@@ -116,6 +123,7 @@ public class HttpResponse {
 
     /**
      * Gets HTTP response headers
+     *
      * @return HTTP response headers
      */
     public Map<String, List<String>> getHeaders() {
@@ -124,6 +132,7 @@ public class HttpResponse {
 
     /**
      * Gets HTTP response header using key
+     *
      * @param key Header key
      * @return Header value
      */
@@ -133,9 +142,10 @@ public class HttpResponse {
 
     /**
      * Connection is open or not
+     *
      * @return Whether the response connection is open or not
      */
-    public boolean isOpen() {
+    boolean isOpen() {
         return mOpen;
     }
 }

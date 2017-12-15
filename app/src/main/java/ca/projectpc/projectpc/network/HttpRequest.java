@@ -59,6 +59,7 @@ public class HttpRequest {
 
     /**
      * Constructor initializing request with specified URL
+     *
      * @param url Request URL
      * @param data Data in byte array
      * @throws MalformedURLException Thrown when URL is malformed
@@ -174,6 +175,7 @@ public class HttpRequest {
 
     /**
      * Gets response for HTTP request
+     *
      * @return HTTP response
      * @throws IOException Thrown when connection is not opened successfully
      */

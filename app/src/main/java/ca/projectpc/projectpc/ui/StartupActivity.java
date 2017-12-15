@@ -38,6 +38,7 @@ import ca.projectpc.projectpc.api.service.SystemService;
 import pl.aprilapps.easyphotopicker.EasyImage;
 
 public class StartupActivity extends AppCompatActivity {
+
     public static final int REQUEST_PERMISSIONS = 10000;
     public static final String[] PERMISSIONS = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -48,8 +49,15 @@ public class StartupActivity extends AppCompatActivity {
     };
 
     public static final String API_ENDPOINT = "http://192.168.43.40:4040/api/"; //"http://s1.indigogames.ca:44008/api/";
+    public static final String API_ENDPOINT = "http://192.168.43.40:4040/api/"; // "http://192.168.0.101:4040/api/";
     public static final int API_TIMEOUT = 10000;
 
+    /**
+     * Save away any dynamic instance state in activity into the given Bundle,
+     * to be later received in onCreate(Bundle) if the activity needs to be re-created.
+     *
+     * @param savedInstanceState Last saved state
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +67,7 @@ public class StartupActivity extends AppCompatActivity {
         Service.setServerUrl(API_ENDPOINT);
         Service.setTimeout(API_TIMEOUT);
 
-        // Initialize EasyImage
+        // Initialize EasyImage for quickly accessing users' gallery later
         EasyImage.configuration(this)
                 .setImagesFolderName("local")
                 .saveInAppExternalFilesDir()
@@ -74,7 +82,6 @@ public class StartupActivity extends AppCompatActivity {
                 toRequest.add(permission);
             }
         }
-
         if (toRequest.size() == 0) {
             checkSystemAndStart();
         } else {
@@ -83,6 +90,13 @@ public class StartupActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Called after the requestPermission pop-up window has received input
+     * from the user ('Allow' or 'Deny').
+     * @param requestCode Identifying code for the permission request
+     * @param permissions All requested permissions stored as a String[] array
+     * @param grantResults All respective result codes for each permission
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
@@ -101,6 +115,11 @@ public class StartupActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Called to check if the server service is working and can be connected to.
+     * If the check is successful navigate the user to the login page, otherwise
+     * produce a Toast describing the connectivity issue.
+     */
     private void checkSystemAndStart() {
         // Check system service
         try {
@@ -120,6 +139,8 @@ public class StartupActivity extends AppCompatActivity {
                     } catch (Exception ex) {
                         ex.printStackTrace();
 
+                        // Print error stack trace and produce Toast msg to notify user
+                        // of connectivity issues
                         Toast.makeText(getBaseContext(), R.string.service_unable_to_connect,
                                 Toast.LENGTH_LONG).show();
                         finish();

@@ -51,6 +51,7 @@ public abstract class HttpTask extends AsyncTask<HttpResponse> {
 
     /**
      * Initializes task with HTTP url and data
+     *
      * @param url Request URL
      * @param data Request data as string
      */
@@ -64,6 +65,7 @@ public abstract class HttpTask extends AsyncTask<HttpResponse> {
 
     /**
      * Initializes task with HTTP url and data
+     *
      * @param url Request URL
      * @param data Request data as byte array
      */
@@ -77,6 +79,7 @@ public abstract class HttpTask extends AsyncTask<HttpResponse> {
 
     /**
      * Initializes task with HTTP url and response timeout
+     *
      * @param url Request URL
      * @param timeout Request timeout
      */
@@ -89,6 +92,7 @@ public abstract class HttpTask extends AsyncTask<HttpResponse> {
 
     /**
      * Initializes task with HTTP url and response timeout
+     *
      * @param url Request URL
      */
     public HttpTask(String url) {
@@ -100,6 +104,7 @@ public abstract class HttpTask extends AsyncTask<HttpResponse> {
 
     /**
      * Initializes task with HTTP url, data and response timeout
+     *
      * @param url Request URL
      * @param data Request data as string
      * @param timeout Request timeout
@@ -117,6 +122,7 @@ public abstract class HttpTask extends AsyncTask<HttpResponse> {
 
     /**
      * Initializes task with HTTP url, data and response timeout
+     *
      * @param url Request URL
      * @param data Request data as byte array
      * @param timeout Request timeout
@@ -138,6 +144,7 @@ public abstract class HttpTask extends AsyncTask<HttpResponse> {
 
     /**
      * Sets request URL
+     *
      * @param url HTTP request URL
      */
     public void setUrl(String url) {
@@ -153,6 +160,7 @@ public abstract class HttpTask extends AsyncTask<HttpResponse> {
 
     /**
      * Sets request method
+     *
      * @param method HTTP request method
      */
     public void setMethod(String method) {
@@ -161,6 +169,7 @@ public abstract class HttpTask extends AsyncTask<HttpResponse> {
 
     /**
      * Gets HTTP request headers
+     *
      * @return HTTP request headers
      */
     public Map<String, List<String>> getHeaders() {
@@ -169,6 +178,7 @@ public abstract class HttpTask extends AsyncTask<HttpResponse> {
 
     /**
      * Sets HTTP request headers
+     *
      * @param headers HTTP request headers
      */
     public void setHeaders(Map<String, List<String>> headers) {
@@ -177,6 +187,7 @@ public abstract class HttpTask extends AsyncTask<HttpResponse> {
 
     /**
      * Sets HTTP request headers
+     *
      * @param key Header key
      */
     public List<String> getHeader(String key) {

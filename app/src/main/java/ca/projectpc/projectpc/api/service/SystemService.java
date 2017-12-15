@@ -21,11 +21,22 @@ import ca.projectpc.projectpc.api.IServiceCallback;
 import ca.projectpc.projectpc.api.Service;
 import ca.projectpc.projectpc.api.ServiceTask;
 
+/**
+ * Generic class for system services, storing the service
+ * version and setting up HTTP GET version request.
+ */
 public class SystemService extends Service {
     public class VersionResult {
         public String version;
     }
 
+    /**
+     * Fetch the version of the service task
+     *
+     * @param callback Service callback to receive success or fail result
+     * @return The result of the sendRequest method
+     * @throws Exception sendRequest may throw Exception
+     */
     public ServiceTask getVersion(IServiceCallback<VersionResult> callback) throws Exception {
         return sendRequest("GET", "/system/version", VersionResult.class, null, callback);
     }
