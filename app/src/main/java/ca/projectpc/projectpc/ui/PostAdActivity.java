@@ -9,7 +9,6 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -26,7 +25,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.pchmn.materialchips.ChipsInput;
 import com.pchmn.materialchips.model.ChipInterface;
 
@@ -45,6 +44,7 @@ import ca.projectpc.projectpc.api.ServiceResultCode;
 import ca.projectpc.projectpc.api.ServiceTask;
 import ca.projectpc.projectpc.api.service.PostService;
 import ca.projectpc.projectpc.api.service.result.BasicIdResult;
+import ca.projectpc.projectpc.ui.glide.GlideApp;
 import pl.aprilapps.easyphotopicker.DefaultCallback;
 import pl.aprilapps.easyphotopicker.EasyImage;
 
@@ -207,19 +207,36 @@ public class PostAdActivity extends AppCompatActivity {
                     ImageView imageView = mImageViews.get(imageIndex);
 
                     // Store image for later uploading
-                    mImages[imageIndex] = file; // TODO: Debug the file location
+                    mImages[imageIndex] = file;
 
-                    // TODO: We seem to be storing an old image file, perhaps the image
-                    // is deleted after this method's end?
+                    // If this is the first image, set as primary
+                    if (mThumbnailImage == null) {
+                        mThumbnailImage = file;
+                    }
 
                     // Use glide to open into the image view
-                    Glide.with(getBaseContext()).load(file).into(imageView);
+                    GlideApp.with(getBaseContext())
+                            .load(file)
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .skipMemoryCache(true)
+                            .into(imageView);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                     Toast.makeText(getBaseContext(),
                             R.string.error_unable_open_image,
                             Toast.LENGTH_LONG
                     ).show();
+                }
+            }
+
+            @Override
+            public void onCanceled(EasyImage.ImageSource source, int type) {
+                // Remove temporary file if cancelled
+                if (source == EasyImage.ImageSource.CAMERA) {
+                    File photoFile = EasyImage.lastlyTakenButCanceledPhoto(PostAdActivity.this);
+                    if (photoFile != null) {
+                        photoFile.delete();
+                    }
                 }
             }
         });
@@ -397,7 +414,7 @@ public class PostAdActivity extends AppCompatActivity {
             final PostService service = Service.get(PostService.class);
             try {
                 // Load into buffer
-                FileInputStream stream = new FileInputStream(image);
+                FileInputStream stream = new FileInputStream(image); // This is not right
 
                 // Read file
                 byte[] buffer = new byte[(int) image.length()];
@@ -405,15 +422,10 @@ public class PostAdActivity extends AppCompatActivity {
 
                 // Base64 encode
                 String b64Image = Base64.encodeToString(buffer, Base64.DEFAULT);
-                mTask = service.uploadImage(postId, thumbnail, b64Image,
+                service.uploadImage(postId, thumbnail, b64Image,
                         new IServiceCallback<BasicIdResult>() {
                             @Override
                             public void onEnd(ServiceResult<BasicIdResult> result) {
-                                mTask = null;
-                                if (result.isCancelled()) {
-                                    return;
-                                }
-
                                 if (!result.hasError()) {
                                     if (result.getCode() == ServiceResultCode.Ok) {
                                         if (lastImage) {

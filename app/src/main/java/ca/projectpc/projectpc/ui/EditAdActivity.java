@@ -20,6 +20,7 @@ import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.pchmn.materialchips.ChipsInput;
 import com.pchmn.materialchips.model.ChipInterface;
 
@@ -33,6 +34,8 @@ import ca.projectpc.projectpc.api.Service;
 import ca.projectpc.projectpc.api.ServiceResult;
 import ca.projectpc.projectpc.api.ServiceTask;
 import ca.projectpc.projectpc.api.service.PostService;
+import ca.projectpc.projectpc.ui.glide.GlideApp;
+//import ca.projectpc.projectpc.ui.glide.GlideApp;
 
 // TODO: Do main stuff
 
@@ -285,7 +288,11 @@ public class EditAdActivity extends AppCompatActivity {
 
                         // Show in image view
                         ImageView imageView = mImageViews.get(index);
-                        Glide.with(context).load(buffer).into(imageView);
+                        GlideApp.with(context)
+                                .load(buffer)
+                                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                .skipMemoryCache(true)
+                                .into(imageView);
 
                         // Dismiss progress if this was the last image downloaded
                         if (lastImage && mProgressDialog != null) {
