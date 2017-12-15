@@ -12,7 +12,4 @@
 
     <dimen name="post_image_width">164dp</dimen>
     <dimen name="post_image_height">164dp</dimen>
-
-    <dimen name="show_image_width">match_parent</dimen>
-    <dimen name="show_image_height">wrap_content</dimen>
 </resources>

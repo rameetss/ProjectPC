@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -93,19 +94,13 @@ public class ShowAdActivity extends AppCompatActivity {
 
                         // TODO: set other info
 
-                        // Get image view size
-                        int imageViewWidth = (int) getResources().getDimension(
-                                R.dimen.show_image_width);
-                        int imageViewHeight = (int) getResources().getDimension(
-                                R.dimen.show_image_height);
-
                         // Create image views
                         for (String imageId : data.imageIds) {
                             ImageView imageView = new ImageView(context);
                             imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
                             imageView.setLayoutParams(new LinearLayout.LayoutParams(
-                                    imageViewWidth,
-                                    imageViewHeight
+                                    ViewGroup.LayoutParams.MATCH_PARENT,
+                                    ViewGroup.LayoutParams.WRAP_CONTENT
                             ));
                             mImageContainer.addView(imageView);
 

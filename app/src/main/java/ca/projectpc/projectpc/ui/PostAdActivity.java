@@ -207,7 +207,7 @@ public class PostAdActivity extends AppCompatActivity {
                     ImageView imageView = mImageViews.get(imageIndex);
 
                     // Store image for later uploading
-                    mImages[imageIndex] = file;
+                    mImages[imageIndex] = file; // TODO: Debug the file location
 
                     // TODO: We seem to be storing an old image file, perhaps the image
                     // is deleted after this method's end?
