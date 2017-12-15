@@ -1,11 +1,19 @@
 package ca.projectpc.projectpc.ui;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -24,8 +32,10 @@ import com.pchmn.materialchips.model.ChipInterface;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import ca.projectpc.projectpc.R;
 import ca.projectpc.projectpc.api.IServiceCallback;
@@ -178,6 +188,8 @@ public class PostAdActivity extends AppCompatActivity {
 
         // Set title
         setTitle(String.format(getString(R.string.title_activity_post_in), mCategory));
+
+        mLocationEditText.setText(getLocationString());
     }
 
     @Override
@@ -276,8 +288,6 @@ public class PostAdActivity extends AppCompatActivity {
         }
 
         final String currency = mCurrenciesSpinner.getSelectedItem().toString();
-
-        // TODO: Do geocoding (if time permits)
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.title_alert_are_you_sure);
@@ -476,5 +486,46 @@ public class PostAdActivity extends AppCompatActivity {
                 mProgressDialog = null;
             }
         }
+    }
+
+    private boolean checkLocationPermission() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return false;
+        }
+        return true;
+    }
+
+    private String getLocationString() {
+        if (checkLocationPermission()) {
+            LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+            if (locationManager != null) {
+                Location lastKnownLocationPassive = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+                return getLocation(lastKnownLocationPassive);
+            } else {
+                return "";
+            }
+        } else {
+            return "";
+        }
+    }
+
+    private String getLocation(Location location) {
+        Geocoder geocoder = new Geocoder(getBaseContext(), Locale.getDefault());
+
+        try {
+            List<Address> addresses = geocoder.getFromLocation(location.getLatitude(),
+                    location.getLongitude(), 1);
+            return addresses.get(0).getLocality() + ", " + addresses.get(0).getCountryName();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 }
