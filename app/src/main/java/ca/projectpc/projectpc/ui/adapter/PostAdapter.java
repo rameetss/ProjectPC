@@ -91,6 +91,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             @Override
             public void onClick(View view) {
                 // TODO: Send message
+                Toast.makeText(mContext, "Send message!", Toast.LENGTH_LONG).show();
             }
         });
 

@@ -51,7 +51,7 @@ import ca.projectpc.projectpc.api.service.PostService;
 import ca.projectpc.projectpc.ui.glide.GlideApp;
 import ca.projectpc.projectpc.utility.LatLong;
 
-// TODO: Add fab
+// TODO: Use fab
 public class ShowAdActivity extends AppCompatActivity {
     private LinearLayout mImageContainer;
     private TextView mTitleTextView;
@@ -108,6 +108,8 @@ public class ShowAdActivity extends AppCompatActivity {
             case R.id.menu_action_edit:
                 Intent intent = new Intent(this, EditAdActivity.class);
                 intent.putExtra("postId", mPostId);
+                startActivity(intent);
+                finish();
                 return true;
             case R.id.menu_action_bookmark:
                 // TODO: Implement
@@ -124,6 +126,7 @@ public class ShowAdActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
+    // TODO: Fix design for image views, they're not right
     private void downloadAd(String postId) {
         try {
             final Context context = this;
@@ -176,7 +179,7 @@ public class ShowAdActivity extends AppCompatActivity {
                         // Create image views
                         for (String imageId : data.imageIds) {
                             ImageView imageView = new ImageView(context);
-                            imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+                            imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
                             imageView.setLayoutParams(new LinearLayout.LayoutParams(
                                     imageViewWidth,
                                     imageViewHeight
@@ -207,6 +210,7 @@ public class ShowAdActivity extends AppCompatActivity {
             final Context context = this;
             final PostService service = Service.get(PostService.class);
 
+            // TODO: Make cancellable (put them in a task list)
             service.downloadImage(imageId, new IServiceCallback<PostService.DownloadImageResult>() {
                 @Override
                 public void onEnd(ServiceResult<PostService.DownloadImageResult> result) {

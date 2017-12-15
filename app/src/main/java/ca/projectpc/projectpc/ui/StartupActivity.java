@@ -47,14 +47,9 @@ public class StartupActivity extends AppCompatActivity {
             Manifest.permission.CAMERA
     };
 
-    public static final String API_ENDPOINT = "http://s1.indigogames.ca:44008/api/";
-    public static final int API_TIMEOUT = 25000;
+    public static final String API_ENDPOINT = "http://s1.indigogames.ca:44008/api/"; // "http://192.168.0.101:4040/api/";
+    public static final int API_TIMEOUT = 10000;
 
-    /**
-     *
-     * @param savedInstanceState
-     * Initialize API, EasyImage and grab all necessary permissions on startup
-     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

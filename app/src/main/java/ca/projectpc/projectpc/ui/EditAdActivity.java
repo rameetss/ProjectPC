@@ -52,6 +52,7 @@ import ca.projectpc.projectpc.api.ServiceResult;
 import ca.projectpc.projectpc.api.ServiceTask;
 import ca.projectpc.projectpc.api.service.PostService;
 import ca.projectpc.projectpc.ui.glide.GlideApp;
+import pl.aprilapps.easyphotopicker.EasyImage;
 
 public class EditAdActivity extends AppCompatActivity {
     private static final int MAX_IMAGES = 8;
@@ -69,9 +70,10 @@ public class EditAdActivity extends AppCompatActivity {
 
     private String mPostId;
     private List<ImageView> mImageViews;
-    private Bitmap[] mImages;
+    private String[] mImages;
     private File[] mChangedImages;
     private File mChangedThumbnailImage;
+    private String mChangedThumbnailImageOld;
     private List<String> mTags;
 
     /**
@@ -103,6 +105,7 @@ public class EditAdActivity extends AppCompatActivity {
         mTagsChipsInput.setShowChipDetailed(false);
 
         // Check for valid tags
+        mTags = new ArrayList<>();
         mTagsChipsInput.addChipsListener(new ChipsInput.ChipsListener() {
             @Override
             public void onChipAdded(final ChipInterface chipInterface, int i) {
@@ -139,8 +142,10 @@ public class EditAdActivity extends AppCompatActivity {
 
         // Create image views
         mImageViews = new ArrayList<>();
-        mImages = new Bitmap[MAX_IMAGES];
+        mImages = new String[MAX_IMAGES];
+        mChangedImages = new File[MAX_IMAGES];
         for (int i = 0; i < MAX_IMAGES; i++) {
+            final int imageIndex = i;
             ImageView imageView = new ImageView(this);
             imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
             imageView.setImageResource(R.drawable.ic_add_box_gray);
@@ -151,7 +156,40 @@ public class EditAdActivity extends AppCompatActivity {
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    // TODO: If image exists, show delete/set as main, otherwise show add image
+                    final String image = mImages[imageIndex];
+                    if (image != null) {
+                        // Show menu
+                        String[] options = {
+                                getString(R.string.action_set_primary),
+                                getString(R.string.action_remove)
+                        };
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(EditAdActivity.this);
+                        builder.setTitle(getString(R.string.prompt_image_options));
+                        builder.setItems(options, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int which) {
+                                if (which == 0) {
+                                    // Set as primary
+                                    if (mChangedImages[imageIndex] != null)
+                                        mChangedThumbnailImage = mChangedImages[imageIndex];
+                                    else mChangedThumbnailImageOld = image;
+                                } else if (which == 1) {
+                                    // Remove image
+                                    //mImages[imageIndex] = null;
+                                    //if (image == mThumbnailImage) {
+                                    //    mThumbnailImage = null;
+                                    //}
+                                    //imageView.setImageResource(R.drawable.ic_add_box_gray);
+                                }
+                            }
+                        });
+                        builder.show();
+                    } else {
+                        // Show add image dialog
+                        EasyImage.openChooserWithGallery(EditAdActivity.this,
+                                getString(R.string.prompt_select_image), imageIndex);
+                    }
                 }
             });
 
@@ -284,7 +322,8 @@ public class EditAdActivity extends AppCompatActivity {
         try {
             final Context context = this;
             final PostService service = Service.get(PostService.class);
-            mTask = service.downloadImage(imageId, new IServiceCallback<PostService.DownloadImageResult>() {
+            mTask = service.downloadImage(imageId,
+                    new IServiceCallback<PostService.DownloadImageResult>() {
                 @Override
                 public void onEnd(ServiceResult<PostService.DownloadImageResult> result) {
                     mTask = null;
@@ -297,6 +336,7 @@ public class EditAdActivity extends AppCompatActivity {
 
                         // Show in image view
                         ImageView imageView = mImageViews.get(index);
+                        imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
                         GlideApp.with(context)
                                 .load(buffer)
                                 .diskCacheStrategy(DiskCacheStrategy.NONE)

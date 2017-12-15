@@ -18,6 +18,8 @@
 package ca.projectpc.projectpc;
 
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -28,18 +30,7 @@ import java.util.concurrent.TimeUnit;
  * amount of threads
  */
 public class Task {
-    private static final int CPU_COUNT = Runtime.getRuntime().availableProcessors();
-    private static final int CORE_POOL_SIZE = CPU_COUNT;
-    private static final int MAXIMUM_POOL_SIZE = CPU_COUNT * 24;
-    private static final int KEEP_ALIVE_SECONDS = 60;
-
-    private static final ThreadPoolExecutor sExecutor = new ThreadPoolExecutor(
-            CORE_POOL_SIZE,
-            MAXIMUM_POOL_SIZE,
-            KEEP_ALIVE_SECONDS,
-            TimeUnit.SECONDS,
-            new LinkedBlockingQueue<Runnable>()
-    );
+    private static final ExecutorService sExecutor = Executors.newCachedThreadPool();
 
     /**
      * Starts a task on a new thread as long as the pool is not empty. However this should be used

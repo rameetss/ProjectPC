@@ -6,7 +6,6 @@ Project PC is the result of a problem that many people face, finding quality com
 These are just some of the features this app includes:
 - Android 5.0+ compatible
 - Follows Google Material Design
-- Utilizes Google APIs to find restaurants
 - Grabs information from server about ads, contact info and location
 - Displays ads posted and can be updated with a swipe
 - Part-specific categories to create organized and intuitive design

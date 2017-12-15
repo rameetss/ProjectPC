@@ -62,6 +62,7 @@ import ca.projectpc.projectpc.api.ServiceTask;
 import ca.projectpc.projectpc.api.service.PostService;
 import ca.projectpc.projectpc.api.service.result.BasicIdResult;
 import ca.projectpc.projectpc.ui.glide.GlideApp;
+import ca.projectpc.projectpc.utility.LatLong;
 import pl.aprilapps.easyphotopicker.DefaultCallback;
 import pl.aprilapps.easyphotopicker.EasyImage;
 
@@ -143,8 +144,11 @@ public class PostAdActivity extends AppCompatActivity {
                 if (length > 0) {
                     char lastChar = charSequence.charAt(length - 1);
                     if (lastChar == ' ') {
-                        // TODO: Check if string is just spaces
-                        String label = charSequence.subSequence(0, length - 1).toString();
+                        String label = charSequence.toString().trim();
+                        if (label.trim().length() == 0) {
+                            return;
+                        }
+
                         mTagsChipsInput.addChip(label, "");
                     }
                 }
@@ -220,19 +224,12 @@ public class PostAdActivity extends AppCompatActivity {
         setTitle(String.format(getString(R.string.title_activity_post_in), mCategory));
 
         // Set location string
-        mLocation = getLocation();
+        mLocation = LatLong.getLocation(this);
         if (mLocation != null) {
             mLocationEditText.setText(getLocationString(mLocation));
         }
     }
 
-    /**
-     *
-     * @param requestCode
-     * @param resultCode
-     * @param data
-     * Grab image view from earlier and store to post later
-     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         EasyImage.handleActivityResult(requestCode, resultCode, data, this, new DefaultCallback() {
@@ -376,21 +373,6 @@ public class PostAdActivity extends AppCompatActivity {
         builder.show();
     }
 
-    /**
-     *
-     * @param title
-     * @param category
-     * @param tags
-     * @param price
-     * @param currency
-     * @param description
-     * @param location
-     * @param latitude
-     * @param longitude
-     * Try catch for service error
-     * Grab all input information in context
-     * Upload info and post
-     */
     private void uploadAd(String title, String category, List<String> tags, Double price,
                           String currency, String description, String location,
                           @Nullable Double latitude, @Nullable Double longitude) {
@@ -461,15 +443,6 @@ public class PostAdActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     *
-     * @param postId
-     * @param image
-     * @param thumbnail
-     * @param lastImage
-     * Double try-catch for service errors
-     * Upload images to post with buffer and Base64 encode
-     */
     private void uploadImage(final String postId, File image, boolean thumbnail,
                              final boolean lastImage) {
         try {
@@ -575,22 +548,6 @@ public class PostAdActivity extends AppCompatActivity {
                 mProgressDialog = null;
             }
         }
-    }
-
-    private Location getLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            return null;
-        }
-
-        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-        if (locationManager != null) {
-            return locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
-        }
-
-        return null;
     }
 
     private String getLocationString(Location location) {
