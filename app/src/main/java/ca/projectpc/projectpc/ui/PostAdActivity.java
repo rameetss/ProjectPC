@@ -66,7 +66,9 @@ import ca.projectpc.projectpc.utility.LatLong;
 import pl.aprilapps.easyphotopicker.DefaultCallback;
 import pl.aprilapps.easyphotopicker.EasyImage;
 
-// TODO: Fix up comments
+/**
+ * Class to handle when a user is posting an add
+ */
 public class PostAdActivity extends AppCompatActivity {
     private static final int MAX_IMAGES = 8;
 

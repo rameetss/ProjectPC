@@ -23,6 +23,9 @@ import android.os.Bundle;
 
 import ca.projectpc.projectpc.R;
 
+/**
+ * Activity to handle messaging
+ */
 public class MessageActivity extends AppCompatActivity {
 
     /**

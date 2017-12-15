@@ -40,6 +40,9 @@ import ca.projectpc.projectpc.api.ServiceTask;
 import ca.projectpc.projectpc.api.service.PostService;
 import ca.projectpc.projectpc.ui.adapter.PostAdapter;
 
+/**
+ * Class to handle and show the search results from SearchActivity
+ */
 public class SearchResultsActivity extends AppCompatActivity
         implements SwipeRefreshLayout.OnRefreshListener {
     private SwipeRefreshLayout mSwipeRefreshLayout;

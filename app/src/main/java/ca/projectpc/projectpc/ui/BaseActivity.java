@@ -35,6 +35,9 @@ import org.jetbrains.annotations.NotNull;
 
 import ca.projectpc.projectpc.R;
 
+/**
+ * Abstract class for all activities to be based on
+ */
 public abstract class BaseActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     protected ConstraintLayout mContentContainer;

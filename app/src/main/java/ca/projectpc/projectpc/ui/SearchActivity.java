@@ -45,6 +45,9 @@ import ca.projectpc.projectpc.api.service.AuthService;
 import ca.projectpc.projectpc.api.service.PostService;
 import ca.projectpc.projectpc.ui.adapter.PostAdapter;
 
+/**
+ * Activity to handle searching for ads
+ */
 public class SearchActivity extends BaseActivity
         implements SwipeRefreshLayout.OnRefreshListener {
     private int mNavigationId;

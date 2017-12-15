@@ -40,6 +40,9 @@ import ca.projectpc.projectpc.api.ServiceResult;
 import ca.projectpc.projectpc.api.ServiceResultCode;
 import ca.projectpc.projectpc.api.service.AuthService;
 
+/**
+ * Activity to handle user registration
+ */
 public class RegisterActivity extends AppCompatActivity implements DialogInterface.OnClickListener {
     public static final int MIN_USER_NAME_LENGTH = 6;
     public static final int MIN_FIRST_NAME_LENGTH = 2;

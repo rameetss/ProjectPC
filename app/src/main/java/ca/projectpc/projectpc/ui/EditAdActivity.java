@@ -60,6 +60,9 @@ import ca.projectpc.projectpc.ui.glide.GlideApp;
 import ca.projectpc.projectpc.utility.LatLong;
 import pl.aprilapps.easyphotopicker.EasyImage;
 
+/**
+ * Activity to handle editing of ads
+ */
 public class EditAdActivity extends AppCompatActivity {
     private static final int MAX_IMAGES = 8;
 
@@ -320,16 +323,16 @@ public class EditAdActivity extends AppCompatActivity {
             final PostService service = Service.get(PostService.class);
             mTask = service.downloadImage(imageId,
                     new IServiceCallback<PostService.DownloadImageResult>() {
-                @Override
-                public void onEnd(ServiceResult<PostService.DownloadImageResult> result) {
-                    mTask = null;
-                    if (result.isCancelled()) {
-                        return;
-                    }
+                        @Override
+                        public void onEnd(ServiceResult<PostService.DownloadImageResult> result) {
+                            mTask = null;
+                            if (result.isCancelled()) {
+                                return;
+                            }
 
-                    if (!result.hasError()) {
-                        // Decode image
-                        byte[] buffer = Base64.decode(result.getData().imageData, Base64.DEFAULT);
+                            if (!result.hasError()) {
+                                // Decode image
+                                byte[] buffer = Base64.decode(result.getData().imageData, Base64.DEFAULT);
 
                                 // Show in image view
                                 imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
@@ -497,7 +500,7 @@ public class EditAdActivity extends AppCompatActivity {
         builder.setNegativeButton(R.string.action_no, null);
         builder.show();
     }
-    
+
     private String getLocationString(Location location) {
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
         try {

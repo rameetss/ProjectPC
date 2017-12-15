@@ -38,7 +38,9 @@ import ca.projectpc.projectpc.api.Service;
 import ca.projectpc.projectpc.api.ServiceResult;
 import ca.projectpc.projectpc.api.service.MessageService;
 
-// TODO/NOTE: This might be removed in favour of emailing.
+/**
+ * Activity to handle sending emails to other users
+ */
 public class InboxActivity extends AppCompatActivity
         implements SwipeRefreshLayout.OnRefreshListener {
 

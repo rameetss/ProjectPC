@@ -33,6 +33,9 @@ import android.widget.Toast;
 
 import ca.projectpc.projectpc.R;
 
+/**
+ * Activity to handle changing settings
+ */
 public class SettingsActivity extends AppCompatActivity {
     /**
      * Save any dynamic instance state in activity into the given Bundle,

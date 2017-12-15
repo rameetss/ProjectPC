@@ -49,6 +49,9 @@ import ca.projectpc.projectpc.api.service.result.BasicIdResult;
 import ca.projectpc.projectpc.ui.glide.GlideApp;
 import ca.projectpc.projectpc.utility.LatLong;
 
+/**
+ * Activity to show ad details of an ad the user clicked on from SearchResultsActivity
+ */
 public class ShowAdActivity extends AppCompatActivity {
     private LinearLayout mImageContainer;
     private TextView mTitleTextView;
@@ -282,30 +285,30 @@ public class ShowAdActivity extends AppCompatActivity {
 
             ServiceTask task = service.downloadImage(imageId,
                     new IServiceCallback<PostService.DownloadImageResult>() {
-                @Override
-                public void onEnd(ServiceResult<PostService.DownloadImageResult> result) {
-                    if (result.isCancelled()) {
-                        return;
-                    }
+                        @Override
+                        public void onEnd(ServiceResult<PostService.DownloadImageResult> result) {
+                            if (result.isCancelled()) {
+                                return;
+                            }
 
-                    if (!result.hasError()) {
-                        // Decode image
-                        byte[] buffer = Base64.decode(result.getData().imageData, Base64.DEFAULT);
+                            if (!result.hasError()) {
+                                // Decode image
+                                byte[] buffer = Base64.decode(result.getData().imageData, Base64.DEFAULT);
 
-                        // Load into image view
-                        GlideApp.with(context)
-                                .load(buffer)
-                                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                                .skipMemoryCache(true)
-                                .into(imageView);
-                    } else {
-                        result.getException().printStackTrace();
-                        Toast.makeText(context,
-                                getString(R.string.service_unable_to_process_request),
-                                Toast.LENGTH_LONG).show();
-                    }
-                }
-            });
+                                // Load into image view
+                                GlideApp.with(context)
+                                        .load(buffer)
+                                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                        .skipMemoryCache(true)
+                                        .into(imageView);
+                            } else {
+                                result.getException().printStackTrace();
+                                Toast.makeText(context,
+                                        getString(R.string.service_unable_to_process_request),
+                                        Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
             mTasks.add(task);
         } catch (Exception ex) {
             // Unable to get service (internal error)

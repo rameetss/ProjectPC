@@ -37,6 +37,9 @@ import ca.projectpc.projectpc.api.ServiceResult;
 import ca.projectpc.projectpc.api.service.SystemService;
 import pl.aprilapps.easyphotopicker.EasyImage;
 
+/**
+ * The home screen activity, to show the ads the user has posted
+ */
 public class StartupActivity extends AppCompatActivity {
 
     public static final int REQUEST_PERMISSIONS = 10000;
