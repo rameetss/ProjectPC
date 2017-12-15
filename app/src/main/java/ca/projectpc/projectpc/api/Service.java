@@ -1,3 +1,20 @@
+/*
+ * ProjectPC
+ *
+ * Copyright (C) 2017 ProjectPC. All Rights Reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or any
+ * later version. This program is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied warranty
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details. You should have received
+ * a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
+ */
+
 package ca.projectpc.projectpc.api;
 
 import android.annotation.SuppressLint;
@@ -81,12 +98,12 @@ public abstract class Service {
 
     protected static <TResult>
     ServiceTask sendRequestRaw(String method, String path,
-                            Map<String, List<String>> headers,
-                            final byte[] buffer,
-                            final Class<TResult> resultClass,
-                            final IServiceCallback<TResult> internalCallback,
-                            final IServiceCallback<TResult> callback)
-        throws UnsupportedEncodingException, ParseException {
+                               Map<String, List<String>> headers,
+                               final byte[] buffer,
+                               final Class<TResult> resultClass,
+                               final IServiceCallback<TResult> internalCallback,
+                               final IServiceCallback<TResult> callback)
+            throws UnsupportedEncodingException, ParseException {
         String requestUrl = String.format("%s/%s", sServerUrl, path).replaceAll("///", "/");
 
         // Create headers map if it doesn't already exist
@@ -339,11 +356,10 @@ public abstract class Service {
         return sendRequest(method, path, null, null, null, resultClass, internalCallback, callback);
     }
 
-    protected static
-    ServiceTask sendRequest(String method,
-                            String path,
-                            final IServiceCallback<Void> internalCallback,
-                            final IServiceCallback<Void> callback)
+    protected static ServiceTask sendRequest(String method,
+                                             String path,
+                                             final IServiceCallback<Void> internalCallback,
+                                             final IServiceCallback<Void> callback)
             throws UnsupportedEncodingException, ParseException {
         return sendRequest(method, path, null, null, null, null, internalCallback, callback);
     }
@@ -360,13 +376,12 @@ public abstract class Service {
         return sendRequestRaw(method, path, headers, buffer, resultClass, internalCallback, callback);
     }
 
-    protected static
-    ServiceTask sendRequest(String method,
-                            String path,
-                            Map<String, List<String>> headers,
-                            byte[] buffer,
-                            final IServiceCallback<Void> internalCallback,
-                            final IServiceCallback<Void> callback)
+    protected static ServiceTask sendRequest(String method,
+                                             String path,
+                                             Map<String, List<String>> headers,
+                                             byte[] buffer,
+                                             final IServiceCallback<Void> internalCallback,
+                                             final IServiceCallback<Void> callback)
             throws UnsupportedEncodingException, ParseException {
         return sendRequestRaw(method, path, headers, buffer, null, internalCallback, callback);
     }

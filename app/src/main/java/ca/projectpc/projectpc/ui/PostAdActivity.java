@@ -1,3 +1,20 @@
+/*
+ * ProjectPC
+ *
+ * Copyright (C) 2017 ProjectPC. All Rights Reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or any
+ * later version. This program is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied warranty
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details. You should have received
+ * a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
+ */
+
 package ca.projectpc.projectpc.ui;
 
 import android.Manifest;
@@ -48,6 +65,7 @@ import ca.projectpc.projectpc.ui.glide.GlideApp;
 import pl.aprilapps.easyphotopicker.DefaultCallback;
 import pl.aprilapps.easyphotopicker.EasyImage;
 
+// TODO: Fix up comments
 public class PostAdActivity extends AppCompatActivity {
     private static final int MAX_IMAGES = 8;
 
@@ -458,7 +476,7 @@ public class PostAdActivity extends AppCompatActivity {
             final PostService service = Service.get(PostService.class);
             try {
                 // Load into buffer
-                FileInputStream stream = new FileInputStream(image); // This is not right
+                FileInputStream stream = new FileInputStream(image);
 
                 // Read file
                 byte[] buffer = new byte[(int) image.length()];

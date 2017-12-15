@@ -1,6 +1,22 @@
+/*
+ * ProjectPC
+ *
+ * Copyright (C) 2017 ProjectPC. All Rights Reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or any
+ * later version. This program is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied warranty
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details. You should have received
+ * a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
+ */
+
 package ca.projectpc.projectpc.ui;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.constraint.ConstraintLayout;
@@ -27,10 +43,9 @@ public abstract class BaseActivity extends AppCompatActivity
     protected NavigationView mNavigationView;
 
     /**
-     *
-     * @param savedInstanceState
-     *  Save away any dynamic instance state in activity into the given Bundle,
-     *  to be later received in onCreate(Bundle) if the activity needs to be re-created.
+     * Save away any dynamic instance state in activity into the given Bundle,
+     * to be later received in onCreate(Bundle) if the activity needs to be re-created.
+     * @param savedInstanceState Last saved state
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +79,9 @@ public abstract class BaseActivity extends AppCompatActivity
         mNavigationView.inflateMenu(getNavigationMenuId());
     }
 
-
+    /**
+     * Called when the back button is pressed on the device
+     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -76,11 +93,10 @@ public abstract class BaseActivity extends AppCompatActivity
     }
 
     /**
-     *
-     * @param item
-     * Trigger boolean value for drawer layout, only activated if user
-     * attempts to navigate to different page.
-     * @return
+     * Called only activated if user attempts to navigate to different page.
+     * Used for implementing navigation to other pages
+     * @param item Navigation item which was clicked
+     * @return Should navigate
      */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -98,11 +114,9 @@ public abstract class BaseActivity extends AppCompatActivity
     }
 
     /**
-     *
-     * @param menu
-     * looking for a file called main.xml located in the folder src/main/res/menu/.
-     * This file is used to create the buttons inside the top ActionBar.
-     * @return
+     * Generates menu options for action bar
+     * @param menu Menu to generate options for
+     * @return Whether generation was successful or not
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -113,6 +127,11 @@ public abstract class BaseActivity extends AppCompatActivity
         return true;
     }
 
+    /**
+     * Set content view for inner container, instead of for entire activity
+     *
+     * @param layoutResID Layout to inflate
+     */
     @Override
     public void setContentView(@LayoutRes int layoutResID) {
         View childView = View.inflate(this, layoutResID, null);

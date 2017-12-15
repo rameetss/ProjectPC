@@ -1,3 +1,20 @@
+/*
+ * ProjectPC
+ *
+ * Copyright (C) 2017 ProjectPC. All Rights Reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or any
+ * later version. This program is distributed in the hope that it will be
+ * useful, but WITHOUT ANY WARRANTY; without even the implied warranty
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details. You should have received
+ * a copy of the GNU General Public License along with this program;
+ * if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
+ */
+
 package ca.projectpc.projectpc.ui;
 
 import android.app.Dialog;
@@ -24,6 +41,9 @@ import ca.projectpc.projectpc.api.ServiceResultCode;
 import ca.projectpc.projectpc.api.ServiceTask;
 import ca.projectpc.projectpc.api.service.AuthService;
 
+/**
+ * Provides login functionality to user
+ */
 public class LoginActivity extends AppCompatActivity implements Dialog.OnCancelListener {
     private EditText mEmailEditText;
     private EditText mPasswordEditText;
@@ -33,11 +53,9 @@ public class LoginActivity extends AppCompatActivity implements Dialog.OnCancelL
     private ServiceTask mLoginTask;
 
     /**
-     *
-     * @param savedInstanceState
-     * Get Controls, Preferences
-     * Check if intent information was passed
-     * Grab login information from database
+     * Called when activity is loaded, loads preferences and automatically logs user in
+     * if credentials are stored in the preferences.
+     * @param savedInstanceState Last saved state
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,12 +101,8 @@ public class LoginActivity extends AppCompatActivity implements Dialog.OnCancelL
     }
 
     /**
-     *
-     * @param view
-     * Preform check on login information, output appropriate message
-     * Output progress dialog
-     * Catch service exception for no connection
-     *
+     * Preform check on login information, attempt login and return any errors to the user
+     * @param view Sender
      */
     public void onLogin(View view) {
         try {
@@ -119,39 +133,39 @@ public class LoginActivity extends AppCompatActivity implements Dialog.OnCancelL
             // Try to log in with specified email and password
             mLoginTask = authService.login(email, password,
                     new IServiceCallback<AuthService.AuthResult>() {
-                @Override
-                public void onEnd(ServiceResult<AuthService.AuthResult> result) {
-                    // Hide progress dialog
-                    dialog.dismiss();
-                    mLoginTask = null;
+                        @Override
+                        public void onEnd(ServiceResult<AuthService.AuthResult> result) {
+                            // Hide progress dialog
+                            dialog.dismiss();
+                            mLoginTask = null;
 
-                    if (result.isCancelled()) {
-                        return;
-                    }
+                            if (result.isCancelled()) {
+                                return;
+                            }
 
-                    if (!result.hasError()) {
-                        // Check if we logged in successfully
-                        if (result.getCode() == ServiceResultCode.Ok) {
-                            SharedPreferences.Editor editor = mPreferences.edit();
-                            editor.putString("email", email);
-                            editor.putString("password", password);
-                            editor.apply();
+                            if (!result.hasError()) {
+                                // Check if we logged in successfully
+                                if (result.getCode() == ServiceResultCode.Ok) {
+                                    SharedPreferences.Editor editor = mPreferences.edit();
+                                    editor.putString("email", email);
+                                    editor.putString("password", password);
+                                    editor.apply();
 
-                            Intent intent = new Intent(context, SearchActivity.class);
-                            startActivity(intent);
-                            finish();
-                        } else if (result.getCode() == ServiceResultCode.InvalidCredentials) {
-                            Toast.makeText(context, getString(R.string.error_invalid_credentials),
-                                    Toast.LENGTH_LONG).show();
+                                    Intent intent = new Intent(context, SearchActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                } else if (result.getCode() == ServiceResultCode.InvalidCredentials) {
+                                    Toast.makeText(context, getString(R.string.error_invalid_credentials),
+                                            Toast.LENGTH_LONG).show();
+                                }
+                            } else {
+                                // The API failed to complete the request and returned an exception
+                                result.getException().printStackTrace();
+                                Toast.makeText(context, R.string.service_unable_to_process_request,
+                                        Toast.LENGTH_LONG).show();
+                            }
                         }
-                    } else {
-                        // The API failed to complete the request and returned an exception
-                        result.getException().printStackTrace();
-                        Toast.makeText(context, R.string.service_unable_to_process_request,
-                                Toast.LENGTH_LONG).show();
-                    }
-                }
-            });
+                    });
         } catch (Exception ex) {
             // Unable to get service (internal error)
             ex.printStackTrace();
@@ -160,9 +174,8 @@ public class LoginActivity extends AppCompatActivity implements Dialog.OnCancelL
     }
 
     /**
-     *
-     * @param view
-     * Register Intent
+     * Open register activity
+     * @param view Sender
      */
     public void onRegister(View view) {
         Intent intent = new Intent(this, RegisterActivity.class);
@@ -170,6 +183,9 @@ public class LoginActivity extends AppCompatActivity implements Dialog.OnCancelL
         finish();
     }
 
+    /**
+     * Called when the back button is pressed on the device
+     */
     @Override
     public void onBackPressed() {
         if (mLoginTask != null && !mLoginTask.isCancelled()) {
@@ -179,6 +195,11 @@ public class LoginActivity extends AppCompatActivity implements Dialog.OnCancelL
         super.onBackPressed();
     }
 
+    /**
+     * Called when the progress dialog is cancelled, terminates any running task
+     *
+     * @param dialog Dialog which was cancelled
+     */
     @Override
     public void onCancel(DialogInterface dialog) {
         if (mLoginTask != null && !mLoginTask.isCancelled()) {
