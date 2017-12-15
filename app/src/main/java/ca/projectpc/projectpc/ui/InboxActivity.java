@@ -21,7 +21,7 @@ import ca.projectpc.projectpc.api.Service;
 import ca.projectpc.projectpc.api.ServiceResult;
 import ca.projectpc.projectpc.api.service.MessageService;
 
-// NOTE: This might be removed in favour of emailing.
+// TODO/NOTE: This might be removed in favour of emailing.
 public class InboxActivity extends AppCompatActivity
         implements SwipeRefreshLayout.OnRefreshListener {
     private SwipeRefreshLayout mSwipeRefreshLayout;

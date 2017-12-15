@@ -145,9 +145,9 @@ public class SearchActivity extends BaseActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // This is for menu options
-        // TODO/NOTE: I think this is how it's done
         if (item.getItemId() == R.id.menu_action_settings) {
-            // ...
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
         }
 
         return true;
@@ -202,7 +202,7 @@ public class SearchActivity extends BaseActivity
                         // Clear adapter
                         mPosts.clear();
 
-                        if (!result.hasError() && result.hasData()) {
+                        if (!result.hasError()) {
                             mPosts.addAll(Arrays.asList(result.getData().result));
 
                             // Notify data changed
@@ -226,7 +226,7 @@ public class SearchActivity extends BaseActivity
                                 // Clear adapter
                                 mPosts.clear();
 
-                                if (!result.hasError() && result.hasData()) {
+                                if (!result.hasError()) {
                                     mPosts.addAll(Arrays.asList(result.getData().result));
 
                                     // Notify data changed

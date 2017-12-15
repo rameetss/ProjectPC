@@ -128,7 +128,7 @@ public class SearchResultsActivity extends AppCompatActivity
                                 return;
                             }
 
-                            if (!result.hasError() && result.hasData()) {
+                            if (!result.hasError()) {
                                 mPosts.addAll(Arrays.asList(result.getData().result));
 
                                 // Notify data changed

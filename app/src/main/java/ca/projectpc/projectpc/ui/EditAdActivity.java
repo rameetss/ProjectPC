@@ -36,6 +36,8 @@ import ca.projectpc.projectpc.api.service.PostService;
 
 // TODO: Do main stuff
 
+// TODO: Rewrite from scratch
+
 // TODO/NOTE: THIS IS ALL EXPERIMENTAL, DO NOT TOUCH.
 
 // TODO: Show ads
@@ -59,7 +61,7 @@ public class EditAdActivity extends AppCompatActivity {
     private ProgressDialog mProgressDialog;
     private ServiceTask mTask;
 
-    private String mAdId;
+    private String mPostId;
     private List<ImageView> mImageViews;
     private Bitmap[] mImages;
     private File[] mChangedImages;
@@ -146,9 +148,9 @@ public class EditAdActivity extends AppCompatActivity {
         }
 
         Intent intent = getIntent();
-        mAdId = intent.getStringExtra("id");
+        mPostId = intent.getStringExtra("postId");
 
-        downloadAd(mAdId);
+        downloadAd(mPostId);
     }
 
     @Override
@@ -201,7 +203,7 @@ public class EditAdActivity extends AppCompatActivity {
         try {
             final Context context = this;
             PostService service = Service.get(PostService.class);
-            mTask = service.getPost(mAdId,
+            mTask = service.getPost(mPostId,
                     new IServiceCallback<PostService.GetPostResult>() {
                         @Override
                         public void onEnd(ServiceResult<PostService.GetPostResult> result) {

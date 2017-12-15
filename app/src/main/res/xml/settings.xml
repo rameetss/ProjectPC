@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="General">
+
+        <Preference
+            android:key="clear_cache"
+            android:summary="Clears the cache"
+            android:title="@string/action_clear_cache_button" />
+
+        <Preference
+            android:key="clear_bookmarks"
+            android:summary="Clears the bookmarks"
+            android:title="@string/action_clear_bookmarks_button" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/prompt_notifications">
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="notifications_new_message"
+            android:title="@string/prompt_message_sound" />
+
+        <RingtonePreference
+            android:defaultValue="content://settings/system/notification_sound"
+            android:dependency="notifications_new_message"
+            android:key="message_ringtone"
+            android:ringtoneType="notification"
+            android:summary="@string/prompt_choose_ringtone"
+            android:title="@string/prompt_select_ringtone" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="key_vibrate"
+            android:summary="@string/prompt_choose_vibrate"
+            android:title="@string/prompt_select_vibrate" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/prompt_about">
+
+        <Preference
+            android:selectable="false"
+            android:summary="@string/prompt_about_text" />
+
+        <Preference
+            android:summary="@string/app_version"
+            android:title="@string/prompt_version" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

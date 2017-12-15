@@ -67,6 +67,7 @@ public class PostAdActivity extends AppCompatActivity {
     private File[] mImages;
     private File mThumbnailImage;
     private List<String> mTags;
+    private Location mLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -189,7 +190,11 @@ public class PostAdActivity extends AppCompatActivity {
         // Set title
         setTitle(String.format(getString(R.string.title_activity_post_in), mCategory));
 
-        mLocationEditText.setText(getLocationString());
+        // Set location string
+        mLocation = getLocation();
+        if (mLocation != null) {
+            mLocationEditText.setText(getLocationString(mLocation));
+        }
     }
 
     @Override
@@ -296,9 +301,18 @@ public class PostAdActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (i == AlertDialog.BUTTON_POSITIVE) {
+                    // Get location coordinates (used later for measuring distance between user
+                    // and ad poster
+                    Double latitude = null;
+                    Double longitude = null;
+                    if (mLocation != null) {
+                        latitude = mLocation.getLatitude();
+                        longitude = mLocation.getLongitude();
+                    }
+
                     // Upload ad
                     uploadAd(title, mCategory, mTags, Double.parseDouble(price), currency,
-                            description, location, null, null);
+                            description, location, latitude, longitude);
                 }
             }
         });
@@ -327,7 +341,7 @@ public class PostAdActivity extends AppCompatActivity {
             final Context context = this;
             final PostService service = Service.get(PostService.class);
             mTask = service.createPost(title, mCategory, mTags, price, currency, description,
-                    location, null, null, new IServiceCallback<BasicIdResult>() {
+                    location, latitude, longitude, new IServiceCallback<BasicIdResult>() {
                         @Override
                         public void onEnd(ServiceResult<BasicIdResult> result) {
                             mTask = null;
@@ -488,44 +502,39 @@ public class PostAdActivity extends AppCompatActivity {
         }
     }
 
-    private boolean checkLocationPermission() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return false;
+    private Location getLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            return null;
         }
-        return true;
+
+        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        if (locationManager != null) {
+            return locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+        }
+
+        return null;
     }
 
-    private String getLocationString() {
-        if (checkLocationPermission()) {
-            LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-            if (locationManager != null) {
-                Location lastKnownLocationPassive = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
-                return getLocation(lastKnownLocationPassive);
-            } else {
-                return "";
-            }
-        } else {
-            return "";
-        }
-    }
-
-    private String getLocation(Location location) {
-        Geocoder geocoder = new Geocoder(getBaseContext(), Locale.getDefault());
-
+    private String getLocationString(Location location) {
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
         try {
             List<Address> addresses = geocoder.getFromLocation(location.getLatitude(),
                     location.getLongitude(), 1);
-            return addresses.get(0).getLocality() + ", " + addresses.get(0).getCountryName();
-        } catch (IOException e) {
-            e.printStackTrace();
+
+            // Get first address information
+            Address address = addresses.get(0);
+
+            return String.format("%s, %s",
+                    address.getLocality(),
+                    address.getCountryName()
+            );
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
+
         return "";
     }
 }

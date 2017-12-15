@@ -82,7 +82,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                                 return;
                             }
 
-                            if (!result.hasError() && result.hasData()) {
+                            if (!result.hasError()) {
                                 // TODO/NOTE: This isn't working all the time, but we will assume
                                 // it does
                                 Log.d("PostAdapter",
