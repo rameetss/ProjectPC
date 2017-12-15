@@ -189,24 +189,7 @@ public class PostAdActivity extends AppCompatActivity {
         // Set title
         setTitle(String.format(getString(R.string.title_activity_post_in), mCategory));
 
-        // TODO: Do geocoding (if time permits)
-        LocationManager locationManager = (LocationManager)
-                getSystemService(Context.LOCATION_SERVICE);
-        LocationListener locationListener = new AdLocationListener();
-        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
-            }
-            locationManager.requestLocationUpdates(
-                    LocationManager.GPS_PROVIDER, 5000, 10, locationListener
-            );
-        }
+        mLocationEditText.setText(getLocationString());
     }
 
     @Override
@@ -499,40 +482,50 @@ public class PostAdActivity extends AppCompatActivity {
         }
     }
 
-    private class AdLocationListener implements LocationListener {
+    private boolean checkLocationPermission() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return false;
+        }
+        return true;
+    }
 
-        @Override
-        public void onLocationChanged(Location location) {
-            //Get location data
-            Double lat = location.getLatitude();
-            Double lon = location.getLongitude();
-            String city = "", country = "";
-            Geocoder geocoder = new Geocoder(getBaseContext(), Locale.getDefault());
-            List<Address> addresses;
-            try {
-                addresses = geocoder.getFromLocation(lat, lon, 1);
-                if (addresses.size() > 0) {
-                    city = addresses.get(0).getLocality();
-                    country = addresses.get(0).getCountryName();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+    private String getLocationString() {
+        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        if (locationManager != null) {
+            Location lastKnownLocationGPS;
+            if (checkLocationPermission()) {
+                lastKnownLocationGPS = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            } else {
+                lastKnownLocationGPS = null;
             }
-
-            //Update location field
-            mLocationEditText.setText(String.format("%s, %s", city, country));
+            if (lastKnownLocationGPS != null) {
+                return getLocation(lastKnownLocationGPS);
+            } else {
+                Location lastKnownLocationPassive = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+                return getLocation(lastKnownLocationPassive);
+            }
+        } else {
+            return "";
         }
+    }
 
-        @Override
-        public void onStatusChanged(String s, int i, Bundle bundle) {
-        }
+    private String getLocation(Location location) {
+        Geocoder geocoder = new Geocoder(getBaseContext(), Locale.getDefault());
 
-        @Override
-        public void onProviderEnabled(String s) {
+        try {
+            List<Address> addresses = geocoder.getFromLocation(location.getLatitude(),
+                    location.getLongitude(), 1);
+            return addresses.get(0).getLocality() + ", " + addresses.get(0).getCountryName();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
-        @Override
-        public void onProviderDisabled(String s) {
-        }
+        return "";
     }
 }
