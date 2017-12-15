@@ -8,12 +8,12 @@ These are just some of the features this app includes:
 - Follows Google Material Design
 - Utilizes Google APIs to find restaurants
 - Grabs information from server about ads, contact info and location
-- Displays ads posted and can be updates with a swipe
-- Part specific categories to create organized and intuitive design
-- User Profiles and bookmarks to save favourite ads
+- Displays ads posted and can be updated with a swipe
+- Part-specific categories to create organized and intuitive design
+- User profiles and bookmarks to save favourite ads
 
 ### Requirements
-These items are needed to run this app:
+These items are needed to compile this application:
 - Android Studio v3.0.1
 - Device must be running Android 5.0 or above
 - Device must have USB debugging enabled
@@ -24,7 +24,7 @@ These items are needed to run this app:
 3. Install apk to device
 
 ### Authors
-- Thaghsan M.
+- Thaghsan Mohanarathnam
 - Jesse Crouch
 - Rameet Sekhon
 - Eyaz Rehman
