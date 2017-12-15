@@ -67,6 +67,8 @@ public class InboxActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+
+        // TODO: Cancel task
     }
 
     private void refresh() {

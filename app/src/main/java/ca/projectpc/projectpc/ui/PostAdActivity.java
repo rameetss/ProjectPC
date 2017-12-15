@@ -192,6 +192,9 @@ public class PostAdActivity extends AppCompatActivity {
                     // Store image for later uploading
                     mImages[imageIndex] = file;
 
+                    // TODO: We seem to be storing an old image file, perhaps the image
+                    // is deleted after this method's end?
+
                     // Use glide to open into the image view
                     Glide.with(getBaseContext()).load(file).into(imageView);
                 } catch (Exception ex) {
@@ -283,19 +286,6 @@ public class PostAdActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (i == AlertDialog.BUTTON_POSITIVE) {
-                    // Show progress dialog
-                    mProgressDialog = ProgressDialog.show(PostAdActivity.this,
-                            getString(R.string.title_progress_posting),
-                            getString(R.string.prompt_wait), true, true,
-                            new DialogInterface.OnCancelListener() {
-                                @Override
-                                public void onCancel(DialogInterface dialogInterface) {
-                                    if (mTask != null && !mTask.isCancelled()) {
-                                        mTask.cancel();
-                                    }
-                                }
-                            });
-
                     // Upload ad
                     uploadAd(title, mCategory, mTags, Double.parseDouble(price), currency,
                             description, location, null, null);
@@ -309,6 +299,19 @@ public class PostAdActivity extends AppCompatActivity {
     private void uploadAd(String title, String category, List<String> tags, Double price,
                           String currency, String description, String location,
                           @Nullable Double latitude, @Nullable Double longitude) {
+        // Show progress dialog
+        mProgressDialog = ProgressDialog.show(this,
+                getString(R.string.title_progress_posting),
+                getString(R.string.prompt_wait), true, true,
+                new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialogInterface) {
+                        if (mTask != null && !mTask.isCancelled()) {
+                            mTask.cancel();
+                        }
+                    }
+                });
+
         // Upload
         try {
             final Context context = this;
@@ -322,8 +325,7 @@ public class PostAdActivity extends AppCompatActivity {
                                 return;
                             }
 
-                            if (!result.hasError() && result.hasData()
-                                    && result.getCode() == ServiceResultCode.Ok) {
+                            if (!result.hasError()) {
                                 String postId = result.getData().id;
 
                                 File lastImage = null;
@@ -439,7 +441,7 @@ public class PostAdActivity extends AppCompatActivity {
         try {
             final Context context = this;
             final PostService service = Service.get(PostService.class);
-            mTask = service.setListed(postId, new IServiceCallback<BasicIdResult>() {
+            mTask = service.setListed(postId, true, new IServiceCallback<BasicIdResult>() {
                 @Override
                 public void onEnd(ServiceResult<BasicIdResult> result) {
                     mTask = null;
@@ -452,11 +454,15 @@ public class PostAdActivity extends AppCompatActivity {
                         mProgressDialog = null;
                     }
 
-                    if (!result.hasError() && result.hasData()
-                            && result.getCode() == ServiceResultCode.Ok) {
+                    if (!result.hasError()) {
                         Toast.makeText(context, R.string.prompt_ad_posted,
                                 Toast.LENGTH_LONG).show();
                         finish();
+                    } else {
+                        result.getException().printStackTrace();
+                        Toast.makeText(context,
+                                getString(R.string.service_unable_to_process_request),
+                                Toast.LENGTH_LONG).show();
                     }
                 }
             });

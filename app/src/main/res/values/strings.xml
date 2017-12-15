@@ -4,8 +4,6 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="action_settings">Settings</string>
-
     <!-- Navigation drawer -->
     <string name="drawer_home">Home</string>
     <string name="drawer_inbox">Inbox</string>
@@ -101,6 +99,14 @@
     <string name="error_unable_open_image">Unable to open image. Check permissions.</string>
     <string name="title_progress_posting">Posting…</string>
     <string name="prompt_ad_posted">Your ad has been posted.</string>
+
+    <!-- Search -->
+    <string name="title_activity_search">Search</string>
+    <string name="title_activity_search_for">Showing results for %s</string>
+
+    <!-- Menu -->
+    <string name="action_search">Search</string>
+    <string name="action_settings">Settings</string>
 
     <!-- Message activity -->
     <string name="title_activity_message">Message</string>

@@ -151,6 +151,15 @@ public class LoginActivity extends AppCompatActivity implements Dialog.OnCancelL
     }
 
     @Override
+    public void onBackPressed() {
+        if (mLoginTask != null && !mLoginTask.isCancelled()) {
+            mLoginTask.cancel();
+            return;
+        }
+        super.onBackPressed();
+    }
+
+    @Override
     public void onCancel(DialogInterface dialog) {
         if (mLoginTask != null && !mLoginTask.isCancelled()) {
             mLoginTask.cancel();

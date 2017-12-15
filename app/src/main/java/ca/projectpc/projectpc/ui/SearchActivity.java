@@ -1,21 +1,32 @@
 package ca.projectpc.projectpc.ui;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
 import android.view.View;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import ca.projectpc.projectpc.R;
 import ca.projectpc.projectpc.api.IServiceCallback;
 import ca.projectpc.projectpc.api.Service;
 import ca.projectpc.projectpc.api.ServiceResult;
 import ca.projectpc.projectpc.api.service.AuthService;
+import ca.projectpc.projectpc.api.service.PostService;
+import ca.projectpc.projectpc.ui.adapter.PostAdapter;
 
 public class SearchActivity extends BaseActivity
         implements SwipeRefreshLayout.OnRefreshListener {
@@ -24,8 +35,12 @@ public class SearchActivity extends BaseActivity
     private String mCategory;
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    RecyclerView mRecyclerView;
-    LinearLayoutManager mLinearLayoutManager;
+    private RecyclerView mRecyclerView;
+    private LinearLayoutManager mLinearLayoutManager;
+    private SearchView mSearchView;
+
+    private List<PostService.Post> mPosts;
+    private PostAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +62,11 @@ public class SearchActivity extends BaseActivity
         } else {
             // Show floating action button (to create new post)
             showFloatingActionButton();
+
+            // Show menu
+            if (mMenuId == 0) {
+                mMenuId = R.menu.menu_search;
+            }
         }
 
         // Set title
@@ -81,10 +101,26 @@ public class SearchActivity extends BaseActivity
 
         // Find recycler view
         mRecyclerView = (RecyclerView) findViewById(R.id.search_ads_recycler_view);
+        mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
 
-        // TODO: Fetch data from server depending on the category (mCategory)
-        // ...
+        // Set up recycler view
+        mPosts = new ArrayList<>();
+        mAdapter = new PostAdapter(mPosts);
+        mRecyclerView.setAdapter(mAdapter);
+
+        // Refresh
+        refresh();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!mSearchView.isIconified()) {
+            mSearchView.setIconified(true);
+            return;
+        }
+
+        super.onBackPressed();
     }
 
     @Override
@@ -109,17 +145,112 @@ public class SearchActivity extends BaseActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // This is for menu options
+        // TODO/NOTE: I think this is how it's done
+        if (item.getItemId() == R.id.menu_action_settings) {
+            // ...
+        }
 
         return true;
     }
 
     @Override
-    public void onRefresh() {
-        // TODO: Refresh
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
 
+        // Associate searchable configuration with the SearchView
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        MenuItem menuItem = menu.findItem(R.id.menu_action_search);
+        if (menuItem != null) {
+            mSearchView = (SearchView) menuItem.getActionView();
+            mSearchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+            mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String s) {
+                    // Submit to results activity
+                    Intent intent = new Intent(getBaseContext(), SearchResultsActivity.class);
+                    intent.putExtra("category", mCategory);
+                    intent.putExtra("query", s);
+                    startActivity(intent);
+
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String s) {
+                    return false;
+                }
+            });
+        }
+
+        return true;
+    }
+
+    private void refresh() {
         // Set as complete, for now
         mSwipeRefreshLayout.setRefreshing(true);
-        mSwipeRefreshLayout.setRefreshing(false);
+
+        try {
+            final Context context = this;
+            PostService service = Service.get(PostService.class);
+            if (mCategory.equals("")) {
+                mAdapter.setShowSendMessageIcon(false);
+                service.getMyPosts(new IServiceCallback<PostService.GetPostsResult>() {
+                    @Override
+                    public void onEnd(ServiceResult<PostService.GetPostsResult> result) {
+                        mSwipeRefreshLayout.setRefreshing(false);
+
+                        // Clear adapter
+                        mPosts.clear();
+
+                        if (!result.hasError() && result.hasData()) {
+                            mPosts.addAll(Arrays.asList(result.getData().result));
+
+                            // Notify data changed
+                            mAdapter.notifyDataSetChanged();
+                        } else {
+                            // The API failed to complete the request and returned an exception
+                            result.getException().printStackTrace();
+                            Toast.makeText(context, R.string.service_unable_to_process_request,
+                                    Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+            } else {
+                mAdapter.setShowSendMessageIcon(true);
+                service.getAllPostsForCategory(mCategory, null,
+                        new IServiceCallback<PostService.GetPostsResult>() {
+                            @Override
+                            public void onEnd(ServiceResult<PostService.GetPostsResult> result) {
+                                mSwipeRefreshLayout.setRefreshing(false);
+
+                                // Clear adapter
+                                mPosts.clear();
+
+                                if (!result.hasError() && result.hasData()) {
+                                    mPosts.addAll(Arrays.asList(result.getData().result));
+
+                                    // Notify data changed
+                                    mAdapter.notifyDataSetChanged();
+                                } else {
+                                    // The API failed to complete the request and returned an exception
+                                    result.getException().printStackTrace();
+                                    Toast.makeText(context, R.string.service_unable_to_process_request,
+                                            Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        });
+            }
+        } catch (Exception ex) {
+            // Unable to get service (internal error)
+            ex.printStackTrace();
+            Toast.makeText(this, R.string.service_internal_error, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void onRefresh() {
+        // Refresh
+        refresh();
     }
 
     private int navIdToCategoryStringId(int id) {

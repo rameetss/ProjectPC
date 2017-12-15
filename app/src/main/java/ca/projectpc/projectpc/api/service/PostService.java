@@ -42,6 +42,7 @@ public class PostService extends Service {
 
     private class SetListedParameters {
         String postId;
+        boolean listed;
     }
 
     private class UpdatePostParameters {
@@ -165,10 +166,12 @@ public class PostService extends Service {
                 SetThumbnailImageParameters.class, BasicIdResult.class, null, callback);
     }
 
-    public ServiceTask setListed(String postId, IServiceCallback<BasicIdResult> callback)
+    public ServiceTask setListed(String postId, boolean listed,
+                                 IServiceCallback<BasicIdResult> callback)
             throws Exception {
         SetListedParameters parameters = new SetListedParameters();
         parameters.postId = postId;
+        parameters.listed = listed;
 
         return sendRequest("POST", "/post/setListed", parameters,
                 SetListedParameters.class, BasicIdResult.class, null, callback);

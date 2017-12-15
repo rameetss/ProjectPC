@@ -13,8 +13,9 @@ import ca.projectpc.projectpc.api.service.SystemService;
 import pl.aprilapps.easyphotopicker.EasyImage;
 
 public class StartupActivity extends AppCompatActivity {
-    public static final String API_ENDPOINT = "https://ppc.indigogames.ca/api/";
-    public static final int API_TIMEOUT = 5000;
+    // TODO: Change back
+    public static final String API_ENDPOINT = "http://192.168.0.101:4040/api/";//"https://ppc.indigogames.ca/api/";
+    public static final int API_TIMEOUT = 25000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +30,8 @@ public class StartupActivity extends AppCompatActivity {
         EasyImage.configuration(this)
                 .setImagesFolderName("local")
                 .saveInAppExternalFilesDir()
-                .saveInRootPicturesDirectory();
+                .saveInRootPicturesDirectory()
+                .setCopyExistingPicturesToPublicLocation(true);
 
         // TODO: Get required permissions (File reading permissions, GPS permissions)
 
