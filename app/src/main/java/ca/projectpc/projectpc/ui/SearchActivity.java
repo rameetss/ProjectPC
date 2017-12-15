@@ -180,7 +180,8 @@ public class SearchActivity extends BaseActivity
             Intent intent = new Intent(this, InboxActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_settings) {
-            // TODO: Show settings activity
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_sign_out) {
             try {
                 AuthService authService = Service.get(AuthService.class);
