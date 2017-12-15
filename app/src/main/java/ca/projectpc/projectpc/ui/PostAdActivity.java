@@ -68,6 +68,16 @@ public class PostAdActivity extends AppCompatActivity {
     private File mThumbnailImage;
     private List<String> mTags;
 
+    /**
+     *
+     * @param savedInstanceState
+     * Enable android back button compatibility with app
+     * Grab user controls for editing post
+     * Generate ID tags for parts for search activity
+     * Grab image container, size and generate view
+     * grab category and set title for post
+     *
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -192,6 +202,13 @@ public class PostAdActivity extends AppCompatActivity {
         mLocationEditText.setText(getLocationString());
     }
 
+    /**
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     * Grab image view from earlier and store to post later
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         EasyImage.handleActivityResult(requestCode, resultCode, data, this, new DefaultCallback() {
@@ -233,6 +250,9 @@ public class PostAdActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
+    /**
+     * Back pressed functionality
+     */
     @Override
     public void onBackPressed() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -316,6 +336,21 @@ public class PostAdActivity extends AppCompatActivity {
         builder.show();
     }
 
+    /**
+     *
+     * @param title
+     * @param category
+     * @param tags
+     * @param price
+     * @param currency
+     * @param description
+     * @param location
+     * @param latitude
+     * @param longitude
+     * Try catch for service error
+     * Grab all input information in context
+     * Upload info and post
+     */
     private void uploadAd(String title, String category, List<String> tags, Double price,
                           String currency, String description, String location,
                           @Nullable Double latitude, @Nullable Double longitude) {
@@ -374,6 +409,15 @@ public class PostAdActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     *
+     * @param postId
+     * @param image
+     * @param thumbnail
+     * @param lastImage
+     * Double try-catch for service errors
+     * Upload images to post with buffer and Base64 encode
+     */
     private void uploadImage(final String postId, File image, boolean thumbnail,
                              final boolean lastImage) {
         try {

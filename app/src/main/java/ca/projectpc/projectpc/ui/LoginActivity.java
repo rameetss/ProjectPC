@@ -32,6 +32,13 @@ public class LoginActivity extends AppCompatActivity implements Dialog.OnCancelL
     private SharedPreferences mPreferences;
     private ServiceTask mLoginTask;
 
+    /**
+     *
+     * @param savedInstanceState
+     * Get Controls, Preferences
+     * Check if intent information was passed
+     * Grab login information from database
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,6 +82,14 @@ public class LoginActivity extends AppCompatActivity implements Dialog.OnCancelL
         }
     }
 
+    /**
+     *
+     * @param view
+     * Preform check on login information, output appropriate message
+     * Output progress dialog
+     * Catch service exception for no connection
+     *
+     */
     public void onLogin(View view) {
         try {
             AuthService authService = Service.get(AuthService.class);
@@ -144,6 +159,11 @@ public class LoginActivity extends AppCompatActivity implements Dialog.OnCancelL
         }
     }
 
+    /**
+     *
+     * @param view
+     * Register Intent
+     */
     public void onRegister(View view) {
         Intent intent = new Intent(this, RegisterActivity.class);
         startActivity(intent);

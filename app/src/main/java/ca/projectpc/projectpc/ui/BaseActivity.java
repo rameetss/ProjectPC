@@ -26,6 +26,12 @@ public abstract class BaseActivity extends AppCompatActivity
     protected FloatingActionButton mFloatingActionButton;
     protected NavigationView mNavigationView;
 
+    /**
+     *
+     * @param savedInstanceState
+     *  Save away any dynamic instance state in activity into the given Bundle,
+     *  to be later received in onCreate(Bundle) if the activity needs to be re-created.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +64,7 @@ public abstract class BaseActivity extends AppCompatActivity
         mNavigationView.inflateMenu(getNavigationMenuId());
     }
 
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -68,6 +75,13 @@ public abstract class BaseActivity extends AppCompatActivity
         }
     }
 
+    /**
+     *
+     * @param item
+     * Trigger boolean value for drawer layout, only activated if user
+     * attempts to navigate to different page.
+     * @return
+     */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NotNull MenuItem item) {
@@ -83,6 +97,13 @@ public abstract class BaseActivity extends AppCompatActivity
         return true;
     }
 
+    /**
+     *
+     * @param menu
+     * looking for a file called main.xml located in the folder src/main/res/menu/.
+     * This file is used to create the buttons inside the top ActionBar.
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         int id = getMenuId();
