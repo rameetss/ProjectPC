@@ -10,6 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent">
 
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -36,8 +37,9 @@
             </HorizontalScrollView>
 
             <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_width="353dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/show_ad_title"
@@ -47,6 +49,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_gravity="center_vertical"
                     android:layout_marginBottom="10dp"
+                    android:layout_weight="0.5"
                     android:text="Sick Case Styll"
                     android:textSize="25sp" />
 
@@ -56,6 +59,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_toEndOf="@+id/show_ad_title"
                     android:src="@drawable/ic_message_primary_dark" />
+
 
             </RelativeLayout>
 
@@ -67,6 +71,9 @@
                     android:id="@+id/show_ad_currency"
                     android:layout_width="match_parent"
                     android:layout_height="22dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_below="@+id/show_ad_title"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="0.5"
                     android:text="CAD"
@@ -78,6 +85,8 @@
                     android:id="@+id/show_ad_price"
                     android:layout_width="608dp"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="0.5"
                     android:text="2000"
@@ -86,6 +95,43 @@
                     tools:layout_editor_absoluteY="27dp" />
 
             </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="352dp"
+                android:layout_height="25dp"
+                android:layout_marginTop="10dp">
+
+                <ImageView
+                    android:id="@+id/location_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentStart="true"
+                    android:src="@drawable/location_icon"
+                    />
+
+                <TextView
+                    android:id="@+id/show_ad_address_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@+id/location_icon"
+                    android:text="170 jatt is jatt, Bramptn, ON"
+                    android:textColor="@color/colorAccent"/>
+
+                <TextView
+                    android:id="@+id/show_ad_distance_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@+id/show_ad_address_text"
+                    android:layout_alignBottom="@+id/show_ad_address_text"
+                    android:layout_alignParentEnd="true"
+                    android:textColor="@color/colorAccent"
+                    android:text="5km away" />
+
+
+            </RelativeLayout>
+
 
             <TextView
                 android:id="@+id/show_ad_description"
@@ -97,5 +143,7 @@
         </LinearLayout>
 
     </ScrollView>
+
+
 
 </LinearLayout>
