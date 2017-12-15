@@ -38,9 +38,8 @@ import ca.projectpc.projectpc.api.Service;
 import ca.projectpc.projectpc.api.ServiceResult;
 import ca.projectpc.projectpc.api.service.MessageService;
 
-/**
- * Activity to handle sending emails to other users
- */
+// NOTE: Deprecated in favour of emailing. Unfortunately we ran out of time to complete this
+// however the backend code/API for it is complete.
 public class InboxActivity extends AppCompatActivity
         implements SwipeRefreshLayout.OnRefreshListener {
 

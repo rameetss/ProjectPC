@@ -23,9 +23,8 @@ import android.os.Bundle;
 
 import ca.projectpc.projectpc.R;
 
-/**
- * Activity to handle messaging
- */
+// NOTE: Deprecated in favour of emailing. Unfortunately we ran out of time to complete this
+// however the backend code/API for it is complete.
 public class MessageActivity extends AppCompatActivity {
 
     /**
