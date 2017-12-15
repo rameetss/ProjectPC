@@ -21,7 +21,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -36,7 +35,6 @@ import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.pchmn.materialchips.ChipsInput;
 import com.pchmn.materialchips.model.ChipInterface;
@@ -71,9 +69,10 @@ public class EditAdActivity extends AppCompatActivity {
     private String mPostId;
     private List<ImageView> mImageViews;
     private String[] mImages;
+    private String mThumbnailImage;
+    private String mThumbnailImageNew;
     private File[] mChangedImages;
     private File mChangedThumbnailImage;
-    private String mChangedThumbnailImageOld;
     private List<String> mTags;
 
     /**
@@ -146,7 +145,7 @@ public class EditAdActivity extends AppCompatActivity {
         mChangedImages = new File[MAX_IMAGES];
         for (int i = 0; i < MAX_IMAGES; i++) {
             final int imageIndex = i;
-            ImageView imageView = new ImageView(this);
+            final ImageView imageView = new ImageView(this);
             imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
             imageView.setImageResource(R.drawable.ic_add_box_gray);
             imageView.setLayoutParams(new LinearLayout.LayoutParams(
@@ -171,16 +170,28 @@ public class EditAdActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialogInterface, int which) {
                                 if (which == 0) {
                                     // Set as primary
-                                    if (mChangedImages[imageIndex] != null)
+                                    if (mChangedImages[imageIndex] == null) {
+                                        mThumbnailImageNew = mImages[imageIndex];
+                                    } else {
                                         mChangedThumbnailImage = mChangedImages[imageIndex];
-                                    else mChangedThumbnailImageOld = image;
+                                    }
                                 } else if (which == 1) {
                                     // Remove image
-                                    //mImages[imageIndex] = null;
-                                    //if (image == mThumbnailImage) {
-                                    //    mThumbnailImage = null;
-                                    //}
-                                    //imageView.setImageResource(R.drawable.ic_add_box_gray);
+                                    if (mChangedImages[imageIndex] == null) {
+                                        if (mThumbnailImage.equals(mImages[imageIndex])) {
+                                            mThumbnailImageNew = null;
+                                            mThumbnailImage = null;
+                                        }
+                                        mImages[imageIndex] = null;
+                                    } else {
+                                        if (mChangedThumbnailImage == mChangedImages[imageIndex]) {
+                                            mChangedThumbnailImage = null;
+                                        }
+                                        mChangedImages[imageIndex] = null;
+                                    }
+
+                                    imageView.setImageResource(R.drawable.ic_add_box_gray);
+                                    imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
                                 }
                             }
                         });
@@ -281,6 +292,10 @@ public class EditAdActivity extends AppCompatActivity {
                             if (!result.hasError()) {
                                 // Get data
                                 PostService.GetPostResult data = result.getData();
+
+                                // Store data
+                                mImages = data.imageIds;
+                                mThumbnailImage = data.thumbnailImageId;
 
                                 // Get currency
                                 SpinnerAdapter currencyAdapter = mCurrenciesSpinner.getAdapter();

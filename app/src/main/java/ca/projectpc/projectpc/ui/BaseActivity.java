@@ -132,7 +132,6 @@ public abstract class BaseActivity extends AppCompatActivity
 
     /**
      * Set content view for inner container, instead of for entire activity
-     *
      * @param layoutResID Layout to inflate
      */
     @Override
