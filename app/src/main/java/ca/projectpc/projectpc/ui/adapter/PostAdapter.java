@@ -105,13 +105,13 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Intent.ACTION_SEND);
-                intent.putExtra(Intent.EXTRA_EMAIL, new String[]{post.authorEmail});
+                intent.setType("plain/text");
+                intent.putExtra(Intent.EXTRA_EMAIL, new String[] { post.authorEmail });
                 intent.putExtra(Intent.EXTRA_SUBJECT, String.format(
                         mContext.getString(R.string.prompt_email_title),
                         post.title
                 ));
-                mContext.startActivity(Intent.createChooser(intent,
-                        mContext.getString(R.string.prompt_choose_email_client)));
+                mContext.startActivity(Intent.createChooser(intent,""));
             }
         });
 
