@@ -143,6 +143,7 @@ public class PostAdActivity extends AppCompatActivity {
                 if (length > 0) {
                     char lastChar = charSequence.charAt(length - 1);
                     if (lastChar == ' ') {
+                        // TODO: Check if string is just spaces
                         String label = charSequence.subSequence(0, length - 1).toString();
                         mTagsChipsInput.addChip(label, "");
                     }

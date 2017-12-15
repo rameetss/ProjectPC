@@ -19,21 +19,25 @@ package ca.projectpc.projectpc.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,19 +49,20 @@ import ca.projectpc.projectpc.api.ServiceResult;
 import ca.projectpc.projectpc.api.ServiceTask;
 import ca.projectpc.projectpc.api.service.PostService;
 import ca.projectpc.projectpc.ui.glide.GlideApp;
+import ca.projectpc.projectpc.utility.LatLong;
 
 // TODO: Add fab
 public class ShowAdActivity extends AppCompatActivity {
     private LinearLayout mImageContainer;
+    private TextView mTitleTextView;
+    private TextView mDescriptionTextView;
+    private TextView mCurrencyTextView;
+    private TextView mPriceTextView;
+    private TextView mLocationTextView;
+    private TextView mDistanceTextView;
 
-    /**
-     *
-     * @param savedInstanceState
-     * Enable back button
-     * Grab UI and Image container for Ad
-     * Grab post ID for search and filter
-     * grab Ad info
-     */
+    private String mPostId;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,16 +75,28 @@ public class ShowAdActivity extends AppCompatActivity {
         }
 
         // Get UI
+        mTitleTextView = (TextView) findViewById(R.id.show_ad_title);
+        mDescriptionTextView = (TextView) findViewById(R.id.show_ad_description);
+        mCurrencyTextView = (TextView) findViewById(R.id.show_ad_currency);
+        mPriceTextView = (TextView) findViewById(R.id.show_ad_price);
+        mLocationTextView = (TextView) findViewById(R.id.show_ad_location);
+        mDistanceTextView = (TextView) findViewById(R.id.show_ad_distance);
 
         // Get image container
         mImageContainer = (LinearLayout) findViewById(R.id.show_ad_image_container);
 
         // Get post id
         Intent intent = getIntent();
-        String postId = intent.getStringExtra("postId");
+        mPostId = intent.getStringExtra("postId");
 
         // Get ad info
-        downloadAd(postId);
+        downloadAd(mPostId);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_show_ad, menu);
+        return true;
     }
 
     @Override
@@ -87,6 +104,13 @@ public class ShowAdActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
+                return true;
+            case R.id.menu_action_edit:
+                Intent intent = new Intent(this, EditAdActivity.class);
+                intent.putExtra("postId", mPostId);
+                return true;
+            case R.id.menu_action_bookmark:
+                // TODO: Implement
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -100,11 +124,6 @@ public class ShowAdActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
-    /**
-     * Grab context and set title, create image views and schedule downloads
-     * catch api exception where completion of request failed and returned
-     * @param postId Post id
-     */
     private void downloadAd(String postId) {
         try {
             final Context context = this;
@@ -124,15 +143,43 @@ public class ShowAdActivity extends AppCompatActivity {
                         // Set title
                         setTitle(data.title);
 
-                        // TODO: set other info
+                        // Measure distance between locations
+                        String distanceString = "";
+                        Location location = LatLong.getLocation(context);
+                        if (location != null && data.latitude != null && data.longitude != null) {
+                            double distance = LatLong.getDistanceBetweenLocations(data.latitude,
+                                    data.longitude, location.getLatitude(),
+                                    location.getLongitude());
+                            if (distance < 1000) {
+                                distanceString = new DecimalFormat("0.0").format(distance)
+                                        + "m";
+                            } else {
+                                distanceString = new DecimalFormat("0.0").format(distance / 1000)
+                                        + "km";
+                            }
+                        }
+
+                        // Set other info
+                        mTitleTextView.setText(data.title);
+                        mDescriptionTextView.setText(data.body);
+                        mCurrencyTextView.setText(data.currency);
+                        mPriceTextView.setText(String.format("%.2f", data.price));
+                        mLocationTextView.setText(data.location);
+                        mDistanceTextView.setText(distanceString);
+
+                        // Get image view size
+                        int imageViewWidth = (int) getResources().getDimension(
+                                R.dimen.show_image_width);
+                        int imageViewHeight = (int) getResources().getDimension(
+                                R.dimen.show_image_height);
 
                         // Create image views
                         for (String imageId : data.imageIds) {
                             ImageView imageView = new ImageView(context);
                             imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
                             imageView.setLayoutParams(new LinearLayout.LayoutParams(
-                                    ViewGroup.LayoutParams.MATCH_PARENT,
-                                    ViewGroup.LayoutParams.WRAP_CONTENT
+                                    imageViewWidth,
+                                    imageViewHeight
                             ));
                             mImageContainer.addView(imageView);
 
@@ -155,11 +202,6 @@ public class ShowAdActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Download image from post service and load into image view
-     * @param imageId Image id
-     * @param imageView Image view to load image into
-     */
     private void downloadImage(String imageId, final ImageView imageView) {
         try {
             final Context context = this;

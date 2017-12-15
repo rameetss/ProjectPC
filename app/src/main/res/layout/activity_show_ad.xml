@@ -14,7 +14,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="@dimen/default_padding">
 
@@ -44,7 +44,6 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginBottom="10dp"
                 android:layout_weight="0.5"
-                android:text="Sick Case Styll"
                 android:textSize="25sp" />
 
             <LinearLayout
@@ -58,7 +57,6 @@
                     android:layout_height="24dp"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="0.5"
-                    android:text="CAD"
                     android:textSize="18sp" />
 
                 <TextView
@@ -67,7 +65,6 @@
                     android:layout_height="24dp"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="0.5"
-                    android:text="2000"
                     android:textSize="18sp" />
 
             </LinearLayout>
@@ -86,23 +83,21 @@
                     android:src="@drawable/ic_location_primary_dark" />
 
                 <TextView
-                    android:id="@+id/show_ad_address_text"
+                    android:id="@+id/show_ad_location"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_toEndOf="@+id/show_ad_location_icon"
-                    android:text="170 jatt is jatt, Brampton, ON"
                     android:textColor="@color/colorAccent"/>
 
                 <TextView
-                    android:id="@+id/show_ad_distance_text"
+                    android:id="@+id/show_ad_distance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignBaseline="@+id/show_ad_address_text"
-                    android:layout_alignBottom="@+id/show_ad_address_text"
+                    android:layout_alignBaseline="@+id/show_ad_location"
+                    android:layout_alignBottom="@+id/show_ad_location"
                     android:layout_alignParentEnd="true"
-                    android:textColor="@color/colorAccent"
-                    android:text="5km away" />
+                    android:textColor="@color/colorAccent" />
 
             </RelativeLayout>
 
@@ -110,8 +105,7 @@
                 android:id="@+id/show_ad_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="@string/show_ad_description" />
+                android:layout_marginTop="10dp" />
 
         </LinearLayout>
 

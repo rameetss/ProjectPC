@@ -24,6 +24,7 @@ import java.util.Date;
  * the document
  */
 public class DataResult {
+    public String id;
     public Date createdAt;
     public Date updatedAt;
 }

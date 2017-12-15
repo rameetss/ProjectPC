@@ -17,17 +17,12 @@
 
 package ca.projectpc.projectpc.ui.adapter;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationManager;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,9 +41,11 @@ import ca.projectpc.projectpc.api.IServiceCallback;
 import ca.projectpc.projectpc.api.Service;
 import ca.projectpc.projectpc.api.ServiceResult;
 import ca.projectpc.projectpc.api.ServiceTask;
+import ca.projectpc.projectpc.api.service.AuthService;
 import ca.projectpc.projectpc.api.service.PostService;
 import ca.projectpc.projectpc.ui.ShowAdActivity;
 import ca.projectpc.projectpc.ui.glide.GlideApp;
+import ca.projectpc.projectpc.utility.LatLong;
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder> {
     private Context mContext;
@@ -84,15 +81,24 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mContext, ShowAdActivity.class);
+                intent.putExtra("postId", post.id);
                 mContext.startActivity(intent);
+            }
+        });
+
+        // Open send message on click
+        holder.mMessageImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO: Send message
             }
         });
 
         // Measure distance between locations
         String distanceString = "";
-        Location location = getLocation();
+        Location location = LatLong.getLocation(mContext);
         if (location != null && post.latitude != null && post.longitude != null) {
-            double distance = getDistanceBetweenLocations(post.latitude, post.longitude,
+            double distance = LatLong.getDistanceBetweenLocations(post.latitude, post.longitude,
                     location.getLatitude(), location.getLongitude());
             if (distance < 1000) {
                 distanceString = new DecimalFormat("0.0").format(distance) + "m";
@@ -108,19 +114,25 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         holder.mCurrencyTextView.setText(post.currency);
         holder.mDistanceTextView.setText(distanceString);
 
-        // Show message icon if enabled
-        holder.mMessageImageView.setVisibility(mShowSendMessageIcon
-                ? View.VISIBLE : View.INVISIBLE);
-
-        // Check if image exists
-        if (post.thumbnailId == null) {
-            return;
-        }
-
         // Download image
         try {
-            PostService service = Service.get(PostService.class);
-            holder.mDownloadImageTask = service.downloadImage(post.thumbnailId,
+            AuthService authService = Service.get(AuthService.class);
+
+            // Show message icon if enabled
+            if (mShowSendMessageIcon
+                    && !post.authorId.equals(authService.getSessionData().userId)) {
+                holder.mMessageImageView.setVisibility(View.VISIBLE);
+            } else {
+                holder.mMessageImageView.setVisibility(View.INVISIBLE);
+            }
+
+            // Check if image exists
+            if (post.thumbnailId == null) {
+                return;
+            }
+
+            PostService postService = Service.get(PostService.class);
+            holder.mDownloadImageTask = postService.downloadImage(post.thumbnailId,
                     new IServiceCallback<PostService.DownloadImageResult>() {
                         @Override
                         public void onEnd(ServiceResult<PostService.DownloadImageResult> result) {
@@ -162,41 +174,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         }
 
         super.onViewRecycled(holder);
-    }
-
-    private Location getLocation() {
-        if (ActivityCompat.checkSelfPermission(mContext,
-                Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(mContext,
-                Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            return null;
-        }
-
-        LocationManager locationManager =
-                (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
-        if (locationManager != null) {
-            return locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
-        }
-
-        return null;
-    }
-
-    private static double getDistanceBetweenLocations(double latitude1, double longitude1,
-                                                      double latitude2, double longitude2) {
-        double latitude = Math.toRadians(latitude2 - latitude1);
-        double longitude = Math.toRadians(longitude2 - longitude1);
-
-        double a = Math.pow(Math.sin(latitude / 2), 2)
-                + Math.cos(Math.toRadians(latitude1))
-                * Math.cos(Math.toRadians(latitude2))
-                * Math.pow(Math.sin(longitude / 2), 2);
-
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-        // Radius of Earth * c * 1000
-        return 6378.1 * c * 1000; // Meters
     }
 
     @Override

@@ -12,4 +12,7 @@
 
     <dimen name="post_image_width">164dp</dimen>
     <dimen name="post_image_height">164dp</dimen>
+
+    <dimen name="show_image_width">320dp</dimen>
+    <dimen name="show_image_height">320dp</dimen>
 </resources>
