@@ -18,7 +18,7 @@
 package ca.projectpc.projectpc.api;
 
 /**
- *
+ * All service result codes to be used when requesting or initializing services
  */
 public class ServiceResultCode {
     public static final int Ok = 1000;

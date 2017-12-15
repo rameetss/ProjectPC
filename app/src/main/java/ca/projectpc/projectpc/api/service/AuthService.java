@@ -90,10 +90,29 @@ public class AuthService extends Service {
 
     private SessionData mSessionData;
 
+    /**
+     * Clone the session data, throwing exception and return it.
+     *
+     * @return Cloned session data
+     * @throws Exception Cloning data may throw Exception
+     */
     public SessionData getSessionData() throws Exception {
         return (SessionData) mSessionData.clone();
     }
 
+    /**
+     * Accepting user account registration credentials, formatting them together in byte arrays,
+     * hashing the password and sending the HTTP POST request /auth/create.
+     *
+     * @param email     Users desired email
+     * @param firstName Users first name
+     * @param lastName  Users surname
+     * @param userName  Users desired username
+     * @param password  Users desired password
+     * @param callback  Service callback to receive success or fail result
+     * @return The result of the HTTP sendRequest
+     * @throws Exception sendRequest may throw Exception
+     */
     public ServiceTask createAccount(String email, String firstName, String lastName,
                                      String userName, String password,
                                      IServiceCallback<AuthResult> callback)
@@ -120,6 +139,16 @@ public class AuthService extends Service {
         );
     }
 
+    /**
+     * Accepting user account credentials, formatting them together in byte arrays,
+     * hashing the password and sending the HTTP POST request /auth/login.
+     *
+     * @param email Users email
+     * @param password Users password
+     * @param callback Service callback to receive success or fail result
+     * @return The result of the HTTP sendRequest method
+     * @throws Exception sendRequest may throw Exception
+     */
     public ServiceTask login(String email, String password,
                              IServiceCallback<AuthResult> callback)
             throws Exception {
@@ -142,6 +171,14 @@ public class AuthService extends Service {
         );
     }
 
+    /**
+     * Logging out a logged in user by sending HTTP DELETE request, clearing cookies and
+     * setting the current session data to null.
+     *
+     * @param callback Service callback to receive success or fail result
+     * @return The result of the HTTP sendRequest method
+     * @throws Exception sendRequest may throw Exception
+     */
     public ServiceTask logout(IServiceCallback<Void> callback) throws Exception {
         return sendRequest("DELETE", "/auth/delete", new IServiceCallback<Void>() {
             @Override

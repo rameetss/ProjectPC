@@ -28,7 +28,13 @@ import ca.projectpc.projectpc.api.service.result.ArrayResult;
 import ca.projectpc.projectpc.api.service.result.BasicIdResult;
 import ca.projectpc.projectpc.api.service.result.DataResult;
 
+/**
+ * Service API to handle posting and editing of ads
+ */
 public class PostService extends Service {
+    /**
+     * Subclass to store relevant ad parameters
+     */
     private class CreatePostParameters {
         String title;
         String category;
@@ -129,6 +135,23 @@ public class PostService extends Service {
     public class GetPostResult extends Post {
     }
 
+    /**
+     * Accepting relevant ad data, adding them to PostParameters, and passing
+     * them via HTTP POST create request.
+     *
+     * @param title     Ad title
+     * @param category  Ad category
+     * @param tags      Ad tags
+     * @param price     Ad price
+     * @param currency  Currency that the ad price is in
+     * @param body      Ad description
+     * @param location  Ad Location
+     * @param latitude  Nullable lat coords
+     * @param longitude Nullable lon coords
+     * @param callback  Service callback to receive success or fail result
+     * @return The result of the HTTP sendRequest method
+     * @throws Exception sendRequest may throw Exception
+     */
     public ServiceTask createPost(String title, String category, List<String> tags, Double price,
                                   String currency, String body, String location,
                                   @Nullable Double latitude, @Nullable Double longitude,
@@ -149,6 +172,17 @@ public class PostService extends Service {
                 BasicIdResult.class, null, callback);
     }
 
+    /**
+     * Method to upload images associated with an ad ID by parsing the image into
+     * a base64 format and utilizing sendRequest to send HTTP POST uploadImage request.
+     *
+     * @param postId ID of the ad which is associated with the images
+     * @param thumbnail scaled down version of image to be used as thumbnail
+     * @param base64Image the image to be uploaded
+     * @param callback Service callback to receive success or fail result
+     * @return The result of the HTTP sendRequest method
+     * @throws Exception sendRequest may throw Exception
+     */
     public ServiceTask uploadImage(String postId, boolean thumbnail, String base64Image,
                                    final IServiceCallback<BasicIdResult> callback)
             throws Exception {
@@ -161,6 +195,15 @@ public class PostService extends Service {
                 BasicIdResult.class, null, callback);
     }
 
+    /**
+     * Remove an image from a post given the post ID and the image ID
+     *
+     * @param postId ID of the target ad
+     * @param imageId ID of the target image
+     * @param callback Service callback to receive success or fail result
+     * @return The result of the sendRequest method
+     * @throws Exception sendRequest may throw Exception
+     */
     public ServiceTask removeImage(String postId, String imageId,
                                    final IServiceCallback<BasicIdResult> callback)
             throws Exception {
@@ -172,6 +215,15 @@ public class PostService extends Service {
                 BasicIdResult.class, null, callback);
     }
 
+    /**
+     * Method to set the thumbnail of the ad to the appropriately passed image id
+     *
+     * @param postId ID of the ad
+     * @param imageId ID of the image to use as the thumbnail
+     * @param callback Service callback to receive success or fail result
+     * @return The result of the sendRequest method
+     * @throws Exception sendRequest may throw Exception
+     */
     public ServiceTask setThumbnailImage(String postId, String imageId,
                                          final IServiceCallback<BasicIdResult> callback)
             throws Exception {
@@ -183,6 +235,15 @@ public class PostService extends Service {
                 SetThumbnailImageParameters.class, BasicIdResult.class, null, callback);
     }
 
+    /**
+     * Method to set the ad as listed publicly by POST setListed
+     *
+     * @param postId ID of the post to be listed
+     * @param listed Whether or not the post is already listed
+     * @param callback Service callback to receive success or fail result
+     * @return The result of the sendRequest method
+     * @throws Exception sendRequest may throw Exception
+     */
     public ServiceTask setListed(String postId, boolean listed,
                                  IServiceCallback<BasicIdResult> callback)
             throws Exception {
@@ -194,6 +255,23 @@ public class PostService extends Service {
                 SetListedParameters.class, BasicIdResult.class, null, callback);
     }
 
+    /**
+     * Method to update a post with new edited data
+     *
+     * @param postId ID of the post to edit
+     * @param title Updated ad title
+     * @param category Updated ad category
+     * @param tags Updated ad tags
+     * @param price Updated ad price
+     * @param currency Updated ad currency
+     * @param body Updated ad description
+     * @param location Updated ad location
+     * @param latitude Updated ad lat
+     * @param longitude Updated ad lon
+     * @param callback Service callback to receive success or fail result
+     * @return The result of the sendRequest method
+     * @throws Exception sendRequest may throw Exception
+     */
     public ServiceTask updatePost(String postId, @Nullable String title, @Nullable String category,
                                   @Nullable List<String> tags, @Nullable Double price,
                                   @Nullable String currency, @Nullable String body,
@@ -217,6 +295,14 @@ public class PostService extends Service {
                 BasicIdResult.class, null, callback);
     }
 
+    /**
+     * Task to download a specified image for use in replacement.
+     *
+     * @param imageId ID of the image to be downloaded
+     * @param callback Service callback to receive success or fail result
+     * @return The result of the sendRequest method
+     * @throws Exception sendRequest may throw Exception
+     */
     public ServiceTask downloadImage(String imageId,
                                      IServiceCallback<DownloadImageResult> callback)
             throws Exception {
@@ -227,6 +313,15 @@ public class PostService extends Service {
                 DownloadImageResult.class, null, callback);
     }
 
+    /**
+     * Method to fetch all posts in a given category
+     *
+     * @param category category to get posts from
+     * @param tags Nullable list of tags to get posts from
+     * @param callback Service callback to receive success or fail result
+     * @return The result of the sendRequest method
+     * @throws Exception sendRequest may throw Exception
+     */
     public ServiceTask getAllPostsForCategory(String category, @Nullable List<String> tags,
                                               IServiceCallback<GetPostsResult> callback)
             throws Exception {
@@ -238,6 +333,18 @@ public class PostService extends Service {
                 GetAllPostsForCategoryParameters.class, GetPostsResult.class, null, callback);
     }
 
+    /**
+     * Method to fetch a specified number of posts from a category,
+     * given a start and end point.
+     *
+     * @param category The category to fetch posts from
+     * @param tags tags to fetch relevant posts from
+     * @param start Starting point in the list to begin fetch
+     * @param count How many posts to fetch after the starting point
+     * @param callback Service callback to receive success or fail result
+     * @return The result of the sendRequest method
+     * @throws Exception sendRequest may throw Exception
+     */
     public ServiceTask getPostsForCategory(String category, @Nullable List<String> tags,
                                            int start, int count,
                                            IServiceCallback<GetPostsResult> callback)
@@ -252,11 +359,26 @@ public class PostService extends Service {
                 GetPostsForCategoryParameters.class, GetPostsResult.class, null, callback);
     }
 
+    /**
+     * Service task to fetch all posts submitted by the user
+     *
+     * @param callback Service callback to receive success or fail result
+     * @return The result of the sendRequest method
+     * @throws Exception sendRequest may throw Exception
+     */
     public ServiceTask getMyPosts(IServiceCallback<GetPostsResult> callback)
             throws Exception {
         return sendRequest("POST", "/post/getMyPosts", GetPostsResult.class, null, callback);
     }
 
+    /**
+     * Service to fetch one specific post from the database
+     *
+     * @param postId ID of the post to fetch
+     * @param callback Service callback to receive success or fail result
+     * @return The result of the sendRequest method
+     * @throws Exception sendRequest may throw Exception
+     */
     public ServiceTask getPost(String postId, IServiceCallback<GetPostResult> callback)
             throws Exception {
         GetPostParameters parameters = new GetPostParameters();
