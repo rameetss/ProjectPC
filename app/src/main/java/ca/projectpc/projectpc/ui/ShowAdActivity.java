@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,8 @@ import ca.projectpc.projectpc.api.Service;
 import ca.projectpc.projectpc.api.ServiceResult;
 import ca.projectpc.projectpc.api.ServiceTask;
 import ca.projectpc.projectpc.api.service.PostService;
+import ca.projectpc.projectpc.ui.glide.GlideApp;
+//import ca.projectpc.projectpc.ui.glide.GlideApp;
 
 
 public class ShowAdActivity extends AppCompatActivity {
@@ -160,7 +163,11 @@ public class ShowAdActivity extends AppCompatActivity {
                         byte[] buffer = Base64.decode(result.getData().imageData, Base64.DEFAULT);
 
                         // Load into image view
-                        Glide.with(context).load(buffer).into(imageView);
+                        GlideApp.with(context)
+                                .load(buffer)
+                                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                .skipMemoryCache(true)
+                                .into(imageView);
                     } else {
                         result.getException().printStackTrace();
                         Toast.makeText(context,

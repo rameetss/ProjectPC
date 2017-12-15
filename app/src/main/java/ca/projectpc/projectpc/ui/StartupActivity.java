@@ -10,7 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 import ca.projectpc.projectpc.R;
 import ca.projectpc.projectpc.api.IServiceCallback;
@@ -24,12 +25,13 @@ public class StartupActivity extends AppCompatActivity {
     public static final int REQUEST_PERMISSIONS = 10000;
     public static final String[] PERMISSIONS = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.CAMERA
     };
 
-    public static final String API_ENDPOINT = "https://ppc.indigogames.ca/api/";
+    public static final String API_ENDPOINT = "http://s1.indigogames.ca:44008/api/";
     public static final int API_TIMEOUT = 25000;
 
     /**
@@ -53,20 +55,20 @@ public class StartupActivity extends AppCompatActivity {
                 .saveInRootPicturesDirectory()
                 .setCopyExistingPicturesToPublicLocation(true);
 
-        // Get required permissions (File reading permissions, GPS permissions)
-        boolean granted = true;
+        // Get required permissions (File and GPS permissions)
+        List<String> toRequest = new ArrayList<>();
         for (String permission : PERMISSIONS) {
             if (ContextCompat.checkSelfPermission(this, permission)
                     != PackageManager.PERMISSION_GRANTED) {
-                granted = false;
+                toRequest.add(permission);
             }
         }
 
-        if (granted) {
+        if (toRequest.size() == 0) {
             checkSystemAndStart();
         } else {
-            ActivityCompat.requestPermissions(this,
-                    PERMISSIONS, REQUEST_PERMISSIONS);
+            ActivityCompat.requestPermissions(this, toRequest.toArray(new String[0]),
+                    REQUEST_PERMISSIONS);
         }
     }
 
