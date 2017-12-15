@@ -28,9 +28,8 @@ import ca.projectpc.projectpc.api.ServiceResult;
 import ca.projectpc.projectpc.api.ServiceTask;
 import ca.projectpc.projectpc.api.service.PostService;
 import ca.projectpc.projectpc.ui.glide.GlideApp;
-//import ca.projectpc.projectpc.ui.glide.GlideApp;
 
-
+// TODO: Add fab
 public class ShowAdActivity extends AppCompatActivity {
     private LinearLayout mImageContainer;
 
@@ -85,10 +84,9 @@ public class ShowAdActivity extends AppCompatActivity {
     }
 
     /**
-     *
-     * @param postId
      * Grab context and set title, create image views and schedule downloads
      * catch api exception where completion of request failed and returned
+     * @param postId Post id
      */
     private void downloadAd(String postId) {
         try {
@@ -141,10 +139,9 @@ public class ShowAdActivity extends AppCompatActivity {
     }
 
     /**
-     *
-     * @param imageId
-     * @param imageView
      * Download image from post service and load into image view
+     * @param imageId Image id
+     * @param imageView Image view to load image into
      */
     private void downloadImage(String imageId, final ImageView imageView) {
         try {

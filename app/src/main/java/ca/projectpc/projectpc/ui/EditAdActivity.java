@@ -35,21 +35,7 @@ import ca.projectpc.projectpc.api.ServiceResult;
 import ca.projectpc.projectpc.api.ServiceTask;
 import ca.projectpc.projectpc.api.service.PostService;
 import ca.projectpc.projectpc.ui.glide.GlideApp;
-//import ca.projectpc.projectpc.ui.glide.GlideApp;
 
-// TODO: Do main stuff
-
-// TODO: Rewrite from scratch
-
-// TODO/NOTE: THIS IS ALL EXPERIMENTAL, DO NOT TOUCH.
-
-// TODO: Show ads
-// TODO: View Ad, if my ad, then show edit/delete/bookmark buttons on top right (action bar button)
-// TODO: PostAd: Add FAB for upload, when pressed back, show dialog "Are you sure"
-// TODO: Settings menu (clear bookmarks - stored locally in file, clear cache/permissions?) - Or remove settings?
-// TODO: Messenger (get messages, show messages, show notifications, get messages since)
-
-// TODO: Add location getting to this, so we can add "current location" (get last known gps coordinate)
 public class EditAdActivity extends AppCompatActivity {
     private static final int MAX_IMAGES = 8;
 
